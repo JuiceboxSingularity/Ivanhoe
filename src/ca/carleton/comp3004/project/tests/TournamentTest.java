@@ -74,6 +74,7 @@ public class TournamentTest {
 		
 			//Assert that the tournament color is what the player played
 			assertEquals(game.getTournamentColor(), color);
+			System.out.println("Started " + color.toString() + " Tournament!");
 		} else {
 			fail("Did not receive a colored card");
 		}
@@ -108,7 +109,7 @@ public class TournamentTest {
 		CardColor tournamentColor = game.getTournamentColor();
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
-		
+		System.out.println(game.getCurrentPlayer().getPlayerName() + " Has Won The " + tournamentColor.toString() + " Tournament!!");
 		//Make sure a player cannot win more than one token of the same color
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);

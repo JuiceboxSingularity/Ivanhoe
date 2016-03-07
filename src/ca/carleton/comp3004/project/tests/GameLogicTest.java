@@ -57,22 +57,6 @@ public class GameLogicTest {
 			else assertEquals(p.getHand().size(), 8);
 		}
 		
-		//while(!game.ended()) {
-		// Get play from client
-		System.out.println(game.validatePlay(game.getCurrentPlayer().viewCard(0)));
-		System.out.println(game.getCurrentPlayer().viewCard(0).toString());
-		game.getCurrentPlayer().addCardToPlay(game.getCurrentPlayer().removeCard(0));
-		assertEquals(game.getCurrentPlayer().getInPlay().size(), 1);
-		game.endTurn();
-		System.out.println(game.getCurrentPlayer().getPlayerName());
-		game.startTurn();
-		System.out.println(game.getCurrentPlayer().getPlayerName());
-		System.out.println(game.getCurrentPlayer().getHand().size());
-		System.out.println(game.withdrawPlayer());
-		game.startTurn();
-		System.out.println(game.getCurrentPlayer().getPlayerName());
-		System.out.println(game.withdrawPlayer());
-		//}
 	}
 
 }

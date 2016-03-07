@@ -103,7 +103,11 @@ public class Game implements Serializable {
 	public boolean endTurn() {
 		int score = 0;
 		for (Card c : currentPlayer.getInPlay()) {
-			score += c.getValue();
+			if (tournamentColor == CardColor.Green) {
+				score++;
+			} else {
+				score += c.getValue();
+			}
 		}
 		
 		for (Player p : playerList) {
