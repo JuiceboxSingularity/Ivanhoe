@@ -91,6 +91,27 @@ public class TournamentTest {
 		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
 			fail("Should not be able to play two maidens!!");
 		} 
+		
+		game.endTurn();
+		game.startTurn();
+		
+		//Test player ending turn without playing a larger total
+		assertFalse(game.endTurn());
+		
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+		
+		//Check that the player indeed wins a token of the tournament color
+		CardColor tournamentColor = game.getTournamentColor();
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
+		
+		//Make sure a player cannot win more than one token of the same color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
 	}
 
 }

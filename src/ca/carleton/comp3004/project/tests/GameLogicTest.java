@@ -42,7 +42,6 @@ public class GameLogicTest {
 		game.addPlayer(three);
 
 		game.dealTokens();
-		System.out.println(game.getCurrentPlayer().getPlayerName());
 		game.getDeck().shuffle();
 
 		game.dealDeck();

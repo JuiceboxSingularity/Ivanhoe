@@ -8,7 +8,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({	CardTest.class,
 				DeckTest.class,
 				GameTest.class,
-				PlayerTest.class})
+				PlayerTest.class,
+				GameLogicTest.class,
+				TournamentTest.class})
 public class AllGameTests {
 	
 }

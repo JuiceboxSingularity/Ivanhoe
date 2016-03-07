@@ -115,6 +115,7 @@ public class Game implements Serializable {
 				return false;
 			}
 		}
+		
 		for (Player p : playerList) {
 			if (currentPlayer.equals(p)) {
 				do {
@@ -127,9 +128,9 @@ public class Game implements Serializable {
 	}
 
 	public void endTournament() {
+		awardToken(currentPlayer);
 		for (Player p : playerList) {
-			if (p.isPlaying()) awardToken(p);
-			else p.setPlaying(true);
+			p.setPlaying(true);
 			p.clearDisplay();
 		}
 		this.prevColor = tournamentColor;
@@ -165,6 +166,14 @@ public class Game implements Serializable {
 		if (playing == 1) {
 			return true;
 		} else {
+			for (Player p : playerList) {
+				if (currentPlayer.equals(p)) {
+					do {
+						currentPlayer = playerList.get((playerList.indexOf(p) + 1) % playerList.size());
+					} while (!currentPlayer.isPlaying());
+					break;
+				}
+			}
 			this.endTurn();
 			return false;
 		}
@@ -206,7 +215,7 @@ public class Game implements Serializable {
 		return tournamentColor;
 	}
 
-	public boolean tournamentWon() {
+	public boolean gameWon() {
 		for (Player p : playerList) {
 			for (Entry<CardColor, Integer> entry : p.getTokens().entrySet()) { 
 				if (entry.getValue().intValue() != 1) {
