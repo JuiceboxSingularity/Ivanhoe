@@ -1,9 +1,6 @@
 package ca.carleton.comp3004.project.gameobjects;
 
 import java.io.Serializable;
-import java.util.List;
-
-import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 
 public class Gamestate implements Serializable {
 

@@ -2,7 +2,6 @@ package ca.carleton.comp3004.project.gameobjects;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = -6443549403268656779L;
 	private List<Player> playerList;
 	private CardColor tournamentColor;
+	private CardColor prevColor;
 	private Deck deck;
 	private int maxPlayers;
 	private Player currentPlayer;
@@ -26,6 +26,7 @@ public class Game implements Serializable {
 	public Game(int maxPlayers) {
 		this.playerList = new LinkedList<Player>();
 		this.tournamentColor = CardColor.None;
+		this.prevColor = CardColor.None;
 		this.deck = new Deck();
 		this.maxPlayers = maxPlayers;
 		this.currentPlayer = null;
@@ -99,7 +100,21 @@ public class Game implements Serializable {
 	public void startTurn() {
 		currentPlayer.addCard(deck.draw());
 	}
-	public void endTurn() {
+	public boolean endTurn() {
+		int score = 0;
+		for (Card c : currentPlayer.getInPlay()) {
+			score += c.getValue();
+		}
+		
+		for (Player p : playerList) {
+			int tscore = 0;
+			for (Card c : p.getInPlay()) {
+				tscore += c.getValue();
+			}
+			if (tscore > score) {
+				return false;
+			}
+		}
 		for (Player p : playerList) {
 			if (currentPlayer.equals(p)) {
 				do {
@@ -108,6 +123,7 @@ public class Game implements Serializable {
 				break;
 			}
 		}
+		return true;
 	}
 
 	public void endTournament() {
@@ -116,6 +132,7 @@ public class Game implements Serializable {
 			else p.setPlaying(true);
 			p.clearDisplay();
 		}
+		this.prevColor = tournamentColor;
 		this.tournamentColor = CardColor.None;
 		this.customToken = CardColor.None;
 	}
@@ -155,8 +172,13 @@ public class Game implements Serializable {
 
 	public boolean validatePlay(Card c) {
 		if (this.tournamentColor == CardColor.None && c.getCardType() == CardType.Color) {
+			if (this.prevColor == CardColor.Purple && c.getCardColor() == CardColor.Purple) return false;
 			return true;
 		} else if (c.getCardType() == CardType.Supporter){
+			if (c.getCardName() == "Squire") return true;
+			for (Card card : currentPlayer.getInPlay()) {
+				if (card.getCardName() == "Maiden") return false;
+			}
 			return true;
 		} else if (tournamentColor == CardColor.None && c.getCardType() == CardType.Action) {
 			return false;
