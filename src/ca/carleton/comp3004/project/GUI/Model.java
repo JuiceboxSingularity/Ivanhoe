@@ -27,6 +27,7 @@ public class Model {
 	private ArrayList player4Specials;
 	
 	int playerNum = 0; //NOT PLAYER ID
+	int lastPlayerNum = 0;
 	Game game;
 	//private boolean chooseColor;
 	//more?
@@ -77,7 +78,7 @@ public class Model {
 	}
 	
 	public List<Card> getPlayerArea(int x) {
-		return game.getPlayers().get(playerNum).getInDisplay();
+		return game.getPlayers().get(playerNum).getInPlay();
 	}
 		
 	public ArrayList getPlayerTokens(int x) {

@@ -330,7 +330,6 @@ public class GameServer extends Thread {
 	}
 	
 	public static void main(String[] args) {
-		
 		GameServer game = new GameServer();		
 
 	}

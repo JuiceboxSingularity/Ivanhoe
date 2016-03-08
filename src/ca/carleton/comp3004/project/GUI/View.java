@@ -262,7 +262,16 @@ public class View extends JFrame {
 		c.gridy = 4;
 		c.gridheight = 1;
 		c.gridwidth = 1;
-		sidebarOptions.add(widthdrawButton, c);
+		//sidebarOptions.add(widthdrawButton, c);
+		
+		endButton.addActionListener(new EndButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(endButton, c);
 		
 		
 		tempLabel = new JLabel();
@@ -288,7 +297,6 @@ public class View extends JFrame {
 		sidebarOptions.add(tempLabel, c);
 		
 		textArea = new JTextArea(6, 20);
-		//((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ConsoleDocument(textArea, 3));
 		textArea.setEditable(false);
 		c.weightx = 1.0;
 		c.weighty = 2.0;
@@ -878,6 +886,7 @@ public class View extends JFrame {
 					case "player":
 						model.setPlayer(Integer.parseInt(parts[1]));
 						System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
+						textAppend("YOU ARE PLAYER: " + (model.playerNum+1));
 					}
 					
 					
@@ -975,6 +984,14 @@ public class View extends JFrame {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	class EndButtonActionListener implements ActionListener {
+		String message;
+		public void actionPerformed(ActionEvent e) {
+			message = "end:";
+			sendString(message);
+		}	
 	}
 
 
