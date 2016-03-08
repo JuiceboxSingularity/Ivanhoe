@@ -880,13 +880,21 @@ public class View extends JFrame {
 					case "state":
 						game = decodeGameState(parts[1]);
 						System.out.println("RECEIVED GAME STATE");
+						
+						
 						model.setGame(game);
+						
+						if (game.getCurrentPlayer().getId() != model.lastPlayerNum){
+							model.lastPlayerNum = game.getCurrentPlayer().getId();
+							textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
+						}
+						
 						redraw();
 						break;
 					case "player":
 						model.setPlayer(Integer.parseInt(parts[1]));
 						System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
-						textAppend("YOU ARE PLAYER: " + (model.playerNum+1));
+						textAppend("YOU ARE PLAYER: " + (model.playerNum+1)+"\n");
 					}
 					
 					

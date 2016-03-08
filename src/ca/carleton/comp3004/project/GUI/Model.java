@@ -74,7 +74,7 @@ public class Model {
 	}
 
 	public int getHandSize() {
-		return this.hand.size();
+		return game.getPlayers().get(playerNum).getHand().size();
 	}
 	
 	public List<Card> getPlayerArea(int x) {
