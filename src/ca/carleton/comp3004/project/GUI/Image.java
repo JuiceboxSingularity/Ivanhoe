@@ -45,7 +45,7 @@ public class Image extends Component {
     	}
     	
 		try {
-	    	backgroundBorder = ImageIO.read(new File("images/Background/background.jpeg"));
+	    	backgroundBorder = ImageIO.read(new File("images2/Background/background.jpeg"));
 		} catch (IOException e) {
 			System.out.println("Background missing");
 		}
