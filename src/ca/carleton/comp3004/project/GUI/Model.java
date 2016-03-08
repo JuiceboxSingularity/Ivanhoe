@@ -78,7 +78,7 @@ public class Model {
 	}
 	
 	public List<Card> getPlayerArea(int x) {
-		return game.getPlayers().get(playerNum).getInPlay();
+		return game.getPlayers().get(x).getInPlay();
 	}
 		
 	public ArrayList getPlayerTokens(int x) {

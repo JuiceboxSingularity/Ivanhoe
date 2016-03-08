@@ -237,15 +237,6 @@ public class View extends JFrame {
 		c.gridwidth = 1;
 		sidebarOptions.add(button, c);
 		
-		endButton.addActionListener(new ButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 5;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		//sidebarOptions.add(endButton, c);
-		
 		startButton.addActionListener(new StartButtonActionListener());
 		c.weightx = 0.1;
 		c.weighty = 0.5;
@@ -255,14 +246,14 @@ public class View extends JFrame {
 		c.gridwidth = 1;
 		sidebarOptions.add(startButton, c);
 		
-		widthdrawButton.addActionListener(new ButtonActionListener());
+		widthdrawButton.addActionListener(new WidthdrawButtonActionListener());
 		c.weightx = 0.1;
 		c.weighty = 0.5;
-		c.gridx = 1;
-		c.gridy = 4;
+		c.gridx = 0;
+		c.gridy = 5;
 		c.gridheight = 1;
 		c.gridwidth = 1;
-		//sidebarOptions.add(widthdrawButton, c);
+		sidebarOptions.add(widthdrawButton, c);
 		
 		endButton.addActionListener(new EndButtonActionListener());
 		c.weightx = 0.1;
@@ -434,7 +425,7 @@ public class View extends JFrame {
 		
 		
 		
-		for (int x = 0; x < 5;x++){
+		for (int x = 0; x < model.game.getPlayers().size();x++){
 			playerArea[x].removeAll();
 			playerArea[x].addMouseListener(new targetPlayerListener(x));
 			java.util.List<Card> played = model.getPlayerArea(x);
@@ -1001,6 +992,16 @@ public class View extends JFrame {
 			sendString(message);
 		}	
 	}
+	
+	class WidthdrawButtonActionListener implements ActionListener {
+		String message;
+		public void actionPerformed(ActionEvent e) {
+			message = "widthdraw:";
+			sendString(message);
+		}
+	}
+	
+	
 
 
 	private class HandActionListener implements ActionListener {

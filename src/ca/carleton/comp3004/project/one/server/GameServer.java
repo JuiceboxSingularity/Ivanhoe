@@ -238,7 +238,7 @@ public class GameServer extends Thread {
 							System.out.println("GAME NOT STARTED");
 						}
 						break;
-					case "widthraw":
+					case "widthdraw":
 						System.out.println("ATTEMPT TO WIDTHRAW");
 						if (started == true){
 							game.withdrawPlayer();

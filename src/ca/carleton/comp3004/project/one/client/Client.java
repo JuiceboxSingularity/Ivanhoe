@@ -85,19 +85,7 @@ public class Client {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {       
-            	game = new Game(3);
-        		one = new Player("Anduin", 1);
-        		two = new Player("Malfurion", 2);
-        		three = new Player("Garrosh", 3);
-            	
-        		game.addPlayer(one);
-        		game.addPlayer(two);
-        		game.addPlayer(three);
-        		        		
-        		game.getDeck().shuffle();
-        		game.dealTokens();
-        		game.dealDeck();
-        		
+            	        		
                 Model model = new Model(game);
                 //model.setGame(game);
                 
