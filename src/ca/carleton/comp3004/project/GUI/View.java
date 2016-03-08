@@ -87,6 +87,7 @@ public class View extends JFrame {
 	
 	private JButton button;
 	private JButton connectButton;
+	private JButton startGameButton;
 	private JButton startButton;
 	private JButton endButton;
 	private JButton widthdrawButton;
@@ -168,9 +169,10 @@ public class View extends JFrame {
 		JLabel tempLabel;
 		connectButton = new JButton("Connect");
 		button = new JButton("Refresh");
-		startButton = new JButton("Start Game");
+		startButton = new JButton("Start Turn");
 		endButton = new JButton("End Turn");
 		widthdrawButton = new JButton("Widthdraw");
+		startGameButton = new JButton("Start Game");
 
 		connectBox = new JTextField(10);
 		nameBox = new JTextField(10);
@@ -263,6 +265,15 @@ public class View extends JFrame {
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		sidebarOptions.add(endButton, c);
+		
+		startGameButton.addActionListener(new StartGameButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 1;
+		c.gridy = 5;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(startGameButton, c);
 		
 		
 		tempLabel = new JLabel();
@@ -375,17 +386,18 @@ public class View extends JFrame {
 		playerFour.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
 		panel.add(playerFour, c);
 		
-		otherArea.setBorder(BorderFactory.createTitledBorder(null,"Other Area", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(otherArea);
-		playerArea[1].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea[1]);
-		playerArea[2].setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea[2]);
-		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea[3]);
-		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		
+		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		playArea.add(playerArea[0]);
-		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[1].setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[1]);
+		playerArea[2].setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[2]);
+		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[3]);
+		otherArea.setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(otherArea);
+		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 5", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		playArea.add(playerArea[4]);
 		
 		//playerArea.setVisible(true);
@@ -429,13 +441,19 @@ public class View extends JFrame {
 			playerArea[x].removeAll();
 			playerArea[x].addMouseListener(new targetPlayerListener(x));
 			java.util.List<Card> played = model.getPlayerArea(x);
-			
+			if (x == model.playerNum){
+				otherArea.removeAll();
+				otherArea.addMouseListener(new targetPlayerListener(x));
+			}
 			for (int i = 0; i < played.size(); i++) {
 				tempLabel = new JLabel(new ImageIcon(images.getCards(played.get(i))));
 				tempLabel.setSize(new Dimension(images.getCards(played.get(i)).getWidth(),images.getCards(played.get(i)).getHeight()));
 				//NEW
 				tempLabel.addMouseListener(new cardInPlayListener(played.get(i),x));
+				
 				playerArea[x].add(tempLabel, new Integer(i));
+				if (x == model.playerNum) otherArea.add(tempLabel, new Integer(i));
+				
 				tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
 				//System.out.println(i);
 			}
@@ -941,10 +959,18 @@ public class View extends JFrame {
 		}
 	}
 	
-	class StartButtonActionListener implements ActionListener {
+	class StartGameButtonActionListener implements ActionListener {
 		String message;
 		public void actionPerformed(ActionEvent e) {
 			message = "startGame:";
+			sendString(message);
+		}
+	}
+	
+	class StartButtonActionListener implements ActionListener {
+		String message;
+		public void actionPerformed(ActionEvent e) {
+			message = "start:";
 			sendString(message);
 		}
 	}

@@ -241,8 +241,9 @@ public class GameServer extends Thread {
 					case "widthdraw":
 						System.out.println("ATTEMPT TO WIDTHRAW");
 						if (started == true){
-							game.withdrawPlayer();
-							
+							if(game.withdrawPlayer()){
+								game.endTournament();
+							};
 							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
