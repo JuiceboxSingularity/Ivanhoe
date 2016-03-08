@@ -13,7 +13,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,8 +51,10 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter.FilterBypass;
+import javax.swing.Timer;
 
 import ca.carleton.comp3004.project.gameobjects.Card;
+import ca.carleton.comp3004.project.gameobjects.Game;
 
 public class View extends JFrame {
 	private Image images;
@@ -70,6 +87,9 @@ public class View extends JFrame {
 	
 	private JButton button;
 	private JButton connectButton;
+	private JButton startButton;
+	private JButton endButton;
+	private JButton widthdrawButton;
 	
 	private JTextArea textArea;
 	
@@ -80,9 +100,23 @@ public class View extends JFrame {
 	private static Color blue = new Color(25,20,155);
 
 	private Model model;
+	
+	
+	SocketChannel channel;	
+	Selector selector;
+	boolean connected;
+	int port = 1001;
+	
+	CharBuffer charBuffer = CharBuffer.allocate(8192);
+	ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
 
-	//private int testval = 0;
-
+	Charset charset = Charset.forName("US-ASCII");
+	CharsetEncoder encoder = charset.newEncoder();
+	CharsetDecoder decoder = charset.newDecoder();
+	
+	Base64.Encoder b64Encoder = Base64.getEncoder();
+	Base64.Decoder b64Decoder = Base64.getDecoder();
+	
 	public View(Model tempmodel) {
 		tourColor = Color.white;
 		images = new Image();
@@ -134,6 +168,10 @@ public class View extends JFrame {
 		JLabel tempLabel;
 		connectButton = new JButton("Connect");
 		button = new JButton("Refresh");
+		startButton = new JButton("Start Game");
+		endButton = new JButton("End Turn");
+		widthdrawButton = new JButton("Widthdraw");
+
 		connectBox = new JTextField(10);
 		nameBox = new JTextField(10);
 		
@@ -198,6 +236,34 @@ public class View extends JFrame {
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		sidebarOptions.add(button, c);
+		
+		endButton.addActionListener(new ButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 5;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		//sidebarOptions.add(endButton, c);
+		
+		startButton.addActionListener(new StartButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 1;
+		c.gridy = 3;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(startButton, c);
+		
+		widthdrawButton.addActionListener(new ButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 1;
+		c.gridy = 4;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(widthdrawButton, c);
+		
 		
 		tempLabel = new JLabel();
 		tempLabel.setText("Server");
@@ -331,6 +397,8 @@ public class View extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+					   
+		new Timer(100, new NetworkActionListener()).start();
 	}
 
 	public void loadHand() {
@@ -515,7 +583,7 @@ public class View extends JFrame {
 		
 		
 		playerOne.add(tempPanel);
-
+		/*
 		//playerArea2.]
 		playerTwo.removeAll();
 		templabel = new JLabel();
@@ -567,7 +635,7 @@ public class View extends JFrame {
 		}
 		playerTwo.add(tempPanel);
 		
-		/*
+		
 		//playerArea3.
 		playerThree.removeAll();
 		templabel = new JLabel();
@@ -726,9 +794,16 @@ public class View extends JFrame {
 	
 	//Will need to be changed
 	public void useCard(int x) {
+		String message;
+		
+		Game game = model.game;
 		//model.getHand().remove(0);
 		//model.setHand(model.getHand().remove(0));
 		System.out.println(x);
+		game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
+		//game.performPlay(x);
+		message = "play:"+x;
+		sendString(message);
 	}
 	
 	//Will need to be changed
@@ -761,21 +836,143 @@ public class View extends JFrame {
 	public JButton getButton() {
 		return button;
 	}
+	
+	class NetworkActionListener implements ActionListener {
+		int bytes;
+		String string;
+		Game game;
+		public void actionPerformed(ActionEvent e) {
+			if (connected){
+				try {
+					byteBuffer.clear();
+					bytes = channel.read(byteBuffer);
+					byteBuffer.flip();
+				} catch (IOException e1) {
+					connected = false;
+					
+				}
+				if (bytes == 0){
+
+				} else if (bytes > 0){
+					System.out.println("STUFF RECEIVED: "+bytes);
+					
+					charBuffer.clear();
+					decoder.decode(byteBuffer,charBuffer,false);
+					charBuffer.flip();
+					string = charBuffer.toString();
+					//SERVER READ KEEP SELECTING IF THESE BUFFERS NOT CLEARED; SOME SORT OF LAZY READ?
+					byteBuffer.clear();
+					charBuffer.clear();
+										
+					System.out.println(string);
+					System.out.println(string.length());
+					
+					String[] parts = string.split(":");
+					switch(parts[0]){
+					case "state":
+						game = decodeGameState(parts[1]);
+						System.out.println("RECEIVED GAME STATE");
+						model.setGame(game);
+						redraw();
+						break;
+					case "player":
+						model.setPlayer(Integer.parseInt(parts[1]));
+						System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
+					}
+					
+					
+				} else {
+					//EOF -1
+				}
+			}
+		}
+	}
+	
+	public void redraw(){
+		System.out.println("REFRESH");
+		loadHand();
+		loadPlayArea();
+		loadTokens();
+	}
+	
+	public Game decodeGameState(String message){
+		Game game;
+		byte[] object;
+		object = b64Decoder.decode(message);
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream(object);
+		ObjectInputStream ois;
+		try {
+			ois = new ObjectInputStream(bais);
+			game = (Game) ois.readObject();
+			return game;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;		
+	}
+	
+	public void sendString(String message){
+		charBuffer.clear();
+		charBuffer.put(message);
+		charBuffer.flip();
+		
+		try {
+			channel.write(encoder.encode(charBuffer));
+		} catch (CharacterCodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	class StartButtonActionListener implements ActionListener {
+		String message;
+		public void actionPerformed(ActionEvent e) {
+			message = "startGame:";
+			sendString(message);
+		}
+	}
 
 	class ButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			textAppend("WHAT\n");
-			loadHand();
-			loadPlayArea();
-			loadTokens();
-			chooseTourColor();
+			redraw();
+			//chooseTourColor();
 			//connect();
 		}
 	}
 	
 	class ConnectButtonActionListener implements ActionListener {
+		String message;
 		public void actionPerformed(ActionEvent e) {
+			try {
+				channel = SocketChannel.open();
+				channel.configureBlocking(false);
+				channel.connect(new InetSocketAddress(connectBox.getText(), port));
 			
+				selector = Selector.open();
+				channel.register(selector,SelectionKey.OP_CONNECT/*|SelectionKey.OP_READ*/);
+				
+				selector.select(500); //CONNECT TIMEOUT
+				if (!channel.finishConnect()) {
+					throw new SocketTimeoutException();
+				} else {
+					message = "join:"+nameBox.getText();
+					sendString(message);
+					
+					textAppend("CONNECTED\n");
+					connected = true;
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

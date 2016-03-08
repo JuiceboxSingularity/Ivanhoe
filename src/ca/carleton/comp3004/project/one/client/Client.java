@@ -110,7 +110,7 @@ public class Client {
             	temphand.add(11);
             	temphand.add(12);
                 Model model = new Model(temphand,temphand,temphand,temphand,temphand,temphand);
-                model.setGame(game,0);
+                model.setGame(game);
                 
     			//model.addPlayerSpecials("Shield");
     			//model.addPlayerSpecials("Stunned");

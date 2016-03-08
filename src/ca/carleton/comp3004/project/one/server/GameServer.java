@@ -49,6 +49,8 @@ public class GameServer extends Thread {
 		int numPlayers = 0;
 		int index;
 		
+		String message;
+		
 		Player[] players = new Player[6]; //5+1 TODO: THIS NEEDS TO BE REDONE
 		SocketChannel[] playerSockets = new SocketChannel[5]; 
 		
@@ -115,13 +117,18 @@ public class GameServer extends Thread {
 		public void read(SelectionKey key){
 			client = (SocketChannel)key.channel();
 			try {
-				bytes = client.read(byteBuffer);
-				if (bytes == -1){
+				try {
+					bytes = client.read(byteBuffer);
+					if (bytes == -1){
+						throw new IOException();
+					}
+				} catch (IOException e){
 					System.out.println("DISCONNECTED");
 					byteBuffer.clear();
 					client.close();
 					key.cancel();
 					return;
+					//TODO: REMOVE PLAYER SOCKET IF THEY DISCONNECT
 				}
 				byteBuffer.flip();
 				decoder.decode(byteBuffer,charBuffer,false);
@@ -142,18 +149,35 @@ public class GameServer extends Thread {
 				switch(parts[0]){
 					case "join":
 						System.out.println("ATTEMPT TO JOIN");
-						//TODO : GAME ALREADY STARTED CHECK
+						if (started == true){
+							System.out.println("GAME ALREADY STARTED");
+							break;
+						}
 						if (numPlayers>=5){
 							System.out.println("TOO MANY");
 						} else {
+							if (parts.length != 2) {
+								System.out.println("MALFORMED JOIN");
+								break;
+							}
 							numPlayers++;
 							playerSockets[numPlayers-1] = client;
 							players[numPlayers] = new Player(parts[1],numPlayers);
 							System.out.println("JOINED: PLAYER " + parts[1] + " " + numPlayers);
+							
+							message = "player:"+(numPlayers);
+							charBuffer.clear();
+							charBuffer.put(message);
+							charBuffer.flip();
+							client.write(encoder.encode(charBuffer));
 						}
 						break;
 					case "startGame":
 						System.out.println("ATTEMPT TO START");
+						if (started == true){
+							System.out.println("GAME ALREADY STARTED");
+							break;
+						}
 						if (numPlayers>=2){
 							System.out.println("STARTING GAME: " + numPlayers + " PLAYERS");
 							started = true;
@@ -178,6 +202,8 @@ public class GameServer extends Thread {
 						System.out.println("ATTEMPT TO START TURN");
 						if (started == true){
 							game.startTurn();
+							sendGame(game);
+							
 						} else {
 							System.out.println("GAME NOT STARTED");
 						}
@@ -188,6 +214,8 @@ public class GameServer extends Thread {
 							index = Integer.parseInt(parts[1]);
 							game.performPlay(index);
 							System.out.println("PLAYED CARD: " + index);
+							
+							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
 						}
@@ -196,6 +224,8 @@ public class GameServer extends Thread {
 						System.out.println("ATTEMPT TO END TURN");
 						if (started == true){
 							game.endTurn();
+							
+							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
 						}
@@ -204,6 +234,8 @@ public class GameServer extends Thread {
 						System.out.println("ATTEMPT TO WIDTHRAW");
 						if (started == true){
 							game.withdrawPlayer();
+							
+							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
 						}

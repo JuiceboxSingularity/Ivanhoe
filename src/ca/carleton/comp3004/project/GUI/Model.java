@@ -50,14 +50,18 @@ public class Model {
 		this.player4Specials = new ArrayList(0);
 	}
 	
-	public Model(Game game,int playerNum){
+	public Model(Game game){
 		this.game = game;
-		this.playerNum = playerNum;
 	}
+	
+	public void setPlayer(int x){
+		this.playerNum = x-1;
+	}
+	
 	//TODO : TEMPORARY TILL FIXED
-	public void setGame(Game game,int playerNum){
+	public void setGame(Game game){
 		this.game = game;
-		this.playerNum = playerNum;
+		//this.playerNum = playerNum;
 	}
 
 	public void setHand(ArrayList x) {
