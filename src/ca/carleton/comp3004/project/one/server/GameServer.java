@@ -47,8 +47,70 @@ public class GameServer extends Thread {
 		
 		int bytes;
 		int numPlayers = 0;
-		Player[] players = new Player[6]; //5+1
+		int index;
+		
+		Player[] players = new Player[6]; //5+1 TODO: THIS NEEDS TO BE REDONE
+		SocketChannel[] playerSockets = new SocketChannel[5]; 
+		
 		boolean started = false;
+		
+		public void sendGame(Game game){
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream (baos);
+				oos.writeObject(game);
+				oos.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			string = b64Encoder.encodeToString(baos.toByteArray());
+			System.out.println(string);
+			
+			
+			/*
+			byte[] object;
+			object = b64Decoder.decode(string);
+			
+			ByteArrayInputStream bais = new ByteArrayInputStream(object);
+			ObjectInputStream ois;
+			try {
+				ois = new ObjectInputStream(bais);
+				game = (Game) ois.readObject();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			
+			System.out.println("PLAYER TURN " + game.getCurrentPlayer().getId());
+			
+			System.out.println(string.length());
+			charBuffer.clear();
+			charBuffer.append("state:");
+			charBuffer.append(string);
+    		charBuffer.flip();
+    		
+			encoder.encode(charBuffer,byteBuffer,false);
+			writeAll(byteBuffer);
+			byteBuffer.clear();	
+			charBuffer.clear();
+		}
+		
+		public void writeAll(ByteBuffer byteBuffer){
+			for (int x = 0; x<numPlayers; x++){
+				try {
+					byteBuffer.flip();
+					playerSockets[x].write(byteBuffer);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		public void read(SelectionKey key){
 			client = (SocketChannel)key.channel();
@@ -78,72 +140,76 @@ public class GameServer extends Thread {
 				
 				
 				switch(parts[0]){
-				case "join":
-					System.out.println("ATTEMPT TO JOIN");
-					//TODO : GAME ALREADY STARTED CHECK
-					if (numPlayers>=5){
-						System.out.println("TOO MANY");
-					} else {
-						numPlayers++;
-						players[numPlayers] = new Player(parts[1],numPlayers);
-						System.out.println("JOINED: PLAYER " + parts[1] + " " + numPlayers);
-					}
-					break;
-				case "start":
-					System.out.println("ATTEMPT TO START");
-					if (numPlayers>=2){
-						System.out.println("STARTING GAME: " + numPlayers + " PLAYERS");
-						started = true;
-						game = new Game(numPlayers);
-						for (int x = 1; x < numPlayers; x++){ //start from one, maybe change later
-							game.addPlayer(players[x]);
+					case "join":
+						System.out.println("ATTEMPT TO JOIN");
+						//TODO : GAME ALREADY STARTED CHECK
+						if (numPlayers>=5){
+							System.out.println("TOO MANY");
+						} else {
+							numPlayers++;
+							playerSockets[numPlayers-1] = client;
+							players[numPlayers] = new Player(parts[1],numPlayers);
+							System.out.println("JOINED: PLAYER " + parts[1] + " " + numPlayers);
 						}
-						
-						game.dealTokens();
-						game.getDeck().shuffle();
-						game.dealDeck();
-						
-						ByteArrayOutputStream baos = new ByteArrayOutputStream();
-						ObjectOutputStream oos = new ObjectOutputStream (baos);
-						oos.writeObject(game);
-						oos.flush();
-						string = b64Encoder.encodeToString(baos.toByteArray());
-						System.out.println(string);
-						
-						byte[] object;
-						object = b64Decoder.decode(string);
-						
-						ByteArrayInputStream bais = new ByteArrayInputStream(object);
-						ObjectInputStream ois = new ObjectInputStream(bais);
-						game = (Game) ois.readObject();
-						System.out.println(game.getCurrentPlayer());
-						
-						System.out.println(string.length());
-						charBuffer.clear();
-						charBuffer.append(string);
-		        		charBuffer.flip();
-		        		
-						encoder.encode(charBuffer,byteBuffer,false);
-						byteBuffer.flip();
-						client.write(byteBuffer);
-						byteBuffer.clear();	
-						charBuffer.clear();
-						
-						//TODO: SEND GAME STATE
-						
-					} else {
-						System.out.println("NOT ENOUGH PLAYERS");
-					}
-					break;
-				case "play":
-					System.out.println("ATTEMPT TO PLAY CARD");
-					if (started == true){
-						
-					} else {
-						System.out.println("GAME NOT STARTED");
-					}
-					
+						break;
+					case "startGame":
+						System.out.println("ATTEMPT TO START");
+						if (numPlayers>=2){
+							System.out.println("STARTING GAME: " + numPlayers + " PLAYERS");
+							started = true;
+							game = new Game(numPlayers);
+							for (int x = 1; x <= numPlayers; x++){ //start from one, maybe change later
+								game.addPlayer(players[x]);
+							}
+							
+							
+							game.dealTokens();
+							game.getDeck().shuffle();		
+							game.dealDeck();
+							
+							sendGame(game);
+							//TODO: SEND GAME STATE
+							
+						} else {
+							System.out.println("NOT ENOUGH PLAYERS");
+						}
+						break;
+					case "start":
+						System.out.println("ATTEMPT TO START TURN");
+						if (started == true){
+							game.startTurn();
+						} else {
+							System.out.println("GAME NOT STARTED");
+						}
+						break;
+					case "play":
+						System.out.println("ATTEMPT TO PLAY CARD");
+						if (started == true){
+							index = Integer.parseInt(parts[1]);
+							game.performPlay(index);
+							System.out.println("PLAYED CARD: " + index);
+						} else {
+							System.out.println("GAME NOT STARTED");
+						}
+						break;
+					case "end":
+						System.out.println("ATTEMPT TO END TURN");
+						if (started == true){
+							game.endTurn();
+						} else {
+							System.out.println("GAME NOT STARTED");
+						}
+						break;
+					case "widthraw":
+						System.out.println("ATTEMPT TO WIDTHRAW");
+						if (started == true){
+							game.withdrawPlayer();
+						} else {
+							System.out.println("GAME NOT STARTED");
+						}
+						break;					
 				}
+				
 				
 				/*
 				

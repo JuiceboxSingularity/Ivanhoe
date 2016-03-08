@@ -43,7 +43,6 @@ public class GameLogicTest {
 
 		game.dealTokens();
 		game.getDeck().shuffle();
-
 		game.dealDeck();
 		
 		for (Player p : game.getPlayers()) {
