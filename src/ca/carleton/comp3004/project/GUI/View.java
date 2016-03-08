@@ -66,7 +66,7 @@ public class View extends JFrame {
 	private JPanel bottombar;
 	private DrawPanel playArea;
 	
-	private JLayeredPane[] playerArea = new JLayeredPane[5];
+	private JLayeredPane[] playerArea = new JLayeredPane[6];
 
 	private JPanel otherArea;
 	private JPanel playerYou;
@@ -155,7 +155,7 @@ public class View extends JFrame {
 		playArea = new DrawPanel();
 		playArea.setLayout(new GridLayout(2,3));
 		
-		for (int x = 0; x < 5; x++){
+		for (int x = 0; x < 6; x++){
 			playerArea[x] = new JLayeredPane();
 		}
 		
@@ -395,11 +395,17 @@ public class View extends JFrame {
 		playArea.add(playerArea[2]);
 		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		playArea.add(playerArea[3]);
-		otherArea.setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(otherArea);
+		
+		//otherArea.setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		//playArea.add(otherArea);
+		playerArea[5].setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[5]);
+		
 		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 5", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		playArea.add(playerArea[4]);
 		
+		
+				
 		//playerArea.setVisible(true);
 		
 		add(panel);
@@ -442,17 +448,24 @@ public class View extends JFrame {
 			playerArea[x].addMouseListener(new targetPlayerListener(x));
 			java.util.List<Card> played = model.getPlayerArea(x);
 			if (x == model.playerNum){
-				otherArea.removeAll();
-				otherArea.addMouseListener(new targetPlayerListener(x));
+				
+				playerArea[5].removeAll();
+				//otherArea.addMouseListener(new targetPlayerListener(x));
 			}
 			for (int i = 0; i < played.size(); i++) {
 				tempLabel = new JLabel(new ImageIcon(images.getCards(played.get(i))));
 				tempLabel.setSize(new Dimension(images.getCards(played.get(i)).getWidth(),images.getCards(played.get(i)).getHeight()));
-				//NEW
 				tempLabel.addMouseListener(new cardInPlayListener(played.get(i),x));
 				
-				playerArea[x].add(tempLabel, new Integer(i));
-				if (x == model.playerNum) otherArea.add(tempLabel, new Integer(i));
+				
+				if (x == model.playerNum){ 
+					playerArea[5].add(tempLabel, new Integer(i));
+					Border border = BorderFactory.createTitledBorder(null,"You (Player "+(model.playerNum+1)+")", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white);
+					playerArea[5].setBorder(border);
+				} else {
+					playerArea[x].add(tempLabel, new Integer(i));
+					
+				}
 				
 				tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
 				//System.out.println(i);
@@ -463,6 +476,9 @@ public class View extends JFrame {
 	}
 
 	public void loadTokens() {
+		if (true){
+			return;
+		}
 		JLabel templabel;
 		JPanel tempPanel;
 		//YOU
@@ -904,9 +920,11 @@ public class View extends JFrame {
 						model.setPlayer(Integer.parseInt(parts[1]));
 						System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
 						textAppend("YOU ARE PLAYER: " + (model.playerNum+1)+"\n");
+						break;
+					case "msg":
+						textAppend(parts[1]+"\n");
+						break;
 					}
-					
-					
 				} else {
 					//EOF -1
 				}
