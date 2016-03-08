@@ -243,6 +243,20 @@ public class GameServer extends Thread {
 						if (started == true){
 							if(game.withdrawPlayer()){
 								game.endTournament();
+								for (Player p : game.getPlayers()) {
+									if (p.isPlaying()){
+										message = "msg:player "+ p.getId()+ " has won\n";
+										charBuffer.clear();
+										charBuffer.put(message);
+										charBuffer.flip();
+										encoder.encode(charBuffer,byteBuffer,false);
+										encoder.reset();
+										byteBuffer.flip();
+										charBuffer.clear();
+										writeAll(byteBuffer);
+										byteBuffer.clear();
+									}
+								}
 							};
 							sendGame(game);
 						} else {
