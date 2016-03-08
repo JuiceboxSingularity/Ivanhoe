@@ -1,5 +1,6 @@
 package ca.carleton.comp3004.project.gameobjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.List;
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Card.CardType;
 
-public class Deck {
+public class Deck implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4551003649221963293L;
 	List<Card> cards;
 
 	//110 cards:

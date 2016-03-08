@@ -1,5 +1,6 @@
 package ca.carleton.comp3004.project.gameobjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +8,12 @@ import java.util.Map;
 
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 
-public class Player {
+public class Player implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2949226602823583816L;
 	private List<Card> hand;
 	private List<Card> inPlay;
 	private List<Card> inDisplay;

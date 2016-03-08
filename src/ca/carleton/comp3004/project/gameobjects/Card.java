@@ -1,8 +1,15 @@
 package ca.carleton.comp3004.project.gameobjects;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8274378730236653995L;
+
 	public enum CardType {
 		Color, Supporter, Action;
 		
