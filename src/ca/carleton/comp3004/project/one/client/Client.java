@@ -112,7 +112,6 @@ public class Client {
                 Model model = new Model(temphand,temphand,temphand,temphand,temphand,temphand);
                 model.setGame(game,0);
                 
-                model.setPlayerTokens();
     			//model.addPlayerSpecials("Shield");
     			//model.addPlayerSpecials("Stunned");
     			//model.addPlayerSpecials("Ivanhoe");

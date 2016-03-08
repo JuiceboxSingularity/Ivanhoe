@@ -207,6 +207,18 @@ public class Game implements Serializable {
 			tournamentColor = currentPlayer.viewCard(index).getCardColor();
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
+			
+			
+			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
+			    for (Player p : playerList) {
+			     for (Card c : p.getInPlay()) {
+			      if (c.getCardType() == CardType.Supporter) {
+			       p.getInPlay().remove(c);
+			      }
+			     }
+			    }
+			   }
+			
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));

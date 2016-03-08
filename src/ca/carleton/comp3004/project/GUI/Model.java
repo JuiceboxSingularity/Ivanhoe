@@ -3,6 +3,10 @@ package ca.carleton.comp3004.project.GUI;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.carleton.comp3004.project.gameobjects.Card;
+import ca.carleton.comp3004.project.gameobjects.Game;
+import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
+
 public class Model {
 
 	private ArrayList hand; //Array list of hand
@@ -21,29 +25,11 @@ public class Model {
 	private ArrayList player2Specials;
 	private ArrayList player3Specials;
 	private ArrayList player4Specials;
+	
+	int playerNum; //NOT PLAYER ID
+	Game game;
 	//private boolean chooseColor;
 	//more?
-
-
-	public Model() {
-		hand = new ArrayList(0);
-		playerArea = new ArrayList(0);
-		playerArea1 = new ArrayList(0);
-		playerArea2 = new ArrayList(0);
-		playerArea3 = new ArrayList(0);
-		playerArea4 = new ArrayList(0);
-		playertokens = new ArrayList(0);
-		player1tokens = new ArrayList(0);
-		player2tokens = new ArrayList(0);
-		player3tokens = new ArrayList(0);
-		player4tokens = new ArrayList(0);
-		playerSpecials = new ArrayList(0);
-		player1Specials = new ArrayList(0);
-		player2Specials = new ArrayList(0);
-		player3Specials = new ArrayList(0);
-		player4Specials = new ArrayList(0);
-		
-	}
 
 	public Model(ArrayList hand, ArrayList area, ArrayList area1, ArrayList area2, ArrayList area3, ArrayList area4) {
 		this.hand = hand;
@@ -63,61 +49,58 @@ public class Model {
 		this.player3Specials = new ArrayList(0);
 		this.player4Specials = new ArrayList(0);
 	}
+	
+	public Model(Game game,int playerNum){
+		this.game = game;
+		this.playerNum = playerNum;
+	}
+	//TODO : TEMPORARY TILL FIXED
+	public void setGame(Game game,int playerNum){
+		this.game = game;
+		this.playerNum = playerNum;
+	}
 
 	public void setHand(ArrayList x) {
 		this.hand = x;
 	}
 
-	public ArrayList getHand() {
-		return this.hand;
+	public List<Card> getHand() {
+		return game.getPlayers().get(playerNum).getHand();
 	}
 
 	public int getHandSize() {
 		return this.hand.size();
 	}
 	
-	public ArrayList getPlayerArea() {
-		return playerArea;
+	public List<Card> getPlayerArea(int x) {
+		return game.getPlayers().get(playerNum).getInDisplay();
 	}
-	
-	public ArrayList getPlayerArea1() {
-		return playerArea1;
-	}
-	
-	public ArrayList getPlayerArea2() {
-		return playerArea2;
-	}
-	
-	public ArrayList getPlayerArea3() {
-		return playerArea3;
-	}
-	
-	public ArrayList getPlayerArea4() {
-		return playerArea4;
-	}
-	
-	public ArrayList getPlayerTokens() {
-		return playertokens;
-	}
-	
-	public ArrayList getPlayerTokens1() {
-		return player1tokens;
-	}
-	
-	public ArrayList getPlayerTokens2() {
-		return player2tokens;
-	}
-	
-	public ArrayList getPlayerTokens3() {
-		return player3tokens;
-	}
-	
-	public ArrayList getPlayerTokens4() {
-		return player4tokens;
-	}
-	
-	public void setPlayerTokens() {
+		
+	public ArrayList getPlayerTokens(int x) {
 		ArrayList temp = new ArrayList(5);
+		java.util.Map<CardColor, Integer> tokens;
+		tokens = game.getPlayers().get(x).getTokens();
+		if (tokens.get(Card.CardColor.Red)>0){
+			temp.add("R");
+		}
+		if (tokens.get(Card.CardColor.Blue)>0){
+			temp.add("B");
+		}
+		if (tokens.get(Card.CardColor.Green)>0){
+			temp.add("G");
+		}
+		if (tokens.get(Card.CardColor.Yellow)>0){
+			temp.add("Y");
+		}
+		if (tokens.get(Card.CardColor.Purple)>0){
+			temp.add("P");
+		}
+		return temp;
+	}
+	
+	/*
+	public void setPlayerTokens() {
+		
 		temp.add("P");
 		temp.add("G");
 		temp.add("B");
@@ -129,6 +112,7 @@ public class Model {
 		player3tokens = temp;
 		player4tokens = temp;
 	}
+	*/
 	
 	public ArrayList getPlayerSpecials() {
 		return playerSpecials;

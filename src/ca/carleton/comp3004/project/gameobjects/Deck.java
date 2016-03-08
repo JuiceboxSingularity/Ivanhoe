@@ -68,7 +68,7 @@ public class Deck implements Serializable {
 		}
 
 		// Add special cards
-		String[] actionCardName = {"Retreat", "Knock Down", "Knock Down", "Outmaneuver", "Charge", "Countercharge", "Disgrace", "Adapt",
+		String[] actionCardName = {"Retreat", "KnockDown", "KnockDown", "Outmaneuver", "Charge", "Countercharge", "Disgrace", "Adapt",
 				"Outwit", "Shield", "Stunned", "Ivanhoe", "Unhorse", "Changeweapon", "Dropweapon", "Breaklance", "Riposte", "Riposte", 
 				"Riposte", "Dodge"};
 	

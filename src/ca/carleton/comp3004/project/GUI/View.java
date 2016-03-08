@@ -27,10 +27,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter.FilterBypass;
+
+import ca.carleton.comp3004.project.gameobjects.Card;
 
 public class View extends JFrame {
 	private Image images;
@@ -41,11 +48,9 @@ public class View extends JFrame {
 	private JPanel sidebarOptions;
 	private JPanel bottombar;
 	private DrawPanel playArea;
-	private JLayeredPane playerArea;
-	private JLayeredPane playerArea1;
-	private JLayeredPane playerArea2;
-	private JLayeredPane playerArea3;
-	private JLayeredPane playerArea4;
+	
+	private JLayeredPane[] playerArea = new JLayeredPane[5];
+
 	private JPanel otherArea;
 	private JPanel playerYou;
 	private JPanel playerOne;
@@ -57,9 +62,16 @@ public class View extends JFrame {
 	private JPanel playZone2;
 	private JPanel playZone3;
 	private JPanel playZone4;
-	private JButton button;
+	
+	
 	private JTextField connectBox;
+	private JTextField nameBox;
 	private Color tourColor;
+	
+	private JButton button;
+	private JButton connectButton;
+	
+	private JTextArea textArea;
 	
 	private static Color purple = new Color(115,20,130);
 	private static Color red = new Color(150,20,20);
@@ -77,6 +89,25 @@ public class View extends JFrame {
 		initUI();
 		model = tempmodel;
 	}
+	
+	private void textAppend(String string){
+		int max = 4;
+		int lines = textArea.getLineCount();
+		
+		if (lines > max) {
+			int linesToRemove = lines - max -1;
+			int lengthToRemove;
+			try {
+				lengthToRemove = textArea.getLineStartOffset(linesToRemove);
+				textArea.replaceRange("", 0, lengthToRemove);
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		}
+		textArea.append(string);
+	}
 
 	private void initUI() {
 		panel = new JPanel(new GridBagLayout());
@@ -88,20 +119,27 @@ public class View extends JFrame {
 		bottombar = new JPanel();
 		playArea = new DrawPanel();
 		playArea.setLayout(new GridLayout(2,3));
-		playerArea = new JLayeredPane();
-		playerArea1 = new JLayeredPane();
-		playerArea2 = new JLayeredPane();
-		playerArea3 = new JLayeredPane();
-		playerArea4 = new JLayeredPane();
+		
+		for (int x = 0; x < 5; x++){
+			playerArea[x] = new JLayeredPane();
+		}
+		
 		otherArea = new JPanel(new GridLayout(2,5));
 		playerYou = new JPanel(new GridLayout(2,5));
 		playerOne = new JPanel(new GridLayout(2,5));
 		playerTwo = new JPanel(new GridLayout(2,5));
 		playerThree = new JPanel(new GridLayout(2,5));
 		playerFour = new JPanel(new GridLayout(2,5));
+		
+		JLabel tempLabel;
+		connectButton = new JButton("Connect");
 		button = new JButton("Refresh");
-		connectBox = new JTextField(15);
-
+		connectBox = new JTextField(10);
+		nameBox = new JTextField(10);
+		
+		
+		
+		
 		otherArea.setOpaque(false);
 		
 		sidebar.setBackground(Color.gray);
@@ -125,23 +163,75 @@ public class View extends JFrame {
 
 		panel.setBackground(Color.gray);
 
-		c.weightx = 0.8;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 0;
+		c.weightx = 10;
+		c.weighty = 10;
+		c.gridx = 1;
+		c.gridy = 1;
 		c.gridheight = 1;
 		c.gridwidth = 1;
+		connectBox.setText("127.0.0.1");
 		sidebarOptions.add(connectBox, c);
+		
+		c.weightx = 10;
+		c.weighty = 10;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(nameBox, c);
+		
+		
+		connectButton.addActionListener(new ConnectButtonActionListener());
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(connectButton, c);
 		
 		button.addActionListener(new ButtonActionListener());
 		c.weightx = 0.5;
 		c.weighty = 0.5;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 4;
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		sidebarOptions.add(button, c);
-
+		
+		tempLabel = new JLabel();
+		tempLabel.setText("Server");
+		tempLabel.setForeground(yellow);
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(tempLabel, c);
+		
+		tempLabel = new JLabel();
+		tempLabel.setText("Name");
+		tempLabel.setForeground(yellow);
+		c.weightx = 0.1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		sidebarOptions.add(tempLabel, c);
+		
+		textArea = new JTextArea(6, 20);
+		//((AbstractDocument) textArea.getDocument()).setDocumentFilter(new ConsoleDocument(textArea, 3));
+		textArea.setEditable(false);
+		c.weightx = 1.0;
+		c.weighty = 2.0;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridheight = 1;
+		c.gridwidth = 2;
+		sidebarOptions.add(textArea, c);
+				
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 0.4;
 		c.weighty = 0.7;
@@ -220,18 +310,18 @@ public class View extends JFrame {
 		playerFour.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
 		panel.add(playerFour, c);
 		
-		playerArea1.setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea1);
 		otherArea.setBorder(BorderFactory.createTitledBorder(null,"Other Area", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		playArea.add(otherArea);
-		playerArea2.setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea2);
-		playerArea3.setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea3);
-		playerArea.setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea);
-		playerArea4.setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
-		playArea.add(playerArea4);
+		playerArea[1].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[1]);
+		playerArea[2].setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[2]);
+		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[3]);
+		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[0]);
+		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playArea.add(playerArea[4]);
 		
 		//playerArea.setVisible(true);
 		
@@ -245,10 +335,11 @@ public class View extends JFrame {
 
 	public void loadHand() {
 		JButton tempButton;
-		ArrayList hand = model.getHand();
+		java.util.List<Card> hand = model.getHand();
 		bottombar.removeAll();
 		for (int i = 0; i < hand.size(); i++) {
-			tempButton = new JButton(new ImageIcon(images.getCards((int) hand.get(i))));
+			//System.out.println("GETTING HAND: "+i);
+			tempButton = new JButton(new ImageIcon(images.getCards(hand.get(i))));
 			int temp = 100;
 			if (bottombar.getWidth() / model.getHandSize() < temp) {
 				temp = bottombar.getWidth() / model.getHandSize();
@@ -257,74 +348,31 @@ public class View extends JFrame {
 			tempButton.addActionListener(new HandActionListener(i));
 			bottombar.add(tempButton, c);
 		}
+		//System.out.println("DONE GETTING HAND");
 		revalidate();
 		repaint();
 	}
 
 	public void loadPlayArea() {
 		JLabel tempLabel;
-		ArrayList played = model.getPlayerArea();
-		playerArea.removeAll();
-		playerArea.addMouseListener(new targetPlayerListener(0));
-		for (int i = 0; i < played.size(); i++) {
-			tempLabel = new JLabel(new ImageIcon(images.getCards((int) played.get(i))));
-			tempLabel.setSize(new Dimension(images.getCards((int) played.get(i)).getWidth(),images.getCards((int) played.get(i)).getHeight()));
-			//NEW
-			tempLabel.addMouseListener(new cardInPlayListener((int)played.get(i),0));
-			playerArea.add(tempLabel, new Integer(i));
-			tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
-			//System.out.println(i);
-		}
-		playerArea1.removeAll();
-		playerArea1.addMouseListener(new targetPlayerListener(1));
-		played = model.getPlayerArea1();
-		for (int i = 0; i < played.size(); i++) {
-			tempLabel = new JLabel(new ImageIcon(images.getCards((int) played.get(i))));
-			tempLabel.setSize(new Dimension(images.getCards((int) played.get(i)).getWidth(),images.getCards((int) played.get(i)).getHeight()));
-			//NEW
-			tempLabel.addMouseListener(new cardInPlayListener((int)played.get(i),1));
-			playerArea1.add(tempLabel, new Integer(i));
-			tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
-			//System.out.println(i);
-		}
-		playerArea2.removeAll();
-		playerArea2.addMouseListener(new targetPlayerListener(2));
-		played = model.getPlayerArea2();
-		for (int i = 0; i < played.size(); i++) {
-			tempLabel = new JLabel(new ImageIcon(images.getCards((int) played.get(i))));
-			tempLabel.setSize(new Dimension(images.getCards((int) played.get(i)).getWidth(),images.getCards((int) played.get(i)).getHeight()));
-			//NEW
-			tempLabel.addMouseListener(new cardInPlayListener((int)played.get(i),2));
-			playerArea2.add(tempLabel, new Integer(i));
-			tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
-			//System.out.println(i);
-		}
-		playerArea3.removeAll();
-		playerArea3.addMouseListener(new targetPlayerListener(3));
-		played = model.getPlayerArea3();
-		for (int i = 0; i < played.size(); i++) {
-			tempLabel = new JLabel(new ImageIcon(images.getCards((int) played.get(i))));
-			tempLabel.setSize(new Dimension(images.getCards((int) played.get(i)).getWidth(),images.getCards((int) played.get(i)).getHeight()));
-			//NEW
-			tempLabel.addMouseListener(new cardInPlayListener((int)played.get(i),3));
-			playerArea3.add(tempLabel, new Integer(i));
-			tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
-			//System.out.println(i);
-		}
-		playerArea4.removeAll();
-		playerArea4.addMouseListener(new targetPlayerListener(4));
-		played = model.getPlayerArea4();
-		for (int i = 0; i < played.size(); i++) {
-			tempLabel = new JLabel(new ImageIcon(images.getCards((int) played.get(i))));
-			tempLabel.setSize(new Dimension(images.getCards((int) played.get(i)).getWidth(),images.getCards((int) played.get(i)).getHeight()));
-			//NEW
-			tempLabel.addMouseListener(new cardInPlayListener((int)played.get(i),4));
-			playerArea4.add(tempLabel, new Integer(i));
-			tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
-			//System.out.println(i);
-		}
 		
 		
+		
+		for (int x = 0; x < 5;x++){
+			playerArea[x].removeAll();
+			playerArea[x].addMouseListener(new targetPlayerListener(x));
+			java.util.List<Card> played = model.getPlayerArea(x);
+			
+			for (int i = 0; i < played.size(); i++) {
+				tempLabel = new JLabel(new ImageIcon(images.getCards(played.get(i))));
+				tempLabel.setSize(new Dimension(images.getCards(played.get(i)).getWidth(),images.getCards(played.get(i)).getHeight()));
+				//NEW
+				tempLabel.addMouseListener(new cardInPlayListener(played.get(i),x));
+				playerArea[x].add(tempLabel, new Integer(i));
+				tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
+				//System.out.println(i);
+			}
+		}
 		revalidate();
 		repaint();
 	}
@@ -340,7 +388,7 @@ public class View extends JFrame {
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens().contains("P")) {
+		if (model.getPlayerTokens(0).contains("P")) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -349,7 +397,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens().contains("R")) {
+		if (model.getPlayerTokens(0).contains("R")) {
 			templabel.setBackground(red);
 			tempPanel.add(templabel);
 		} else {
@@ -358,7 +406,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens().contains("B")) {
+		if (model.getPlayerTokens(0).contains("B")) {
 			templabel.setBackground(blue);
 			tempPanel.add(templabel);
 		} else {
@@ -367,7 +415,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens().contains("Y")) {
+		if (model.getPlayerTokens(0).contains("Y")) {
 			templabel.setBackground(yellow);
 			tempPanel.add(templabel);
 		} else {
@@ -376,7 +424,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens().contains("G")) {
+		if (model.getPlayerTokens(0).contains("G")) {
 			templabel.setBackground(green);
 			tempPanel.add(templabel);
 		} else {
@@ -384,9 +432,10 @@ public class View extends JFrame {
 			tempPanel.add(templabel);
 		}
 		playerYou.add(tempPanel);
-		
+		/*
 		tempPanel = new JPanel(new FlowLayout());
 		tempPanel.setOpaque(false);
+		
 		if (model.getPlayerSpecials().contains("Shield")) {
 			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerYou.getWidth()/5, (int)playerYou.getHeight()/2)));
 			//NEW
@@ -404,16 +453,19 @@ public class View extends JFrame {
 			//NEW
 			templabel.addMouseListener(new cardInPlayListener((int)16,0));
 			tempPanel.add(templabel);
+			
 		}
+		
 		playerYou.add(tempPanel);
+		*/
 		
 		//playerArea1.
+		playerOne.removeAll();
 		templabel = new JLabel();
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
 		templabel.setOpaque(true);
-		playerOne.removeAll();
-		if (model.getPlayerTokens1().contains("P")) {
+		if (model.getPlayerTokens(1).contains("P")) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -422,7 +474,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens1().contains("R")) {
+		if (model.getPlayerTokens(1).contains("R")) {
 			templabel.setBackground(red);
 			tempPanel.add(templabel);
 		} else {
@@ -431,7 +483,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens1().contains("B")) {
+		if (model.getPlayerTokens(1).contains("B")) {
 			templabel.setBackground(blue);
 			tempPanel.add(templabel);
 		} else {
@@ -440,7 +492,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens1().contains("Y")) {
+		if (model.getPlayerTokens(1).contains("Y")) {
 			templabel.setBackground(yellow);
 			tempPanel.add(templabel);
 		} else {
@@ -449,7 +501,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens1().contains("G")) {
+		if (model.getPlayerTokens(1).contains("G")) {
 			templabel.setBackground(green);
 			tempPanel.add(templabel);
 		} else {
@@ -460,24 +512,8 @@ public class View extends JFrame {
 		
 		tempPanel = new JPanel(new FlowLayout());
 		tempPanel.setOpaque(false);
-		if (model.getPlayer1Specials().contains("Shield")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerOne.getWidth()/5, (int)playerOne.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)14,1));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer1Specials().contains("Stunned")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(15), (int)playerOne.getWidth()/5, (int)playerOne.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)15,1));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer1Specials().contains("Ivanhoe")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(16), (int)playerOne.getWidth()/5, (int)playerOne.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)16,1));
-			tempPanel.add(templabel);
-		}
+		
+		
 		playerOne.add(tempPanel);
 
 		//playerArea2.]
@@ -486,7 +522,7 @@ public class View extends JFrame {
 		templabel.setOpaque(true);
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens2().contains("P")) {
+		if (model.getPlayerTokens(2).contains("P")) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -495,7 +531,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens2().contains("R")) {
+		if (model.getPlayerTokens(2).contains("R")) {
 			templabel.setBackground(red);
 			tempPanel.add(templabel);
 		} else {
@@ -504,7 +540,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens2().contains("B")) {
+		if (model.getPlayerTokens(2).contains("B")) {
 			templabel.setBackground(blue);
 			tempPanel.add(templabel);
 		} else {
@@ -513,7 +549,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens2().contains("Y")) {
+		if (model.getPlayerTokens(2).contains("Y")) {
 			templabel.setBackground(yellow);
 			tempPanel.add(templabel);
 		} else {
@@ -522,7 +558,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens2().contains("G")) {
+		if (model.getPlayerTokens(2).contains("G")) {
 			templabel.setBackground(green);
 			tempPanel.add(templabel);
 		} else {
@@ -531,35 +567,14 @@ public class View extends JFrame {
 		}
 		playerTwo.add(tempPanel);
 		
-		tempPanel = new JPanel(new FlowLayout());
-		tempPanel.setOpaque(false);
-		if (model.getPlayer2Specials().contains("Shield")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerTwo.getWidth()/5, (int)playerTwo.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)14,2));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer2Specials().contains("Stunned")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(15), (int)playerTwo.getWidth()/5, (int)playerTwo.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)15,2));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer2Specials().contains("Ivanhoe")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(16), (int)playerTwo.getWidth()/5, (int)playerTwo.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)16,2));
-			tempPanel.add(templabel);
-		}
-		playerTwo.add(tempPanel);
-		
+		/*
 		//playerArea3.
 		playerThree.removeAll();
 		templabel = new JLabel();
 		templabel.setOpaque(true);
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens3().contains("P")) {
+		if (model.getPlayerTokens(3).contains("P")) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -568,7 +583,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens3().contains("R")) {
+		if (model.getPlayerTokens(3).contains("R")) {
 			templabel.setBackground(red);
 			tempPanel.add(templabel);
 		} else {
@@ -577,7 +592,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens3().contains("B")) {
+		if (model.getPlayerTokens(3).contains("B")) {
 			templabel.setBackground(blue);
 			tempPanel.add(templabel);
 		} else {
@@ -586,7 +601,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens3().contains("Y")) {
+		if (model.getPlayerTokens(4).contains("Y")) {
 			templabel.setBackground(yellow);
 			tempPanel.add(templabel);
 		} else {
@@ -595,7 +610,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens3().contains("G")) {
+		if (model.getPlayerTokens(3).contains("G")) {
 			templabel.setBackground(green);
 			tempPanel.add(templabel);
 		} else {
@@ -604,27 +619,7 @@ public class View extends JFrame {
 		}
 		playerThree.add(tempPanel);
 		
-		tempPanel = new JPanel(new FlowLayout());
-		tempPanel.setOpaque(false);
-		if (model.getPlayer3Specials().contains("Shield")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerThree.getWidth()/5, (int)playerThree.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)14,3));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer3Specials().contains("Stunned")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(15), (int)playerThree.getWidth()/5, (int)playerThree.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)15,3));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer3Specials().contains("Ivanhoe")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(16), (int)playerThree.getWidth()/5, (int)playerThree.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)16,3));
-			tempPanel.add(templabel);
-		}
-		playerThree.add(tempPanel);
+		
 		
 		//playerArea4.
 		playerFour.removeAll();
@@ -632,7 +627,7 @@ public class View extends JFrame {
 		templabel.setOpaque(true);
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens4().contains("P")) {
+		if (model.getPlayerTokens(4).contains("P")) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -641,7 +636,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens4().contains("R")) {
+		if (model.getPlayerTokens(4).contains("R")) {
 			templabel.setBackground(red);
 			tempPanel.add(templabel);
 		} else {
@@ -650,7 +645,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens4().contains("B")) {
+		if (model.getPlayerTokens(4).contains("B")) {
 			templabel.setBackground(blue);
 			tempPanel.add(templabel);
 		} else {
@@ -659,7 +654,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens4().contains("Y")) {
+		if (model.getPlayerTokens(4).contains("Y")) {
 			templabel.setBackground(yellow);
 			tempPanel.add(templabel);
 		} else {
@@ -668,7 +663,7 @@ public class View extends JFrame {
 		}
 		templabel = new JLabel();
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens4().contains("G")) {
+		if (model.getPlayerTokens(4).contains("G")) {
 			templabel.setBackground(green);
 			tempPanel.add(templabel);
 		} else {
@@ -676,28 +671,7 @@ public class View extends JFrame {
 			tempPanel.add(templabel);
 		}
 		playerFour.add(tempPanel);
-		
-		tempPanel = new JPanel(new FlowLayout());
-		tempPanel.setOpaque(false);
-		if (model.getPlayer4Specials().contains("Shield")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerFour.getWidth()/5, (int)playerFour.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)14,4));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer4Specials().contains("Stunned")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(15), (int)playerFour.getWidth()/5, (int)playerFour.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)15,4));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayer4Specials().contains("Ivanhoe")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(16), (int)playerFour.getWidth()/5, (int)playerFour.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)16,4));
-			tempPanel.add(templabel);
-		}
-		playerFour.add(tempPanel);
+		*/
 	}
 
 	public void update() {
@@ -758,8 +732,8 @@ public class View extends JFrame {
 	}
 	
 	//Will need to be changed
-	public void selectPlayedCard(int card, int player) {
-		System.out.println("Card: " + card);
+	public void selectPlayedCard(Card card, int player) {
+		System.out.println("Card: " + card.getCardName());
 		System.out.println("Player: " + player);
 	}
 
@@ -790,6 +764,7 @@ public class View extends JFrame {
 
 	class ButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			textAppend("WHAT\n");
 			loadHand();
 			loadPlayArea();
 			loadTokens();
@@ -797,6 +772,13 @@ public class View extends JFrame {
 			//connect();
 		}
 	}
+	
+	class ConnectButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+	}
+
 
 	private class HandActionListener implements ActionListener {
 		private int card;
@@ -823,10 +805,10 @@ public class View extends JFrame {
 	}
 	
 	private class cardInPlayListener implements MouseListener {
-		private int card;
+		private Card card;
 		private int player;
 
-		public cardInPlayListener(int card, int player) {
+		public cardInPlayListener(Card card, int player) {
 			this.card = card;
 			this.player = player;
 		}

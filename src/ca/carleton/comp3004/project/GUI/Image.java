@@ -6,11 +6,17 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
+
+import ca.carleton.comp3004.project.gameobjects.Card;
  
 public class Image extends Component {
            
-    BufferedImage actionCards[] = new BufferedImage[17];
-    BufferedImage simpleCards[] = new BufferedImage[19];
+    //BufferedImage actionCards[] = new BufferedImage[17];
+    //BufferedImage simpleCards[] = new BufferedImage[19];
+	BufferedImage[] cards = new BufferedImage[36]; //17+19
+	String[] cardNames = new String[36];
+	String[] part;
+	int cardCount;
     BufferedImage backgroundBorder;//=  ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/background.jpg"));
 
     //(BufferedImage)ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/background.jpg"));
@@ -19,20 +25,22 @@ public class Image extends Component {
     //backgroundBorder = ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/background.jpg"));
  
     public Image() {
-    	for(int i = 0; i<17; i++) {
-    		try {
-    			//actionCards[i] = ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/" + "actionCards" + i + ".jpeg"));
-    			actionCards[i] = ImageIO.read(new File("images/actionCards" + i + ".jpeg"));
-    			actionCards[i] = resize(actionCards[i],100,160);
-    		} catch (IOException e) {
-    		}
-    	}
-    	for(int i = 0; i<19; i++) {
-    		try {
-    			//simpleCards[i] = ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/" + "simpleCards" + i + ".jpeg"));
-    			simpleCards[i] = ImageIO.read(new File("images/simpleCards" + i + ".jpeg"));
-    			simpleCards[i] = resize(simpleCards[i],100,160);
-    		} catch (IOException e) {
+    	File folder = new File("images2");
+    	File[] listOfFiles = folder.listFiles();
+    	cardCount = 0;
+    	for (int i = 0; i < listOfFiles.length; i++) {
+    		if (listOfFiles[i].isFile()) {
+    			try {
+					cards[cardCount] = ImageIO.read(listOfFiles[i]);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			cards[cardCount] = resize(cards[cardCount],100,160);
+    			cardNames[cardCount] = listOfFiles[i].getName();
+    			cardCount++;
+    		} else if (listOfFiles[i].isDirectory()) {
+    			//System.out.println("Directory " + listOfFiles[i].getName());
     		}
     	}
     	
@@ -43,24 +51,38 @@ public class Image extends Component {
 		}
  
     }
- 
-    public BufferedImage getActionCards(int x) {
-        return actionCards[x];
-    }
-    
-    public BufferedImage getSimpleCards(int x) {
-        return simpleCards[x];
-    }
-    
-    public BufferedImage getCards(int x) {
-    	if (x < 17 && x >= 0) {
-    		return actionCards[x];
-    	} else if (x > 16 && x < 35) {
-    		x = x - 17;
-    		return simpleCards[x];
+     
+    public BufferedImage getCards(Card card) {
+    	String name;
+    	//System.out.println("IN WE GO" + card);
+    	if (card.getCardType() != Card.CardType.Action){
+    		//System.out.println("IN AGAIN");
+    		name = card.getCardName() + card.getValue();
+    		name = name.toLowerCase();
+    		for (int x = 0; x<cardCount;x++){
+        		part = cardNames[x].split("\\.");
+        		//System.out.println(name + " " + part[0]);
+        		if (part[0].equals(name)){
+        			//System.out.println("FOUND");
+        			return cards[x];
+        		}
+        	}
+    		System.out.println("ERROR: CARD NOT FOUND");
     	} else {
-    		return null;
+    		name = "action"+card.getCardName();
+    		name = name.toLowerCase();
+    		for (int x = 0; x<cardCount;x++){
+        		part = cardNames[x].split("\\.");
+        		//System.out.println(name + " " + part[0]);
+        		part[0] = part[0].toLowerCase();
+        		if (part[0].equals(name)){
+        			//System.out.println("FOUND");
+        			return cards[x];
+        		}
+        	}
+    		System.out.println("ERROR: CARD NOT FOUND");
     	}
+    	return null;
     }
     
     public BufferedImage getBackgroundPic() {
