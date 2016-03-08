@@ -99,15 +99,18 @@ public class GameServer extends Thread {
     		byteBuffer.clear();
 			encoder.encode(charBuffer,byteBuffer,false);
 			encoder.reset();
+			byteBuffer.flip();
 			writeAll(byteBuffer);
 			byteBuffer.clear();	
 			charBuffer.clear();
 		}
-		
+				
 		public void writeAll(ByteBuffer byteBuffer){
+			//System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
 			for (int x = 0; x<numPlayers; x++){
 				try {
-					byteBuffer.flip();
+					byteBuffer.rewind();
+					//System.out.println(byteBuffer.remaining());
 					playerSockets[x].write(byteBuffer);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -242,21 +245,22 @@ public class GameServer extends Thread {
 						System.out.println("ATTEMPT TO WIDTHRAW");
 						if (started == true){
 							if(game.withdrawPlayer()){
-								game.endTournament();
 								for (Player p : game.getPlayers()) {
 									if (p.isPlaying()){
 										message = "msg:player "+ p.getId()+ " has won\n";
-										charBuffer.clear();
-										charBuffer.put(message);
+										System.out.println(message);
+										
+										charBuffer.clear();										
+										charBuffer.append(message);
 										charBuffer.flip();
-										encoder.encode(charBuffer,byteBuffer,false);
+										
 										encoder.reset();
-										byteBuffer.flip();
-										charBuffer.clear();
-										writeAll(byteBuffer);
+										writeAll(encoder.encode(charBuffer));
 										byteBuffer.clear();
+										charBuffer.clear();										
 									}
 								}
+								game.endTournament();
 							};
 							sendGame(game);
 						} else {

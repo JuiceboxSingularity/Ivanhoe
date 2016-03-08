@@ -833,10 +833,14 @@ public class View extends JFrame {
 		//model.getHand().remove(0);
 		//model.setHand(model.getHand().remove(0));
 		System.out.println(x);
-		game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
-		//game.performPlay(x);
-		message = "play:"+x;
-		sendString(message);
+		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1)){
+			game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
+			//game.performPlay(x);
+			message = "play:"+x;
+			sendString(message);
+		} else {
+			System.out.println("NOT YOUR TURN");
+		}
 	}
 	
 	//Will need to be changed
@@ -887,7 +891,7 @@ public class View extends JFrame {
 				if (bytes == 0){
 
 				} else if (bytes > 0){
-					System.out.println("STUFF RECEIVED: "+bytes);
+					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
 					
 					charBuffer.clear();
 					decoder.decode(byteBuffer,charBuffer,false);
@@ -896,7 +900,7 @@ public class View extends JFrame {
 					//SERVER READ KEEP SELECTING IF THESE BUFFERS NOT CLEARED; SOME SORT OF LAZY READ?
 					byteBuffer.clear();
 					charBuffer.clear();
-										
+					
 					System.out.println(string);
 					System.out.println(string.length());
 					
@@ -922,6 +926,7 @@ public class View extends JFrame {
 						textAppend("YOU ARE PLAYER: " + (model.playerNum+1)+"\n");
 						break;
 					case "msg":
+						
 						textAppend(parts[1]+"\n");
 						break;
 					}
@@ -966,6 +971,7 @@ public class View extends JFrame {
 		charBuffer.flip();
 		
 		try {
+			encoder.reset();
 			channel.write(encoder.encode(charBuffer));
 			encoder.reset();
 		} catch (CharacterCodingException e) {
