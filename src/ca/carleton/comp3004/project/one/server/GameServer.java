@@ -96,7 +96,9 @@ public class GameServer extends Thread {
 			charBuffer.append(string);
     		charBuffer.flip();
     		
+    		byteBuffer.clear();
 			encoder.encode(charBuffer,byteBuffer,false);
+			encoder.reset();
 			writeAll(byteBuffer);
 			byteBuffer.clear();	
 			charBuffer.clear();
@@ -118,6 +120,7 @@ public class GameServer extends Thread {
 			client = (SocketChannel)key.channel();
 			try {
 				try {
+					byteBuffer.clear();
 					bytes = client.read(byteBuffer);
 					if (bytes == -1){
 						throw new IOException();
@@ -131,6 +134,7 @@ public class GameServer extends Thread {
 					//TODO: REMOVE PLAYER SOCKET IF THEY DISCONNECT
 				}
 				byteBuffer.flip();
+				charBuffer.clear();
 				decoder.decode(byteBuffer,charBuffer,false);
 				charBuffer.flip();
 				string = charBuffer.toString();
@@ -140,6 +144,7 @@ public class GameServer extends Thread {
 				
 				string = string.replaceAll("[\\r\\n]+\\s", ""); //PUTTY TESTING
 				
+				System.out.println("\nNEW MESSAGE");
 				System.out.println(string);
 				System.out.println(string.length());
 				
@@ -170,6 +175,9 @@ public class GameServer extends Thread {
 							charBuffer.put(message);
 							charBuffer.flip();
 							client.write(encoder.encode(charBuffer));
+							encoder.reset();
+							charBuffer.clear();
+							
 						}
 						break;
 					case "startGame":

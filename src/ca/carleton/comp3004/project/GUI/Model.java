@@ -26,7 +26,7 @@ public class Model {
 	private ArrayList player3Specials;
 	private ArrayList player4Specials;
 	
-	int playerNum; //NOT PLAYER ID
+	int playerNum = 0; //NOT PLAYER ID
 	Game game;
 	//private boolean chooseColor;
 	//more?

@@ -923,6 +923,7 @@ public class View extends JFrame {
 		
 		try {
 			channel.write(encoder.encode(charBuffer));
+			encoder.reset();
 		} catch (CharacterCodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
