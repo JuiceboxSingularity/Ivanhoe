@@ -61,6 +61,8 @@ public class View extends JFrame {
 	private JPanel panel;
 	private GridBagConstraints c;
 
+	private final int WINDOW_WIDTH = 1024;
+	private final int WINDOW_HEIGHT = 768;
 	private JPanel sidebar;
 	private JPanel sidebarOptions;
 	private JPanel bottombar;
@@ -147,7 +149,7 @@ public class View extends JFrame {
 	private void initUI() {
 		panel = new JPanel(new GridBagLayout());
 		c = new GridBagConstraints();
-
+		panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		sidebar = new JPanel(new GridLayout(6,0));
 		//sidebar = new JPanel();
 		sidebarOptions = new JPanel(new GridBagLayout());
