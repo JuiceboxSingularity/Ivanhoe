@@ -49,7 +49,7 @@ public class Game implements Serializable {
 	public boolean awardToken(Player p) {
 		if (this.customToken != CardColor.None) tournamentColor = customToken;
 		if (this.tournamentColor == CardColor.None) return false;
-		else if (p.getTokens().get(tournamentColor).intValue() > 1) {
+		else if (p.getTokens().get(tournamentColor).intValue() == 1) {
 			return false;
 		}
 		if (tokens.get(tournamentColor) > 0) {

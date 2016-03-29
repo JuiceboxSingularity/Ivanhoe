@@ -34,6 +34,16 @@ public class TournamentTest {
 		one = new Player("Anduin", 1);
 		two = new Player("Malfurion", 2);
 		three = new Player("Garrosh", 3);
+
+		game.addPlayer(one);
+		game.addPlayer(two);
+		game.addPlayer(three);
+
+		assertEquals(game.getTournamentColor(), CardColor.None);
+
+		game.getDeck().shuffle();
+		game.dealTokens();
+		game.dealDeck();
 	}
 
 	@After
@@ -41,17 +51,212 @@ public class TournamentTest {
 	}
 
 	@Test
-	public void startTournamentTest() {
-		game.addPlayer(one);
-		game.addPlayer(two);
-		game.addPlayer(three);
-		
+	public void yellowTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Yellow).intValue(), 1);
+	}
+
+	@Test
+	public void greenTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Green).intValue(), 1);
+	}
+
+	@Test
+	public void blueTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Blue).intValue(), 1);
+	}
+
+	@Test
+	public void redTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 1);
+	}
+
+	@Test
+	public void purpleTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
+	}
+
+	@Test
+	public void whiteTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
 		assertEquals(game.getTournamentColor(), CardColor.None);
-		
-		game.getDeck().shuffle();
-		game.dealTokens();
-		game.dealDeck();
-		
+	}
+
+	@Test
+	public void consecutivePurpleTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		assertFalse(game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1)));
+
+		assertEquals(game.getTournamentColor(), CardColor.None);
+	}
+
+	@Test
+	public void tournamentPlaySupporter() {
+		// Test playing a supporter card
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
+		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
+			game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		} else {
+			fail("Could not play a supporter card!!");
+		}
+	}
+
+	@Test
+	public void tournamentSupporterRestriction() {
+		// Test playing a Maiden card
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
+			game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		} else {
+			fail("Could not play a supporter card!!");
+		}
+		//Test playing two maidens in one tournament
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
+			fail("Should not be able to play two maidens!!");
+		} 
+	}
+
+	@Test
+	public void testForceWithdrawPlayer() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		game.endTurn();
+		//Start the next player's turn
+		game.startTurn();
+
+		//Test player ending turn without playing a larger total
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void tournamentRewardToken() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		game.endTurn();
+		//Withdraw other two players
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		CardColor tournamentColor = game.getTournamentColor();
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
+	}
+	
+	@Test
+	public void tournamentTokenRestrictions() {
+		game.setTournamentColor(CardColor.Green);
+		game.awardToken(one);
+		assertEquals(one.getTokens().get(CardColor.Green).intValue(), 1);
+		game.awardToken(one);
+		assertEquals(one.getTokens().get(CardColor.Green).intValue(), 1);
+	}
+	public void randomTournamentTest() {
+
 		game.startTurn();
 		int index = 0;
 		boolean end = false;
@@ -67,52 +272,17 @@ public class TournamentTest {
 			if (hasColor) break;
 			end = game.withdrawPlayer();
 		}
-		
+
 		if (game.validatePlay(game.getCurrentPlayer().getHand().get(index))) {
 			CardColor color = game.getCurrentPlayer().viewCard(index).getCardColor();
 			game.performPlay(index);
-		
+
 			//Assert that the tournament color is what the player played
 			assertEquals(game.getTournamentColor(), color);
 			System.out.println("Started " + color.toString() + " Tournament!");
 		} else {
 			fail("Did not receive a colored card");
 		}
-		
-		// Test playing a supporter card
-		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
-		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
-			game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		} else {
-			fail("Could not play a supporter card!!");
-		}
-		
-		//Test playing two maidens in one tournament
-		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
-		if (game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1))) {
-			fail("Should not be able to play two maidens!!");
-		} 
-		
-		game.endTurn();
-		game.startTurn();
-		
-		//Test player ending turn without playing a larger total
-		assertFalse(game.endTurn());
-		
-		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
-		game.startTurn();
-		//This returns true if the tournament has ended
-		assertTrue(game.withdrawPlayer());
-		
-		//Check that the player indeed wins a token of the tournament color
-		CardColor tournamentColor = game.getTournamentColor();
-		game.endTournament();
-		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
-		System.out.println(game.getCurrentPlayer().getPlayerName() + " Has Won The " + tournamentColor.toString() + " Tournament!!");
-		//Make sure a player cannot win more than one token of the same color
-		game.endTournament();
-		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
 	}
 
 }
