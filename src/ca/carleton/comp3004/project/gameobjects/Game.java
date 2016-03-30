@@ -117,7 +117,6 @@ public class Game implements Serializable {
 			for (Card c : p.getInPlay()) {
 				tscore += c.getCardValue();
 			}
-			System.out.println("Player score: " + score + " Total: " + tscore);
 			if (tscore > score) {
 				return false;
 			}
@@ -211,11 +210,12 @@ public class Game implements Serializable {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
 
-
 			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
 				performDisgrace();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
 				performCharge();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Outmaneuver") {
+				performOutmaneuver();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -267,6 +267,17 @@ public class Game implements Serializable {
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				Card aCard = it.next();
 				if (aCard.getCardValue() == smallestVal) {
+					it.remove();
+				}
+			}
+		}
+	}
+	
+	private void performOutmaneuver() {
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (!it.hasNext()) {
 					it.remove();
 				}
 			}
