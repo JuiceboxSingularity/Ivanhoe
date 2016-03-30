@@ -343,5 +343,40 @@ public class TournamentTest {
 			assertFalse(c.getCardValue() == 3);
 		}
 	}
+	
+	@Test
+	public void testOutmaneuver() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 6));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Outmaneuver"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		for (Player p : game.getPlayers()) {
+			for (Card c : p.getInPlay()) {
+				assertTrue(c.getCardValue() == 3);
+			}
+		}
+	}
 
 }
