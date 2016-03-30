@@ -216,6 +216,8 @@ public class Game implements Serializable {
 				performCharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Outmaneuver") {
 				performOutmaneuver();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
+				performCountercharge();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -267,6 +269,26 @@ public class Game implements Serializable {
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				Card aCard = it.next();
 				if (aCard.getCardValue() == smallestVal) {
+					it.remove();
+				}
+			}
+		}
+	}
+	
+	public void performCountercharge() {
+		int biggestVal = 0;
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardValue() > biggestVal) {
+					biggestVal = aCard.getCardValue();
+				}
+			}
+		}
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardValue() == biggestVal) {
 					it.remove();
 				}
 			}
