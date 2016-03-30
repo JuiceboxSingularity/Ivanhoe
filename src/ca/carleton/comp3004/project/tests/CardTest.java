@@ -17,7 +17,7 @@ public class CardTest {
 		
 		assertTrue(aCard.getCardColor() == CardColor.Blue);
 		assertTrue(aCard.getCardType() == CardType.Color);
-		assertTrue(aCard.getValue() == 4);
+		assertTrue(aCard.getCardValue() == 4);
 	}
 
 }

@@ -83,7 +83,7 @@ public class Card implements Serializable {
 		return this.cardColor;
 	}
 	
-	public int getValue() {
+	public int getCardValue() {
 		return this.value;
 	}
 	
@@ -98,7 +98,7 @@ public class Card implements Serializable {
 	
 	public boolean equals(Card aCard) {
 		if ((this.cardColor == aCard.cardColor) && (this.cardName.equals(aCard.cardName)) && 
-		(this.cardType.toString() == aCard.getCardType().toString()) && (this.value == aCard.getValue())) {
+		(this.cardType.toString() == aCard.getCardType().toString()) && (this.value == aCard.getCardValue())) {
 			return true;
 		}
 		return false;

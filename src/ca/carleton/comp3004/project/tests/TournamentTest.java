@@ -246,7 +246,7 @@ public class TournamentTest {
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
 	}
-	
+
 	@Test
 	public void tournamentTokenRestrictions() {
 		game.setTournamentColor(CardColor.Green);
@@ -255,7 +255,7 @@ public class TournamentTest {
 		game.awardToken(one);
 		assertEquals(one.getTokens().get(CardColor.Green).intValue(), 1);
 	}
-	
+
 	@Test
 	public void multipleTournamentTest() {
 		game.startTurn();
@@ -274,12 +274,12 @@ public class TournamentTest {
 		CardColor tournamentColor = game.getTournamentColor();
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
-		
+
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
 
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
+
 		game.endTurn();
 		//Withdraw other two players
 		assertFalse(game.withdrawPlayer());
@@ -290,14 +290,14 @@ public class TournamentTest {
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
 	}
-	
+
 	@Test
 	public void testDisgrace() {
 		game.startTurn();
-		
+
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
+
 
 		for (Card c : game.getCurrentPlayer().getInPlay()) {
 			assertTrue(c.getCardType().equals(CardType.Supporter));
@@ -305,10 +305,43 @@ public class TournamentTest {
 
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Disgrace"));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
+
 		for (Card c : game.getCurrentPlayer().getInPlay()) {
-				assertFalse(c.getCardType().equals(CardType.Supporter));
-			}
+			assertFalse(c.getCardType().equals(CardType.Supporter));
+		}
+	}
+
+	@Test
+	public void testCharge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 6));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Charge"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertFalse(c.getCardValue() == 3);
+		}
 	}
 
 }

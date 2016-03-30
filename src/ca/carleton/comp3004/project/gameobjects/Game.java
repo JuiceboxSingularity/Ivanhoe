@@ -107,20 +107,22 @@ public class Game implements Serializable {
 			if (tournamentColor == CardColor.Green) {
 				score++;
 			} else {
-				score += c.getValue();
+				score += c.getCardValue();
 			}
 		}
-		
+
 		for (Player p : playerList) {
+			if (p.equals(currentPlayer)) continue;
 			int tscore = 0;
 			for (Card c : p.getInPlay()) {
-				tscore += c.getValue();
+				tscore += c.getCardValue();
 			}
+			System.out.println("Player score: " + score + " Total: " + tscore);
 			if (tscore > score) {
 				return false;
 			}
 		}
-		
+
 		for (Player p : playerList) {
 			if (currentPlayer.equals(p)) {
 				do {
@@ -208,19 +210,14 @@ public class Game implements Serializable {
 			tournamentColor = currentPlayer.viewCard(index).getCardColor();
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
-			
-			
+
+
 			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
-			    for (Player p : playerList) {
-			    	for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
-			    	    Card aCard = it.next();
-			    	    if (aCard.getCardType() == CardType.Supporter) {
-			    	        it.remove();
-			    	    }
-			    	}
-			    }
-			   }
-			
+				performDisgrace();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
+				performCharge();
+			}
+
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
@@ -243,5 +240,36 @@ public class Game implements Serializable {
 			return true;
 		}
 		return false;
+	}
+
+	public void performDisgrace() {
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardType() == CardType.Supporter) {
+					it.remove();
+				}
+			}
+		}
+	}
+	
+	public void performCharge() {
+		int smallestVal = 10;
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardValue() < smallestVal) {
+					smallestVal = aCard.getCardValue();
+				}
+			}
+		}
+		for (Player p : playerList) {
+			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardValue() == smallestVal) {
+					it.remove();
+				}
+			}
+		}
 	}
 }

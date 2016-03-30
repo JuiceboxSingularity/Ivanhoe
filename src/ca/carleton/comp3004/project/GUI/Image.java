@@ -57,7 +57,7 @@ public class Image extends Component {
     	//System.out.println("IN WE GO" + card);
     	if (card.getCardType() != Card.CardType.Action){
     		//System.out.println("IN AGAIN");
-    		name = card.getCardName() + card.getValue();
+    		name = card.getCardName() + card.getCardValue();
     		name = name.toLowerCase();
     		for (int x = 0; x<cardCount;x++){
         		part = cardNames[x].split("\\.");
