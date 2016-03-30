@@ -2,6 +2,7 @@ package ca.carleton.comp3004.project.gameobjects;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -211,11 +212,12 @@ public class Game implements Serializable {
 			
 			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
 			    for (Player p : playerList) {
-			     for (Card c : p.getInPlay()) {
-			      if (c.getCardType() == CardType.Supporter) {
-			       p.getInPlay().remove(c);
-			      }
-			     }
+			    	for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
+			    	    Card aCard = it.next();
+			    	    if (aCard.getCardType() == CardType.Supporter) {
+			    	        it.remove();
+			    	    }
+			    	}
 			    }
 			   }
 			

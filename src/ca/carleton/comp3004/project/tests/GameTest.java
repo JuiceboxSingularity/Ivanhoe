@@ -48,21 +48,10 @@ public class GameTest {
 	}
 
 	@Test
-	public void awardTokenTest() {
-		CardColor color = CardColor.Blue;
-		assertEquals(one.getTokens().get(color).intValue(), 0);
-		assertEquals(game.getTokens().get(color).intValue(), 5);
-		assertFalse(game.awardToken(one));
-		game.setTournamentColor(color);
-		assertTrue(game.awardToken(one));
-		assertEquals(game.getTokens().get(color).intValue(), 4);
-		assertEquals(one.getTokens().get(color).intValue(), 1);
-	}
-	
-	@Test
 	public void dealTokenTest() {
 		game.dealTokens();
 		assertNotEquals(game.getCurrentPlayer(), null);
 
 	}
+	
 }
