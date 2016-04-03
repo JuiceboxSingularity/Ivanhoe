@@ -427,6 +427,14 @@ public class TournamentTest {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 
+		game.startTurn();
 		assertEquals(CardColor.Red, game.getTournamentColor());
+		assertFalse(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
+		
+	}
+	
+	@Test
+	public void testChangeWeapon() {
+		
 	}
 }
