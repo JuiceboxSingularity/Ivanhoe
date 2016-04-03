@@ -470,7 +470,5 @@ public class TournamentTest {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertEquals(CardColor.Green, game.getTournamentColor());
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 5)));
-		assertTrue(game.endTurn());
-
 	}
 }

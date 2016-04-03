@@ -204,6 +204,10 @@ public class Game implements Serializable {
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
 				return true;
+			} else if ((c.getCardName() == "Dropweapon") && ((tournamentColor == CardColor.Red) || 
+					(tournamentColor == CardColor.Blue) || 
+					(tournamentColor == CardColor.Yellow))) {
+				return true;
 			}
 			else {
 				return false;
@@ -234,6 +238,8 @@ public class Game implements Serializable {
 				tournamentColor = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
 				tournamentColor = CardColor.None;
+			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
+				tournamentColor = CardColor.Green;
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
