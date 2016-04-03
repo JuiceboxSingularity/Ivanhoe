@@ -435,6 +435,7 @@ public class TournamentTest {
 	}
 	
 	//TODO: This doesn't check the condition that you can only change from R/Y/B to R/Y/B
+	//TODO: Also, make sure you can't play this card if the current color != R/Y/B
 	@Test
 	public void testChangeWeapon() {
 		game.startTurn();
@@ -453,5 +454,23 @@ public class TournamentTest {
 
 		game.startTurn();
 		assertEquals(CardColor.Blue, game.getTournamentColor());
+	}
+	
+	@Test
+	public void testDropWeapon() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Red, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Dropweapon"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Dropweapon")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(CardColor.Green, game.getTournamentColor());
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 5)));
+		assertTrue(game.endTurn());
+
 	}
 }
