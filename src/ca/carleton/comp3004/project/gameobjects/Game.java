@@ -14,12 +14,15 @@ import ca.carleton.comp3004.project.gameobjects.Card.CardType;
 public class Game implements Serializable {
 
 	private static final long serialVersionUID = -6443549403268656779L;
+	private final int NOCARD = -1;
 	private List<Player> playerList;
 	private CardColor tournamentColor;
 	private CardColor prevColor;
 	private Deck deck;
 	private int maxPlayers;
 	private Player currentPlayer;
+	private Player targetPlayer = null;
+	private int targetCard = NOCARD;
 	private Map<CardColor, Integer> tokens;
 	private CardColor customToken = CardColor.None;
 	private boolean ended;
@@ -320,11 +323,31 @@ public class Game implements Serializable {
 	private void performOutmaneuver() {
 		for (Player p : playerList) {
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
-				Card aCard = it.next();
+				it.next();
 				if (!it.hasNext()) {
 					it.remove();
 				}
 			}
 		}
+	}
+
+	public Player getTargetPlayer() {
+		return targetPlayer;
+	}
+
+	public void setTargetPlayer(int targetPlayer) {
+		for (Player p : playerList) {
+			if (p.getId() == targetPlayer) {
+				this.targetPlayer = p;
+			}
+		}
+	}
+
+	public int getTargetCard() {
+		return targetCard;
+	}
+
+	public void setTargetCard(int targetCard) {
+		this.targetCard = targetCard;
 	}
 }
