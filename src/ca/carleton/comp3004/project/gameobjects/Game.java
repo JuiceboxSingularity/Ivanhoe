@@ -200,7 +200,12 @@ public class Game implements Serializable {
 		} else if (c.getCardType() == CardType.Action){
 			if ((c.getCardName() == "Unhorse") && (tournamentColor == CardColor.Purple)) {
 				return true;
-			} else {
+			} else if ((c.getCardName() == "Changeweapon") && ((tournamentColor == CardColor.Red) || 
+					(tournamentColor == CardColor.Blue) || 
+					(tournamentColor == CardColor.Yellow))) {
+				return true;
+			}
+			else {
 				return false;
 			}
 		}
@@ -226,6 +231,8 @@ public class Game implements Serializable {
 			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
 				performCountercharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
+				tournamentColor = CardColor.None;
+			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
 				tournamentColor = CardColor.None;
 			}
 

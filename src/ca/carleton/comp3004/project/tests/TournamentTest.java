@@ -434,7 +434,7 @@ public class TournamentTest {
 		
 	}
 	
-	//TODO: This doesn't check the condition that you can only change from R/G/B to R/G/B
+	//TODO: This doesn't check the condition that you can only change from R/Y/B to R/Y/B
 	@Test
 	public void testChangeWeapon() {
 		game.startTurn();
