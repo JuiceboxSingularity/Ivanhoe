@@ -211,6 +211,8 @@ public class Game implements Serializable {
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
 				return true;
+			} else if ((c.getCardName() == "Breaklance") && (targetPlayer != null)) {
+				return true;
 			}
 			else {
 				return false;
@@ -243,6 +245,8 @@ public class Game implements Serializable {
 				tournamentColor = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
 				tournamentColor = CardColor.Green;
+			} else if (currentPlayer.viewCard(index).getCardName() == "Breaklance") {
+				performBreaklance();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -279,7 +283,7 @@ public class Game implements Serializable {
 			}
 		}
 	}
-	
+
 	public void performCharge() {
 		int smallestVal = 10;
 		for (Player p : playerList) {
@@ -299,7 +303,7 @@ public class Game implements Serializable {
 			}
 		}
 	}
-	
+
 	public void performCountercharge() {
 		int biggestVal = 0;
 		for (Player p : playerList) {
@@ -319,7 +323,7 @@ public class Game implements Serializable {
 			}
 		}
 	}
-	
+
 	private void performOutmaneuver() {
 		for (Player p : playerList) {
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
@@ -329,6 +333,17 @@ public class Game implements Serializable {
 				}
 			}
 		}
+	}
+
+	private void performBreaklance() {
+		for (Iterator<Card> it = targetPlayer.getHand().iterator(); it.hasNext(); ) {
+			Card aCard = it.next();
+			if (aCard.getCardColor() == CardColor.Purple) {
+				it.remove();
+			}
+		}
+		
+		this.targetPlayer = null;
 	}
 
 	public Player getTargetPlayer() {
