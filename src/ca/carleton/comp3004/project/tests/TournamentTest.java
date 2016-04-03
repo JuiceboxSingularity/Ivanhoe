@@ -548,4 +548,24 @@ public class TournamentTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testRetreat() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Retreat"));
+		game.setTargetCard(0);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Retreat")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertFalse(c.equals(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		}
+	}
 }
