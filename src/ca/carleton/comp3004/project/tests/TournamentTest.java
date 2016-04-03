@@ -521,4 +521,31 @@ public class TournamentTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testDodge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		int targetId = game.getCurrentPlayer().getId();
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Dodge"));
+		game.setTargetPlayer(targetId);
+		game.setTargetCard(0);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Dodge")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetId) {
+				for (Card c : p.getInPlay()) {
+					assertFalse((c.getCardColor() == CardColor.Purple) && (c.getCardValue() == 4));
+				}
+			}
+		}
+	}
 }
