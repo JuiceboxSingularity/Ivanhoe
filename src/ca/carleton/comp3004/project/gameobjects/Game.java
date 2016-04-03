@@ -217,6 +217,8 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Dodge") && (targetPlayer != null) && (targetCard != NOCARD) && (targetPlayer.getInPlay().size() != 0)) {
 				return true;
+			} else if ((c.getCardName() == "Retreat") && (targetCard != NOCARD) && (currentPlayer.getInPlay().size() != 0)) {
+				return true;
 			}
 			else {
 				return false;
@@ -255,6 +257,8 @@ public class Game implements Serializable {
 				performRiposte();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dodge") {
 				performDodge();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Retreat") {
+				performRetreat();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -374,6 +378,11 @@ public class Game implements Serializable {
 		this.targetPlayer = null;
 	}
 
+	public void performRetreat() {
+		currentPlayer.getHand().add(currentPlayer.getInPlay().remove(targetCard));
+		this.targetCard = NOCARD;
+	}
+	
 	public void setTargetPlayer(int targetPlayer) {
 		for (Player p : playerList) {
 			if (p.getId() == targetPlayer) {

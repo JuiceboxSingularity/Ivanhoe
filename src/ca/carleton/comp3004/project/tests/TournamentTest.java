@@ -560,7 +560,8 @@ public class TournamentTest {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Retreat"));
-		game.setTargetCard(0);
+		// We want to take back the supporter
+		game.setTargetCard(1);
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Retreat")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		
