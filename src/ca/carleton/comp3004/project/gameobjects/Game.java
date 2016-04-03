@@ -213,6 +213,8 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Breaklance") && (targetPlayer != null)) {
 				return true;
+			} else if ((c.getCardName() == "Riposte") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0)) {
+				return true;
 			}
 			else {
 				return false;
@@ -247,6 +249,8 @@ public class Game implements Serializable {
 				tournamentColor = CardColor.Green;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Breaklance") {
 				performBreaklance();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Riposte") {
+				performRiposte();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -346,6 +350,16 @@ public class Game implements Serializable {
 		this.targetPlayer = null;
 	}
 
+	public void performRiposte() {
+		for (Iterator<Card> it = targetPlayer.getInPlay().iterator(); it.hasNext(); ) {
+			Card aCard = it.next();
+			if (!it.hasNext()) {
+				currentPlayer.getInPlay().add(aCard);
+				it.remove();
+			}
+		}
+		this.targetPlayer = null;
+	}
 	public Player getTargetPlayer() {
 		return targetPlayer;
 	}

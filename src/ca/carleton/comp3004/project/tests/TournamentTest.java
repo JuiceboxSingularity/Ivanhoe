@@ -511,9 +511,8 @@ public class TournamentTest {
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Riposte"));
 		game.setTargetPlayer(targetId);
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Riposte")));
+		Card takenCard = game.getTargetPlayer().getInPlay().get(0);
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
-		Card takenCard = game.getCurrentPlayer().getInPlay().get(0);
 		
 		assertTrue((takenCard.getCardColor() == CardColor.Purple) && ( takenCard.getCardType() == CardType.Color) && (takenCard.getCardValue() == 4));
 		for (Player p : game.getPlayers()) {
