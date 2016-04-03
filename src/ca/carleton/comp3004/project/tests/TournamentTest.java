@@ -421,7 +421,7 @@ public class TournamentTest {
 		assertTrue(game.endTurn());
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
-		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Countercharge"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Unhorse"));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);

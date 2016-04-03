@@ -218,6 +218,8 @@ public class Game implements Serializable {
 				performOutmaneuver();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
 				performCountercharge();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
+				tournamentColor = CardColor.None;
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
