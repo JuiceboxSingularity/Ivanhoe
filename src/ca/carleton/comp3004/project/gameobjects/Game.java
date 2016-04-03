@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Card.CardType;
@@ -219,6 +220,8 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Retreat") && (targetCard != NOCARD) && (currentPlayer.getInPlay().size() != 0)) {
 				return true;
+			} else if ((c.getCardName() == "Knockdown") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0)) {
+				return true;
 			}
 			else {
 				return false;
@@ -259,6 +262,8 @@ public class Game implements Serializable {
 				performDodge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Retreat") {
 				performRetreat();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Knockdown") {
+				performKnockdown();
 			}
 
 			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -381,6 +386,13 @@ public class Game implements Serializable {
 	public void performRetreat() {
 		currentPlayer.getHand().add(currentPlayer.getInPlay().remove(targetCard));
 		this.targetCard = NOCARD;
+	}
+	
+	public void performKnockdown() {
+		Card randomCard = targetPlayer.getHand().remove(new Random().nextInt(targetPlayer.getHand().size()));
+		this.currentPlayer.getHand().add(randomCard);
+		
+		this.targetPlayer = null;
 	}
 	
 	public void setTargetPlayer(int targetPlayer) {
