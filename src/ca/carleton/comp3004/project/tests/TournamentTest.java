@@ -569,4 +569,31 @@ public class TournamentTest {
 			assertFalse(c.equals(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
 		}
 	}
+	
+	@Test
+	public void testKnockdown() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		int targetPlayer = game.getCurrentPlayer().getId();
+		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Knockdown"));
+		game.setTargetPlayer(targetPlayer);
+		int currentPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Knockdown")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				assertEquals(p.getHand().size(), targetPlayerHandSize - 1);
+			}
+		}
+		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
+	}
 }
