@@ -422,6 +422,7 @@ public class TournamentTest {
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Unhorse"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
@@ -433,8 +434,24 @@ public class TournamentTest {
 		
 	}
 	
+	//TODO: This doesn't check the condition that you can only change from R/G/B to R/G/B
 	@Test
 	public void testChangeWeapon() {
-		
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Red, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Changeweapon"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Changeweapon")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		assertEquals(CardColor.Blue, game.getTournamentColor());
 	}
 }

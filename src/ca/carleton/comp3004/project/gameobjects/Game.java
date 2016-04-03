@@ -198,10 +198,10 @@ public class Game implements Serializable {
 		} else if (tournamentColor == CardColor.None && c.getCardType() == CardType.Action) {
 			return false;
 		} else if (c.getCardType() == CardType.Action){
-			if ((c.getCardName() == "Unhorse") && !(tournamentColor == CardColor.Purple)) {
-				return false;
-			} else {
+			if ((c.getCardName() == "Unhorse") && (tournamentColor == CardColor.Purple)) {
 				return true;
+			} else {
+				return false;
 			}
 		}
 		else if (this.tournamentColor == c.getCardColor()) {
