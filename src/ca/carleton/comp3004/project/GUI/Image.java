@@ -25,7 +25,7 @@ public class Image extends Component {
     //backgroundBorder = ImageIO.read(new File("C:/Users/Inar/Desktop/Classes/COMP3004/images/background.jpg"));
  
     public Image() {
-    	File folder = new File("images2");
+    	File folder = new File("images");
     	File[] listOfFiles = folder.listFiles();
     	cardCount = 0;
     	for (int i = 0; i < listOfFiles.length; i++) {
@@ -45,7 +45,7 @@ public class Image extends Component {
     	}
     	
 		try {
-	    	backgroundBorder = ImageIO.read(new File("images2/Background/background.jpeg"));
+	    	backgroundBorder = ImageIO.read(new File("images/Background/background.jpeg"));
 		} catch (IOException e) {
 			System.out.println("Background missing");
 		}
