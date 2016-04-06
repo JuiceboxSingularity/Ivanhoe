@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
+
 public class main {
 
 	public static void main(String[] args) {
@@ -18,11 +20,11 @@ public class main {
     			//model.addPlayerSpecials("Shield");
     			//model.addPlayerSpecials("Stunned");
     			//model.addPlayerSpecials("Ivanhoe");
-                View view = new View(model); 
+                //View view = new View(model); 
+               // CardColor r = view.chooseColor();
                // Controller controller = new Controller(model,view);
                 //controller.control();
             }
         });  
 	}
-
 }

@@ -596,4 +596,75 @@ public class TournamentTest {
 		}
 		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
 	}
+	
+	@Test
+	public void testAdapt() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		int targetPlayer = game.getCurrentPlayer().getId();
+		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Knockdown"));
+		game.setTargetPlayer(targetPlayer);
+		int currentPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Knockdown")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				assertEquals(p.getHand().size(), targetPlayerHandSize - 1);
+			}
+		}
+		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
+	}
+	
+	@Test
+	public void testOutwit() {
+		
+	}
+	
+	@Test
+	public void testShield() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		int targetPlayer = game.getCurrentPlayer().getId();
+		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Knockdown"));
+		game.setTargetPlayer(targetPlayer);
+		int currentPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Knockdown")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				assertEquals(p.getHand().size(), targetPlayerHandSize);
+			}
+		}
+		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize - 1);
+	}
+	
+	@Test
+	public void testStunned() {
+		
+	}
+	
+	@Test
+	public void testIvanhoe() {
+		
+	}
 }

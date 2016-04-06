@@ -41,6 +41,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -54,6 +55,7 @@ import javax.swing.text.DocumentFilter.FilterBypass;
 import javax.swing.Timer;
 
 import ca.carleton.comp3004.project.gameobjects.Card;
+import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Game;
 
 public class View extends JFrame {
@@ -777,6 +779,26 @@ public class View extends JFrame {
 		*/
 	}
 
+	public CardColor chooseColor() {
+		java.util.List<CardColor> options = new ArrayList<CardColor>();
+		for (CardColor c : CardColor.values()) {
+			if ((!c.equals(CardColor.None)) && (!c.equals(CardColor.White))) {
+				options.add(c);
+			}
+		}
+		Object[] oparr = options.toArray();
+		int n = JOptionPane.showOptionDialog(this,
+				"Please choose a color ",
+						"Color selector",
+						JOptionPane.CLOSED_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						oparr,
+						oparr[0]);
+		
+		return options.get(n);
+	}
+	
 	public void update() {
 		loadHand();
 		loadPlayArea();
