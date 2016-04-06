@@ -600,28 +600,35 @@ public class TournamentTest {
 	@Test
 	public void testAdapt() {
 		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		int targetPlayer = game.getCurrentPlayer().getId();
-		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
 		assertTrue(game.endTurn());
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
-		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Knockdown"));
-		game.setTargetPlayer(targetPlayer);
-		int currentPlayerHandSize = game.getCurrentPlayer().getHand().size();
-		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Knockdown")));
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Adapt"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Adapt")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		
 		for (Player p : game.getPlayers()) {
-			if (p.getId() == targetPlayer) {
-				assertEquals(p.getHand().size(), targetPlayerHandSize - 1);
-			}
+			assertTrue(game.validateAdapt(p));
 		}
-		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
+		
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		
+		assertFalse(game.validateAdapt(game.getCurrentPlayer()));
 	}
 	
 	@Test

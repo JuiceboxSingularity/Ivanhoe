@@ -2,12 +2,14 @@ package ca.carleton.comp3004.project.gameobjects;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Card.CardType;
@@ -224,6 +226,8 @@ public class Game implements Serializable {
 				return true;
 			} else if (c.getCardName() == "Shield") {
 				return true;
+			} else if (c.getCardName() == "Adapt") {
+				return true;
 			}
 			else {
 				return false;
@@ -243,32 +247,46 @@ public class Game implements Serializable {
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
 
 			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
+				currentPlayer.removeCard(index);
 				performDisgrace();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
+				currentPlayer.removeCard(index);
 				performCharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Outmaneuver") {
+				currentPlayer.removeCard(index);
 				performOutmaneuver();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
+				currentPlayer.removeCard(index);
 				performCountercharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
+				currentPlayer.removeCard(index);
 				tournamentColor = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
+				currentPlayer.removeCard(index);
 				tournamentColor = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
+				currentPlayer.removeCard(index);
 				tournamentColor = CardColor.Green;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Breaklance") {
+				currentPlayer.removeCard(index);
 				performBreaklance();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Riposte") {
+				currentPlayer.removeCard(index);
 				performRiposte();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dodge") {
+				currentPlayer.removeCard(index);
 				performDodge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Retreat") {
+				currentPlayer.removeCard(index);
 				performRetreat();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Knockdown") {
+				currentPlayer.removeCard(index);
 				performKnockdown();
+			} else if (currentPlayer.viewCard(index).getCardName() == "Shield") {
+				currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
 			}
 
-			currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
+			
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Supporter) {
@@ -421,5 +439,18 @@ public class Game implements Serializable {
 
 	public void setTargetCard(int targetCard) {
 		this.targetCard = targetCard;
+	}
+	
+	public boolean validateAdapt(Player p) {
+		Set<Integer> cardValues = new HashSet<Integer>();
+		
+		for (Card c : p.getHand()) {
+			if (c.getCardType() == CardType.Action) continue;
+			if (!cardValues.add(c.getCardValue())) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 }
