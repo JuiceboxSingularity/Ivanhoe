@@ -1,0 +1,478 @@
+package ca.carleton.comp3004.project.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import ca.carleton.comp3004.project.gameobjects.Card;
+import ca.carleton.comp3004.project.gameobjects.Game;
+import ca.carleton.comp3004.project.gameobjects.Player;
+import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
+import ca.carleton.comp3004.project.gameobjects.Card.CardType;
+
+public class Iteration2Tests {
+
+	static Game game;
+	static Player one;
+	static Player two;
+	static Player three;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		game = new Game(3);
+		one = new Player("Anduin", 1);
+		two = new Player("Malfurion", 2);
+		three = new Player("Garrosh", 3);
+
+		game.addPlayer(one);
+		game.addPlayer(two);
+		game.addPlayer(three);
+
+		assertEquals(game.getTournamentColor(), CardColor.None);
+
+		game.getDeck().shuffle();
+		game.dealDeck();
+		game.dealTokens();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testGreenBulletB1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testGreenBulletB2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testYellowBulletB1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testYellowBulletB2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testRedBulletB1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testRedBulletB2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 5)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testBlueBulletB1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testBlueBulletB2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testPurpleBulletB1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testPurpleBulletB2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testGreenBulletC1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testGreenBulletC2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testYellowBulletC1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testYellowBulletC2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testRedBulletC1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testRedBulletC2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testBlueBulletC1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testBlueBulletC2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testPurpleBulletC1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testPurpleBulletC2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 2));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+	}
+}

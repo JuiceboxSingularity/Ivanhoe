@@ -2,6 +2,8 @@ package ca.carleton.comp3004.project.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.Map.Entry;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -58,8 +60,9 @@ public class TournamentTest {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 
 		assertEquals(game.getTournamentColor(), CardColor.Yellow);
-
+		assertTrue(game.endTurn());
 		//Withdraw other two players
+		game.startTurn();
 		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
@@ -73,13 +76,14 @@ public class TournamentTest {
 	@Test
 	public void greenTournamentTest() {
 		game.startTurn();
-		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
 
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 
 		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
 		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
+		game.startTurn();		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
@@ -98,8 +102,9 @@ public class TournamentTest {
 
 		assertEquals(game.getTournamentColor(), CardColor.Blue);
 
+		assertTrue(game.endTurn());
 		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
+		game.startTurn();		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
@@ -118,8 +123,9 @@ public class TournamentTest {
 
 		assertEquals(game.getTournamentColor(), CardColor.Red);
 
+		assertTrue(game.endTurn());
 		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
+		game.startTurn();		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
@@ -138,8 +144,9 @@ public class TournamentTest {
 
 		assertEquals(game.getTournamentColor(), CardColor.Purple);
 
+		assertTrue(game.endTurn());
 		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
+		game.startTurn();		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
@@ -168,8 +175,9 @@ public class TournamentTest {
 
 		assertEquals(game.getTournamentColor(), CardColor.Purple);
 
+		assertTrue(game.endTurn());
 		//Withdraw other two players
-		assertFalse(game.withdrawPlayer());
+		game.startTurn();		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());

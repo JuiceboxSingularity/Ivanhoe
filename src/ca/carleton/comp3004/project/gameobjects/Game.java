@@ -123,7 +123,7 @@ public class Game implements Serializable {
 			for (Card c : p.getInPlay()) {
 				tscore += c.getCardValue();
 			}
-			if (tscore > score) {
+			if (tscore >= score) {
 				return false;
 			}
 		}
@@ -286,7 +286,7 @@ public class Game implements Serializable {
 				currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
 			}
 
-			
+
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Supporter) {
@@ -299,17 +299,28 @@ public class Game implements Serializable {
 	}
 
 	public boolean gameWon() {
-		for (Player p : playerList) {
-			for (Entry<CardColor, Integer> entry : p.getTokens().entrySet()) { 
-				if (entry.getValue().intValue() != 1) {
-					continue;
+		if (playerList.size() < 3) {
+			int numTokens = 0;
+			for (Entry<CardColor, Integer> entry : currentPlayer.getTokens().entrySet()) { 
+				if (entry.getValue().intValue() == 1) {
+					numTokens++;
 				}
 			}
+
+			if (numTokens < 5) return false;
+			return true;
+		} else {
+			int numTokens = 0;
+			for (Entry<CardColor, Integer> entry : currentPlayer.getTokens().entrySet()) { 
+				if (entry.getValue().intValue() == 1) {
+					numTokens++;
+				}
+			}
+
+			if (numTokens < 4) return false;
 			return true;
 		}
-		return false;
 	}
-
 	public void performDisgrace() {
 		for (Player p : playerList) {
 			if (p.isShielded()) continue;
@@ -378,35 +389,35 @@ public class Game implements Serializable {
 
 	private void performBreaklance() {
 		if (!targetPlayer.isShielded()) {
-		for (Iterator<Card> it = targetPlayer.getHand().iterator(); it.hasNext(); ) {
-			Card aCard = it.next();
-			if (aCard.getCardColor() == CardColor.Purple) {
-				it.remove();
+			for (Iterator<Card> it = targetPlayer.getHand().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (aCard.getCardColor() == CardColor.Purple) {
+					it.remove();
+				}
 			}
-		}
 		}
 		this.targetPlayer = null;
 	}
 
 	public void performRiposte() {
 		if (!targetPlayer.isShielded()) {
-		for (Iterator<Card> it = targetPlayer.getInPlay().iterator(); it.hasNext(); ) {
-			Card aCard = it.next();
-			if (!it.hasNext()) {
-				currentPlayer.getInPlay().add(aCard);
-				it.remove();
+			for (Iterator<Card> it = targetPlayer.getInPlay().iterator(); it.hasNext(); ) {
+				Card aCard = it.next();
+				if (!it.hasNext()) {
+					currentPlayer.getInPlay().add(aCard);
+					it.remove();
+				}
 			}
-		}
 		}
 		this.targetPlayer = null;
 	}
 	public Player getTargetPlayer() {
 		return targetPlayer;
 	}
-	
+
 	public void performDodge() {
 		if (!targetPlayer.isShielded()) {
-		targetPlayer.getInPlay().remove(targetCard);
+			targetPlayer.getInPlay().remove(targetCard);
 		}
 		this.targetCard = NOCARD;
 		this.targetPlayer = null;
@@ -416,15 +427,15 @@ public class Game implements Serializable {
 		currentPlayer.getHand().add(currentPlayer.getInPlay().remove(targetCard));
 		this.targetCard = NOCARD;
 	}
-	
+
 	public void performKnockdown() {
 		if (!targetPlayer.isShielded()) {
-		Card randomCard = targetPlayer.getHand().remove(new Random().nextInt(targetPlayer.getHand().size()));
-		this.currentPlayer.getHand().add(randomCard);
+			Card randomCard = targetPlayer.getHand().remove(new Random().nextInt(targetPlayer.getHand().size()));
+			this.currentPlayer.getHand().add(randomCard);
 		}
 		this.targetPlayer = null;
 	}
-	
+
 	public void setTargetPlayer(int targetPlayer) {
 		for (Player p : playerList) {
 			if (p.getId() == targetPlayer) {
@@ -440,17 +451,17 @@ public class Game implements Serializable {
 	public void setTargetCard(int targetCard) {
 		this.targetCard = targetCard;
 	}
-	
+
 	public boolean validateAdapt(Player p) {
 		Set<Integer> cardValues = new HashSet<Integer>();
-		
+
 		for (Card c : p.getHand()) {
 			if (c.getCardType() == CardType.Action) continue;
 			if (!cardValues.add(c.getCardValue())) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 }
