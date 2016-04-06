@@ -20,6 +20,7 @@ public class Iteration2Tests {
 	static Player one;
 	static Player two;
 	static Player three;
+	static Player four;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -31,15 +32,15 @@ public class Iteration2Tests {
 
 	@Before
 	public void setUp() throws Exception {
-		game = new Game(3);
+		game = new Game(4);
 		one = new Player("Anduin", 1);
 		two = new Player("Malfurion", 2);
 		three = new Player("Garrosh", 3);
-
+		four = new Player("Rexxar", 4);
 		game.addPlayer(one);
 		game.addPlayer(two);
 		game.addPlayer(three);
-
+		game.addPlayer(four);
 		assertEquals(game.getTournamentColor(), CardColor.None);
 
 		game.getDeck().shuffle();
@@ -497,6 +498,12 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertFalse(game.endTurn());
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertFalse(game.endTurn());
 	}
 
 	@Test
@@ -533,6 +540,20 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertFalse(game.endTurn());
 	}
 	
 	@Test
@@ -552,6 +573,11 @@ public class Iteration2Tests {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 4));
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 5));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 5)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
@@ -581,6 +607,13 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 	
 	@Test
@@ -601,6 +634,10 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 5)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 
 	@Test
@@ -628,6 +665,13 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 	
 	@Test
@@ -648,6 +692,10 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 5));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 5)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 
 	@Test
@@ -675,6 +723,13 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 	
 	@Test
@@ -695,6 +750,10 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 
 	@Test
@@ -724,5 +783,12 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 }

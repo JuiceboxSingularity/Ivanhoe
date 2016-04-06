@@ -174,7 +174,6 @@ public class Game implements Serializable {
 				playing++;
 			}
 		}
-
 		if (playing == 1) {
 			return true;
 		} else {
