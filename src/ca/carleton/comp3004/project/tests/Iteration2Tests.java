@@ -817,6 +817,37 @@ public class Iteration2Tests {
 	}
 	
 	@Test
+	public void testGreenBulletE3() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		// Cannot play more than 1 maiden per tournament
+		assertFalse(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+	}
+	
+	@Test
 	public void testYellowBulletE1() {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 1));
@@ -838,6 +869,36 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertEquals(game.getTournamentColor(), CardColor.Yellow);
 		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testYellowBulletE3() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		// Cannot play more than 1 maiden per tournament
+		assertFalse(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 	
 	@Test
@@ -865,6 +926,36 @@ public class Iteration2Tests {
 	}
 	
 	@Test
+	public void testRedBulletE3() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		// Cannot play more than 1 maiden per tournament
+		assertFalse(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+	}
+	
+	@Test
 	public void testBlueBulletE1() {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 1));
@@ -889,6 +980,36 @@ public class Iteration2Tests {
 	}
 	
 	@Test
+	public void testBlueBulletE3() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		// Cannot play more than 1 maiden per tournament
+		assertFalse(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+	}
+	
+	@Test
 	public void testPurpleBulletE1() {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
@@ -910,5 +1031,35 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertEquals(game.getTournamentColor(), CardColor.Purple);
 		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testPurpleBulletE3() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		// Cannot play more than 1 maiden per tournament
+		assertFalse(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
 }
