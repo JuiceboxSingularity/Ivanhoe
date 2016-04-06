@@ -222,6 +222,8 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Knockdown") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0)) {
 				return true;
+			} else if (c.getCardName() == "Shield") {
+				return true;
 			}
 			else {
 				return false;
@@ -292,6 +294,7 @@ public class Game implements Serializable {
 
 	public void performDisgrace() {
 		for (Player p : playerList) {
+			if (p.isShielded()) continue;
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				Card aCard = it.next();
 				if (aCard.getCardType() == CardType.Supporter) {
@@ -312,6 +315,7 @@ public class Game implements Serializable {
 			}
 		}
 		for (Player p : playerList) {
+			if (p.isShielded()) continue;
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				Card aCard = it.next();
 				if (aCard.getCardValue() == smallestVal) {
@@ -332,6 +336,7 @@ public class Game implements Serializable {
 			}
 		}
 		for (Player p : playerList) {
+			if (p.isShielded()) continue;
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				Card aCard = it.next();
 				if (aCard.getCardValue() == biggestVal) {
@@ -343,6 +348,7 @@ public class Game implements Serializable {
 
 	private void performOutmaneuver() {
 		for (Player p : playerList) {
+			if (p.isShielded()) continue;
 			for (Iterator<Card> it = p.getInPlay().iterator(); it.hasNext(); ) {
 				it.next();
 				if (!it.hasNext()) {
@@ -353,23 +359,26 @@ public class Game implements Serializable {
 	}
 
 	private void performBreaklance() {
+		if (!targetPlayer.isShielded()) {
 		for (Iterator<Card> it = targetPlayer.getHand().iterator(); it.hasNext(); ) {
 			Card aCard = it.next();
 			if (aCard.getCardColor() == CardColor.Purple) {
 				it.remove();
 			}
 		}
-		
+		}
 		this.targetPlayer = null;
 	}
 
 	public void performRiposte() {
+		if (!targetPlayer.isShielded()) {
 		for (Iterator<Card> it = targetPlayer.getInPlay().iterator(); it.hasNext(); ) {
 			Card aCard = it.next();
 			if (!it.hasNext()) {
 				currentPlayer.getInPlay().add(aCard);
 				it.remove();
 			}
+		}
 		}
 		this.targetPlayer = null;
 	}
@@ -378,7 +387,9 @@ public class Game implements Serializable {
 	}
 	
 	public void performDodge() {
+		if (!targetPlayer.isShielded()) {
 		targetPlayer.getInPlay().remove(targetCard);
+		}
 		this.targetCard = NOCARD;
 		this.targetPlayer = null;
 	}
@@ -389,9 +400,10 @@ public class Game implements Serializable {
 	}
 	
 	public void performKnockdown() {
+		if (!targetPlayer.isShielded()) {
 		Card randomCard = targetPlayer.getHand().remove(new Random().nextInt(targetPlayer.getHand().size()));
 		this.currentPlayer.getHand().add(randomCard);
-		
+		}
 		this.targetPlayer = null;
 	}
 	

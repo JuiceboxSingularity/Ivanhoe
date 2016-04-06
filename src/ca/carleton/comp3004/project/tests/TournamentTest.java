@@ -639,6 +639,7 @@ public class TournamentTest {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		int targetPlayer = game.getCurrentPlayer().getId();
 		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
 		assertTrue(game.endTurn());

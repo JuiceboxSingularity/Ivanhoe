@@ -123,4 +123,13 @@ public class Player implements Serializable {
 		this.inDisplay.clear();
 		this.inPlay.clear();
 	}
+	
+	public boolean isShielded() {
+		for (Card c : inDisplay) {
+			if (c.getCardName() == "Shield") {
+				return true;
+			}
+		}
+		return false;
+	}
 }
