@@ -1062,4 +1062,84 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
+	
+	@Test
+	public void testGreenBulletG() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 1)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testYellowBulletG() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 2));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 2)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+	
+	@Test
+	public void testRedBulletG() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testBlueBulletG() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void testPurpleBulletG() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 3)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		//Cannot end turn because did not play enough cards
+		assertFalse(game.endTurn());
+	}
 }
