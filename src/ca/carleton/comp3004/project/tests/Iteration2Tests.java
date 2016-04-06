@@ -791,4 +791,124 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
+	
+	@Test
+	public void testGreenBulletE1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testGreenBulletE2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testYellowBulletE1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testYellowBulletE2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testRedBulletE1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testRedBulletE2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testBlueBulletE1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testBlueBulletE2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+		assertTrue(game.endTurn());
+	}
+	
+	@Test
+	public void testPurpleBulletE1() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+	}
+
+	@Test
+	public void testPurpleBulletE2() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+		assertTrue(game.endTurn());
+	}
 }
