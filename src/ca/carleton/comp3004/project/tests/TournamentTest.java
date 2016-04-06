@@ -630,7 +630,7 @@ public class TournamentTest {
 	}
 	
 	@Test
-	public void testShield() {
+	public void testShieldAgainstKnockdown() {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
@@ -657,6 +657,35 @@ public class TournamentTest {
 			}
 		}
 		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize - 1);
+	}
+	
+	@Test
+	public void testShieldAgainstDodge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		int targetId = game.getCurrentPlayer().getId();
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Dodge"));
+		game.setTargetPlayer(targetId);
+		game.setTargetCard(0);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Dodge")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetId) {
+					assertTrue((p.getInPlay().get(0).getCardColor() == CardColor.Purple) && 
+							((p.getInPlay().get(0).getCardValue() == 4)));
+			}
+		}
 	}
 	
 	@Test
