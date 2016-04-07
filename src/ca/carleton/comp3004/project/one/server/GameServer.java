@@ -111,16 +111,19 @@ public class GameServer extends Thread {
 			System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
 			for (int x = 0; x<numPlayers; x++){
 				try {
-					byteBuffer.rewind();
+					byteBuffer.flip();
 					//System.out.println(byteBuffer.remaining());
 					
-					ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
-					size.putLong(byteBuffer.limit());
 					
-					System.out.println("SIZE: " + byteBuffer.limit());
+					//ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
+					ByteBuffer size = ByteBuffer.allocate(8192);
+					size.putLong(byteBuffer.limit());
+					size.put(byteBuffer);
 					size.flip();
+				
+					
 					playerSockets[x].write(size);
-					playerSockets[x].write(byteBuffer);
+					//playerSockets[x].write(byteBuffer);
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -195,9 +198,7 @@ public class GameServer extends Thread {
 							
 							//ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
 							
-							
 							byteBuffer.flip();
-							byteBuffer.reset();
 							
 							ByteBuffer size = ByteBuffer.allocate(8192);
 							size.putLong(byteBuffer.limit());
