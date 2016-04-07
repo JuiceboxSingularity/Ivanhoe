@@ -108,12 +108,20 @@ public class GameServer extends Thread {
 		}
 				
 		public void writeAll(ByteBuffer byteBuffer){
-			//System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
+			System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
 			for (int x = 0; x<numPlayers; x++){
 				try {
 					byteBuffer.rewind();
 					//System.out.println(byteBuffer.remaining());
+					
+					ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
+					size.putLong(byteBuffer.limit());
+					
+					System.out.println("SIZE: " + byteBuffer.limit());
+					size.flip();
+					playerSockets[x].write(size);
 					playerSockets[x].write(byteBuffer);
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -181,6 +189,14 @@ public class GameServer extends Thread {
 							charBuffer.flip();
 							
 							encoder.reset();
+							
+							byteBuffer.clear();
+							encoder.encode(charBuffer,byteBuffer,true);
+							
+							ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
+							size.putLong(byteBuffer.limit());
+							
+							client.write(size);
 							client.write(encoder.encode(charBuffer));
 							
 							charBuffer.clear();

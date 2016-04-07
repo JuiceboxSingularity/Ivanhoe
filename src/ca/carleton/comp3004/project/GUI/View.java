@@ -558,7 +558,7 @@ public class View extends JFrame {
 	}
 	
 	class NetworkActionListener implements ActionListener {
-		int bytes,bytes2;
+		int bytes;
 		String string;
 		Game game;
 		public void actionPerformed(ActionEvent e) {
@@ -574,18 +574,23 @@ public class View extends JFrame {
 				if (bytes == 0){
 
 				} else if (bytes > 0){
-					try {
-						do {
-							Thread.sleep(900);
-							bytes2 = channel.read(byteBuffer);
-							bytes+=bytes2;
-						} while (bytes2>0);
-						
-					} catch (InterruptedException | IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					long size = byteBuffer.getLong();
+					
+					System.out.println("\n\nSIZE HEADER: "+size);
+					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
+					
+					while (bytes < size){
+						try {
+							bytes += channel.read(byteBuffer);
+							System.out.println("WAITING");
+							Thread.sleep(100);
+						} catch (IOException | InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
+					
 					
 					charBuffer.clear();
 					decoder.decode(byteBuffer,charBuffer,false);
@@ -601,6 +606,8 @@ public class View extends JFrame {
 					String[] parts = string.split(":");
 					switch(parts[0]){
 					case "state":
+						//int size = Integer.parseInt( parts[1];
+						
 						game = decodeGameState(parts[1]);
 						System.out.println("RECEIVED GAME STATE");
 						
