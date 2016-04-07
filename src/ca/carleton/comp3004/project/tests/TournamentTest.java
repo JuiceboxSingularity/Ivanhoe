@@ -282,6 +282,7 @@ public class TournamentTest {
 		CardColor tournamentColor = game.getTournamentColor();
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
+		int winner = game.getCurrentPlayer().getId();
 
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
@@ -297,6 +298,7 @@ public class TournamentTest {
 		tournamentColor = game.getTournamentColor();
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(tournamentColor).intValue(), 1);
+		assertEquals(winner, game.getCurrentPlayer().getId());
 	}
 
 	@Test

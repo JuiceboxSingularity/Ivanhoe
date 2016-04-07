@@ -184,6 +184,14 @@ public class Game implements Serializable {
 			}
 		}
 		if (playing == 1) {
+			for (Player p : playerList) {
+				if (currentPlayer.equals(p)) {
+					do {
+						currentPlayer = playerList.get((playerList.indexOf(p) + 1) % playerList.size());
+					} while (!currentPlayer.isPlaying());
+					break;
+				}
+			}
 			return true;
 		} else {
 			for (Player p : playerList) {
