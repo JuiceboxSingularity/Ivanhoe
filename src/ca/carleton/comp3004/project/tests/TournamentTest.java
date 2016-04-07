@@ -430,6 +430,7 @@ public class TournamentTest {
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Unhorse"));
+		game.setCustomColor(CardColor.Red);
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
@@ -1009,6 +1010,7 @@ public class TournamentTest {
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Unhorse"));
+		game.setCustomColor(CardColor.Red);
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
