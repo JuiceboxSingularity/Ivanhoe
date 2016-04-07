@@ -194,10 +194,14 @@ public class GameServer extends Thread {
 							encoder.encode(charBuffer,byteBuffer,true);
 							
 							ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
+							byteBuffer.flip();
+							
 							size.putLong(byteBuffer.limit());
+							size.flip();
 							
 							client.write(size);
-							client.write(encoder.encode(charBuffer));
+							client.write(byteBuffer);
+							//client.write(encoder.encode(charBuffer));
 							
 							charBuffer.clear();
 							
