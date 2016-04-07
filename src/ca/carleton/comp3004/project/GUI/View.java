@@ -579,7 +579,7 @@ public class View extends JFrame {
 					System.out.println("\n\nSIZE HEADER: "+size);
 					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
 					
-					while (bytes < size){
+					while (bytes < size-8){
 						try {
 							bytes += channel.read(byteBuffer);
 							System.out.println("WAITING");
