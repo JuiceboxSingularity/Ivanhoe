@@ -108,6 +108,8 @@ public class Game implements Serializable {
 	}
 
 	public void startTurn() {
+		Card drawn = deck.draw();
+		if (drawn == null) return;
 		currentPlayer.addCard(deck.draw());
 	}
 	public boolean endTurn() {

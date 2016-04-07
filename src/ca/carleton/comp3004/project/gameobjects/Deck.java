@@ -82,7 +82,7 @@ public class Deck implements Serializable {
 	}
 	
 	public Card draw() {
-		// TODO: Filter cards that are not implemented
+		if (cards.size() == 0) return null;
 		return cards.remove(cards.size()-1);
 	}
 	

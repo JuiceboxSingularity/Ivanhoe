@@ -21,7 +21,7 @@ public class Iteration2Tests {
 	static Player two;
 	static Player three;
 	static Player four;
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -87,7 +87,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testYellowBulletB1() {
 		game.startTurn();
@@ -123,7 +123,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testRedBulletB1() {
 		game.startTurn();
@@ -159,7 +159,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testBlueBulletB1() {
 		game.startTurn();
@@ -195,7 +195,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testPurpleBulletB1() {
 		game.startTurn();
@@ -231,7 +231,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testGreenBulletC1() {
 		game.startTurn();
@@ -284,7 +284,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testYellowBulletC1() {
 		game.startTurn();
@@ -332,7 +332,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testRedBulletC1() {
 		game.startTurn();
@@ -380,7 +380,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testBlueBulletC1() {
 		game.startTurn();
@@ -428,7 +428,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testPurpleBulletC1() {
 		game.startTurn();
@@ -476,7 +476,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testGreenBulletD1() {
 		game.startTurn();
@@ -555,7 +555,7 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		assertFalse(game.endTurn());
 	}
-	
+
 	@Test
 	public void testYellowBulletD1() {
 		game.startTurn();
@@ -615,7 +615,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Yellow, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testRedBulletD1() {
 		game.startTurn();
@@ -673,7 +673,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testBlueBulletD1() {
 		game.startTurn();
@@ -731,7 +731,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testPurpleBulletD1() {
 		game.startTurn();
@@ -791,7 +791,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Purple, 4)));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testGreenBulletE1() {
 		game.startTurn();
@@ -815,7 +815,7 @@ public class Iteration2Tests {
 		assertEquals(game.getTournamentColor(), CardColor.Green);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testGreenBulletE3() {
 		game.startTurn();
@@ -844,9 +844,9 @@ public class Iteration2Tests {
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 2, "Squire"));
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
+
 	}
-	
+
 	@Test
 	public void testYellowBulletE1() {
 		game.startTurn();
@@ -870,7 +870,7 @@ public class Iteration2Tests {
 		assertEquals(game.getTournamentColor(), CardColor.Yellow);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testYellowBulletE3() {
 		game.startTurn();
@@ -900,7 +900,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testRedBulletE1() {
 		game.startTurn();
@@ -924,7 +924,7 @@ public class Iteration2Tests {
 		assertEquals(game.getTournamentColor(), CardColor.Red);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testRedBulletE3() {
 		game.startTurn();
@@ -954,7 +954,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testBlueBulletE1() {
 		game.startTurn();
@@ -978,7 +978,7 @@ public class Iteration2Tests {
 		assertEquals(game.getTournamentColor(), CardColor.Blue);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testBlueBulletE3() {
 		game.startTurn();
@@ -1008,7 +1008,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testPurpleBulletE1() {
 		game.startTurn();
@@ -1032,7 +1032,7 @@ public class Iteration2Tests {
 		assertEquals(game.getTournamentColor(), CardColor.Purple);
 		assertTrue(game.endTurn());
 	}
-	
+
 	@Test
 	public void testPurpleBulletE3() {
 		game.startTurn();
@@ -1062,7 +1062,7 @@ public class Iteration2Tests {
 		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 2, "Squire")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 	}
-	
+
 	@Test
 	public void testGreenBulletG() {
 		game.startTurn();
@@ -1094,7 +1094,7 @@ public class Iteration2Tests {
 		//Cannot end turn because did not play enough cards
 		assertFalse(game.endTurn());
 	}
-	
+
 	@Test
 	public void testRedBulletG() {
 		game.startTurn();
@@ -1141,5 +1141,123 @@ public class Iteration2Tests {
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		//Cannot end turn because did not play enough cards
 		assertFalse(game.endTurn());
+	}
+
+	@Test
+	public void greenTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 1));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Green);
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Green).intValue(), 1);
+	}
+
+	@Test
+	public void yellowTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Yellow);
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Yellow).intValue(), 1);
+	}
+
+	@Test
+	public void redTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 1);
+	}
+
+	@Test
+	public void blueTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Blue);
+
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Blue).intValue(), 1);
+	}
+
+	@Test
+	public void purpleTournamentTest() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
 	}
 }
