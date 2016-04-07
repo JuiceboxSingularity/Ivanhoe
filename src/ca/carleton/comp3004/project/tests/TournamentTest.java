@@ -816,6 +816,142 @@ public class TournamentTest {
 			}
 		}
 	}
+
+	@Test
+	public void testShieldAgainstCountercharge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Countercharge"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertTrue(shieldedPlayer.getInPlay().size() == 2);
+	}
+
+	@Test
+	public void testShieldAgainstCharge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 6));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Charge"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertTrue(shieldedPlayer.getInPlay().size() == 2);
+	}
+
+	@Test
+	public void testShieldAgainstBreaklance() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Breaklance"));
+		game.setTargetPlayer(shieldedPlayer.getId());
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Breaklance")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		//All purple cards should still be there
+		for (Card c : shieldedPlayer.getHand()) {
+			assertTrue(c.getCardColor() == CardColor.Purple);
+		}
+	}
+
+	@Test
+	public void testShieldAgainstAdapt() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().clear();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Adapt"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Adapt")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		for (Player p : game.getPlayers()) {
+			assertTrue(game.validateAdapt(p));
+		}
+
+		shieldedPlayer.getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		shieldedPlayer.getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+
+		assertTrue(game.validateAdapt(shieldedPlayer));
+	}
+	
 	@Test
 	public void testStunned() {
 
