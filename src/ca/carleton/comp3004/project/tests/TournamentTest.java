@@ -758,6 +758,21 @@ public class TournamentTest {
 	}
 	
 	@Test
+	public void testShieldAgainstRiposte() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		int targetId = game.getCurrentPlayer().getId();
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Riposte"));
+		game.setTargetPlayer(targetId);
+		assertFalse(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Riposte")));
+	}
+	@Test
 	public void testStunned() {
 		
 	}
