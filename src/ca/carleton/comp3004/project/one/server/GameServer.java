@@ -200,8 +200,9 @@ public class GameServer extends Thread {
 							size.flip();
 							
 							client.write(size);
-							client.write(byteBuffer);
-							//client.write(encoder.encode(charBuffer));
+							//client.write(byteBuffer);
+							charBuffer.rewind();
+							client.write(encoder.encode(charBuffer));
 							
 							charBuffer.clear();
 							
