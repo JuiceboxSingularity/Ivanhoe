@@ -626,9 +626,7 @@ public class View extends JFrame {
 	
 	public void redraw(){
 		System.out.println("REFRESH");
-		
-		
-		
+
 		loadHand();
 		loadPlayArea();
 		loadTokens();
