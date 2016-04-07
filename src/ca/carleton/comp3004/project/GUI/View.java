@@ -574,6 +574,15 @@ public class View extends JFrame {
 				if (bytes == 0){
 
 				} else if (bytes > 0){
+					;
+					
+					try {
+						Thread.sleep(100);
+						bytes += channel.read(byteBuffer);
+					} catch (InterruptedException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
 					
 					charBuffer.clear();
