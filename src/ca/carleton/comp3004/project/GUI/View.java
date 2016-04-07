@@ -1,14 +1,6 @@
 package ca.carleton.comp3004.project.GUI;
 
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.List;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -29,6 +21,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.LinkedList;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -56,9 +50,14 @@ import javax.swing.Timer;
 
 import ca.carleton.comp3004.project.gameobjects.Card;
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
+import ca.carleton.comp3004.project.gameobjects.Card.CardType;
 import ca.carleton.comp3004.project.gameobjects.Game;
 
 public class View extends JFrame {
+	int WIDTH = 1024;
+	int HEIGHT = 1024;
+	int SIDE_WIDTH = 250;
+	
 	private Image images;
 	private JPanel panel;
 	private GridBagConstraints c;
@@ -69,20 +68,9 @@ public class View extends JFrame {
 	private JPanel bottombar;
 	private DrawPanel playArea;
 	
-	private JLayeredPane[] playerArea = new JLayeredPane[6];
-
-	private JPanel otherArea;
-	private JPanel playerYou;
-	private JPanel playerOne;
-	private JPanel playerTwo;
-	private JPanel playerThree;
-	private JPanel playerFour;
-	private JPanel playZone;
-	private JPanel playZone1;
-	private JPanel playZone2;
-	private JPanel playZone3;
-	private JPanel playZone4;
-	
+	private JLayeredPane[] playerAreaPane = new JLayeredPane[6];
+	private JPanel[] playerArea = new JPanel[6];
+	private JPanel[] tokenArea = new JPanel[6];
 	
 	private JTextField connectBox;
 	private JTextField nameBox;
@@ -129,7 +117,7 @@ public class View extends JFrame {
 	}
 	
 	private void textAppend(String string){
-		int max = 4;
+		int max = 24;
 		int lines = textArea.getLineCount();
 		
 		if (lines > max) {
@@ -146,25 +134,89 @@ public class View extends JFrame {
 		}
 		textArea.append(string);
 	}
+	
+	class lab extends JLabel {
+		boolean on;
+		
+		public lab(){
+			on = false;
+		}
+		
+		public lab(boolean bool){
+			on = bool;
+		}
+		
+		public void paintComponent(Graphics g) {
+	        super.paintComponent(g);       
+	        Graphics2D g2d = (Graphics2D) g;
+	        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	        g2d.setRenderingHints(rh);
+	       
+	        g.setColor(this.getForeground());
+	        g2d.setStroke(new BasicStroke(3));
+	        if (on){
+	        	g2d.fillOval(0,0,this.getWidth()-5,this.getWidth()-5);
+	        } else {
+	        	g2d.drawOval(0,0,this.getWidth()-5,this.getWidth()-5);
+			}
+	    }  
+		
+	}
+	
+	private void initToken(JPanel panel){
+		lab tempLabel;
+		
+		tempLabel = new lab();
+		tempLabel.setForeground(blue);
+		tempLabel.setOpaque(true);
+		panel.add(tempLabel);
+		
+		tempLabel = new lab();
+		tempLabel.setForeground(green);
+		tempLabel.setOpaque(true);
+		panel.add(tempLabel);
+		
+		tempLabel = new lab();
+		tempLabel.setForeground(yellow);
+		tempLabel.setOpaque(true);
+		panel.add(tempLabel);
+		
+		tempLabel = new lab();
+		tempLabel.setForeground(red);
+		tempLabel.setOpaque(true);
+		panel.add(tempLabel);
+		
+		tempLabel = new lab();
+		tempLabel.setForeground(purple);
+		tempLabel.setOpaque(true);
+		panel.add(tempLabel);
+	}
 
 	private void initUI() {
+		
+		setSize(WIDTH,HEIGHT);
+		
 		panel = new JPanel(new GridBagLayout());
-		c = new GridBagConstraints();
-		panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		
 		sidebarOptions = new JPanel(new GridBagLayout());
 		bottombar = new JPanel();
 		playArea = new DrawPanel();
 		playArea.setLayout(new GridLayout(2,3));
 		
 		for (int x = 0; x < 6; x++){
-			playerArea[x] = new JLayeredPane();
+			playerArea[x] = new JPanel();
+			playerArea[x].setLayout(new BorderLayout(0,0));
+			playerAreaPane[x] = new JLayeredPane();
+			tokenArea[x] =  new JPanel(new GridLayout(1,5));
+			initToken(tokenArea[x]);
+			
+			tokenArea[x].setPreferredSize(new Dimension(150, 50));
+			playerAreaPane[x].setPreferredSize(new Dimension(140, 200));
+					
+			
+			playerArea[x].add(playerAreaPane[x],BorderLayout.CENTER);
+			playerArea[x].add(tokenArea[x],BorderLayout.PAGE_END);
 		}
-		
-		playerYou = new JPanel(new GridLayout(2,5));
-		playerOne = new JPanel(new GridLayout(2,5));
-		playerTwo = new JPanel(new GridLayout(2,5));
-		playerThree = new JPanel(new GridLayout(2,5));
-		playerFour = new JPanel(new GridLayout(2,5));
 		
 		JLabel tempLabel;
 		connectButton = new JButton("Connect");
@@ -180,9 +232,6 @@ public class View extends JFrame {
 		sidebarOptions.setBackground(Color.darkGray);
 
 		bottombar.setBackground(new Color(115, 60, 20));
-
-		playerYou.setBackground(new Color(190, 110, 30));
-		playerYou.setBorder(BorderFactory.createTitledBorder("You"));
 
 		panel.setBackground(Color.gray);
 
@@ -224,14 +273,13 @@ public class View extends JFrame {
 		startGameButton.addActionListener(new StartGameButtonActionListener());
 		sidebarOptions.add(startGameButton, c);
 		
-		textArea = new JTextArea(25, 20);
+		textArea = new JTextArea(20, 20);
 		textArea.setEditable(false);
 		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 1;
 		c.gridwidth = 2;
-		c.ipady = 25;
 		sidebarOptions.add(textArea, c);
 				
 		c = new GridBagConstraints();
@@ -272,24 +320,16 @@ public class View extends JFrame {
 		c.gridwidth = 4;
 		//playArea.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.4), (int) (panel.getHeight() * 0.7)));
 		panel.add(playArea, c);
-		
-		c.weightx = 0.2;
+		//
+		c.weightx = 0.6;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridheight = 1;
-		c.gridwidth = 1;
-		//playerYou.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.3)));
-		panel.add(playerYou, c);
-		//
-		c.weightx = 0.6;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridheight = 1;
 		c.gridwidth = 2;
 		bottombar.setBorder(BorderFactory.createTitledBorder("Hand"));
-		bottombar.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.6), (int) (panel.getHeight() * 0.3)));
+		//.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.6), (int) (panel.getHeight() * 0.3)));
+		bottombar.setPreferredSize(new Dimension(250,250));
 		panel.add(bottombar, c);
 		
 		c.weightx = 0;
@@ -299,7 +339,7 @@ public class View extends JFrame {
 		c.gridheight = 3;
 		c.gridwidth = 1;
 		c.fill = GridBagConstraints.BOTH;
-		sidebarOptions.setPreferredSize(new Dimension(250,0));
+		sidebarOptions.setPreferredSize(new Dimension(SIDE_WIDTH,0));
 		panel.add(sidebarOptions, c);
 		
 		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
@@ -317,15 +357,15 @@ public class View extends JFrame {
 		playArea.add(playerArea[5]);
 		
 		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 5", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
+	
+		
 		playArea.add(playerArea[4]);
 		
 		
-				
-		//playerArea.setVisible(true);
 		
 		add(panel);
 		setTitle("Ivanhoe Game");
-		setSize(1200, 700);
+		
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
@@ -335,15 +375,21 @@ public class View extends JFrame {
 
 	public void loadHand() {
 		JButton tempButton;
+		
 		java.util.List<Card> hand = model.getHand();
+		//java.util.List<Card> hand = new LinkedList<Card>();
+		//hand.add(new Card(Card.CardType.Color,Card.CardColor.Red,4,"red"));
+		
 		bottombar.removeAll();
 		for (int i = 0; i < hand.size(); i++) {
 			//System.out.println("GETTING HAND: "+i);
 			tempButton = new JButton(new ImageIcon(images.getCards(hand.get(i))));
 			int temp = 100;
-			if (bottombar.getWidth() / model.getHandSize() < temp) {
-				temp = bottombar.getWidth() / model.getHandSize();
+			
+			if (bottombar.getWidth() / hand.size() < temp) {
+				temp = bottombar.getWidth() / hand.size();
 			}
+			
 			tempButton.setPreferredSize(new Dimension((int) (temp), 160));
 			tempButton.addActionListener(new HandActionListener(i));
 			bottombar.add(tempButton, c);
@@ -355,56 +401,89 @@ public class View extends JFrame {
 
 	public void loadPlayArea() {
 		JLabel tempLabel;
-		
-		
+		JPanel tempPanel;
 		
 		for (int x = 0; x < model.game.getPlayers().size();x++){
-			playerArea[x].removeAll();
-			playerArea[x].addMouseListener(new targetPlayerListener(x));
+		//for (int x = 0; x < 3;x++){
+			playerAreaPane[x].removeAll();
+			playerAreaPane[x].addMouseListener(new targetPlayerListener(x));
+			
+			//DEBUG
 			java.util.List<Card> played = model.getPlayerArea(x);
-			if (x == model.playerNum){
-				
-				playerArea[5].removeAll();
-				//otherArea.addMouseListener(new targetPlayerListener(x));
-			}
+			//java.util.List<Card> played = new LinkedList<Card>();
+			//played.add(new Card(Card.CardType.Color,Card.CardColor.Red,4,"red"));
+			//played.add(new Card(Card.CardType.Color,Card.CardColor.Red,1,"green"));
+			
 			for (int i = 0; i < played.size(); i++) {
 				tempLabel = new JLabel(new ImageIcon(images.getCards(played.get(i))));
 				tempLabel.setSize(new Dimension(images.getCards(played.get(i)).getWidth(),images.getCards(played.get(i)).getHeight()));
 				tempLabel.addMouseListener(new cardInPlayListener(played.get(i),x));
 				
-				
+				playerAreaPane[x].add(tempLabel, new Integer(i));
+				/*
 				if (x == model.playerNum){ 
-					playerArea[5].add(tempLabel, new Integer(i));
-					Border border = BorderFactory.createTitledBorder(null,"You (Player "+(model.playerNum+1)+")", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white);
-					playerArea[5].setBorder(border);
+					playerAreaPane[5].add(tempLabel, new Integer(i));
+					//Border border = BorderFactory.createTitledBorder(null,"You (Player "+(model.playerNum+1)+")", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.black);
+					//playerAreaPane[5].setBorder(border);
 				} else {
-					playerArea[x].add(tempLabel, new Integer(i));
+					
 					
 				}
-				
+				*/
 				tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
 				//System.out.println(i);
+				
+				
 			}
+			
+			
+			//otherArea.addMouseListener(new targetPlayerListener(x));
+			
+			
 		}
+
 		revalidate();
 		repaint();
 	}
 
 	public void loadTokens() {
-		if (true){
-			//return;
-		}
-		//System.out.println("TOKENS");
+
 		JLabel templabel;
 		JPanel tempPanel;
-		//YOU
-		//otherArea.getComponentCount()
-		//tempPanel = new JPanel();
-		playerYou.removeAll();
-		templabel = new JLabel();
-		tempPanel = new JPanel(new GridLayout(1,5));
-		tempPanel.setOpaque(false);
-		templabel.setOpaque(true);
+		JLabel tempLabel;
+		for (int x = 0; x < model.game.getPlayers().size();x++){
+			tokenArea[x].removeAll();
+			
+			tempLabel = new lab(model.getPlayerTokens(x).contains("B"));
+			tempLabel.setForeground(blue);
+			tempLabel.setOpaque(true);
+			tokenArea[x].add(tempLabel);
+			
+			tempLabel = new lab(model.getPlayerTokens(x).contains("G"));
+			tempLabel.setForeground(green);
+			tempLabel.setOpaque(true);
+			tokenArea[x].add(tempLabel);
+			
+			tempLabel = new lab(model.getPlayerTokens(x).contains("Y"));
+			tempLabel.setForeground(yellow);
+			tempLabel.setOpaque(true);
+			tokenArea[x].add(tempLabel);
+			
+			tempLabel = new lab(model.getPlayerTokens(x).contains("R"));
+			tempLabel.setForeground(red);
+			tempLabel.setOpaque(true);
+			tokenArea[x].add(tempLabel);
+			
+			tempLabel = new lab(model.getPlayerTokens(x).contains("P"));
+			tempLabel.setForeground(purple);
+			tempLabel.setOpaque(true);
+			tokenArea[x].add(tempLabel);	
+		}
+		
+		/*
+		
+		
+		
 		if (model.getPlayerTokens(0).contains("P")||true) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
@@ -448,6 +527,9 @@ public class View extends JFrame {
 			templabel.setOpaque(false);
 			tempPanel.add(templabel);
 		}
+		for (int x = 0; x < 6; x++){
+			playerArea[x].add(tempPanel);
+		}
 		playerYou.add(tempPanel);
 		/*
 		tempPanel = new JPanel(new FlowLayout());
@@ -476,219 +558,6 @@ public class View extends JFrame {
 		playerYou.add(tempPanel);
 		*/
 		
-		//playerArea1.
-		playerOne.removeAll();
-		templabel = new JLabel();
-		tempPanel = new JPanel(new GridLayout(1,5));
-		tempPanel.setOpaque(false);
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("P")||true) {
-			templabel.setBackground(purple);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("R")) {
-			templabel.setBackground(red);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("B")) {
-			templabel.setBackground(blue);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("Y")) {
-			templabel.setBackground(yellow);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("G")) {
-			templabel.setBackground(green);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		playerOne.add(tempPanel);
-		
-		tempPanel = new JPanel(new FlowLayout());
-		tempPanel.setOpaque(false);
-		
-		
-		playerOne.add(tempPanel);
-		/*
-		//playerArea2.]
-		playerTwo.removeAll();
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		tempPanel = new JPanel(new GridLayout(1,5));
-		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens(2).contains("P")) {
-			templabel.setBackground(purple);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(2).contains("R")) {
-			templabel.setBackground(red);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(2).contains("B")) {
-			templabel.setBackground(blue);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(2).contains("Y")) {
-			templabel.setBackground(yellow);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(2).contains("G")) {
-			templabel.setBackground(green);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		playerTwo.add(tempPanel);
-		
-		
-		//playerArea3.
-		playerThree.removeAll();
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		tempPanel = new JPanel(new GridLayout(1,5));
-		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens(3).contains("P")) {
-			templabel.setBackground(purple);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(3).contains("R")) {
-			templabel.setBackground(red);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(3).contains("B")) {
-			templabel.setBackground(blue);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(4).contains("Y")) {
-			templabel.setBackground(yellow);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(3).contains("G")) {
-			templabel.setBackground(green);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		playerThree.add(tempPanel);
-		
-		
-		
-		//playerArea4.
-		playerFour.removeAll();
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		tempPanel = new JPanel(new GridLayout(1,5));
-		tempPanel.setOpaque(false);
-		if (model.getPlayerTokens(4).contains("P")) {
-			templabel.setBackground(purple);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(4).contains("R")) {
-			templabel.setBackground(red);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(4).contains("B")) {
-			templabel.setBackground(blue);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(4).contains("Y")) {
-			templabel.setBackground(yellow);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(4).contains("G")) {
-			templabel.setBackground(green);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		playerFour.add(tempPanel);
-		*/
 	}
 
 	public CardColor chooseColor() {
@@ -821,6 +690,9 @@ public class View extends JFrame {
 	
 	public void redraw(){
 		System.out.println("REFRESH");
+		
+		
+		
 		loadHand();
 		loadPlayArea();
 		loadTokens();

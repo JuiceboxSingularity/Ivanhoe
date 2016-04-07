@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import ca.carleton.comp3004.project.gameobjects.Game;
+import ca.carleton.comp3004.project.gameobjects.Player;
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 
 public class main {
