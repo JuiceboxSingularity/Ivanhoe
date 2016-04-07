@@ -87,4 +87,15 @@ public class DeckTest {
 		
 		assertNotEquals(index, aDeck.getCards().size()-1);
 	}
+	
+	@Test
+	public void testEndOfDeck() {
+		Deck aDeck2 = new Deck();
+		
+		for (int i = 0; i < 110; i++) {
+			aDeck2.draw();
+		}
+		
+		assertTrue(aDeck2.draw() == null);
+	}
 }

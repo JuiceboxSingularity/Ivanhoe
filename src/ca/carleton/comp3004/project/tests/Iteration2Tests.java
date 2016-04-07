@@ -1372,4 +1372,37 @@ public class Iteration2Tests {
 		// If false, ask user to change his selection for token
 		assertFalse(game.awardToken(game.getCurrentPlayer()));
 	}
+	
+	@Test
+	public void testInvalidColor() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Red);
+		assertTrue(game.endTurn());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		assertFalse(game.validatePlay(new Card(CardType.Color, CardColor.Blue, 3)));
+	}
+	
+	@Test
+	public void testWinGame() {
+		game.startTurn();
+		
+		game.setTournamentColor(CardColor.Red);
+		game.awardToken(game.getCurrentPlayer());
+		
+		game.setTournamentColor(CardColor.Yellow);
+		game.awardToken(game.getCurrentPlayer());
+		
+		game.setTournamentColor(CardColor.Green);
+		game.awardToken(game.getCurrentPlayer());
+		
+		game.setTournamentColor(CardColor.Purple);
+		game.awardToken(game.getCurrentPlayer());
+		
+		assertTrue(game.gameWon());
+	}
 }
