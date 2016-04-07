@@ -224,7 +224,7 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Breaklance") && (targetPlayer != null)) {
 				return true;
-			} else if ((c.getCardName() == "Riposte") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0)) {
+			} else if ((c.getCardName() == "Riposte") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0) && (!targetPlayer.isShielded())) {
 				return true;
 			} else if ((c.getCardName() == "Dodge") && (targetPlayer != null) && (targetCard != NOCARD) && (targetPlayer.getInPlay().size() != 0)) {
 				return true;
