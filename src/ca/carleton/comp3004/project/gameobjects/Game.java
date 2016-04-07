@@ -212,12 +212,16 @@ public class Game implements Serializable {
 		} else if (tournamentColor == CardColor.None && c.getCardType() == CardType.Action) {
 			return false;
 		} else if (c.getCardType() == CardType.Action){
-			if ((c.getCardName() == "Unhorse") && (tournamentColor == CardColor.Purple)) {
+			if ((c.getCardName() == "Unhorse") && (tournamentColor == CardColor.Purple) && (customToken != CardColor.None)) {
 				return true;
 			} else if ((c.getCardName() == "Changeweapon") && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
-				return true;
+				if (((customToken == CardColor.Red) || 
+						(customToken == CardColor.Blue) || 
+						(customToken == CardColor.Yellow)))
+					return true;
+				else return false;
 			} else if ((c.getCardName() == "Dropweapon") && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
@@ -268,10 +272,12 @@ public class Game implements Serializable {
 				performCountercharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
 				currentPlayer.removeCard(index);
-				tournamentColor = CardColor.None;
+				tournamentColor = customToken;
+				customToken = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
 				currentPlayer.removeCard(index);
-				tournamentColor = CardColor.None;
+				tournamentColor = customToken;
+				customToken = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
 				currentPlayer.removeCard(index);
 				tournamentColor = CardColor.Green;

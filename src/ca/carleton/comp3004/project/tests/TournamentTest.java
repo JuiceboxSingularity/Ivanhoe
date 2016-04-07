@@ -454,6 +454,7 @@ public class TournamentTest {
 		assertEquals(CardColor.Red, game.getTournamentColor());
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Changeweapon"));
+		game.setCustomColor(CardColor.Blue);
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Changeweapon")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 5));
@@ -950,6 +951,73 @@ public class TournamentTest {
 		shieldedPlayer.getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
 
 		assertTrue(game.validateAdapt(shieldedPlayer));
+	}
+	
+	@Test
+	public void testShieldAgainstDropweapon() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Red, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Dropweapon"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Dropweapon")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertEquals(CardColor.Green, game.getTournamentColor());
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 5)));
+	}
+	
+	@Test
+	public void testShieldAgainstChangeweapon() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Red, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Changeweapon"));
+		game.setCustomColor(CardColor.Blue);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Changeweapon")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		assertEquals(CardColor.Blue, game.getTournamentColor());
+	}
+	
+	@Test
+	public void testShieldAgainstUnhorse() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Unhorse"));
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 5));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+
+		game.startTurn();
+		assertEquals(CardColor.Red, game.getTournamentColor());
+		assertFalse(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
 	}
 	
 	@Test
