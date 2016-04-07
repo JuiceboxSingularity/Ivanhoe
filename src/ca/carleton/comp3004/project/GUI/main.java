@@ -20,7 +20,7 @@ public class main {
     			//model.addPlayerSpecials("Shield");
     			//model.addPlayerSpecials("Stunned");
     			//model.addPlayerSpecials("Ivanhoe");
-                //View view = new View(model); 
+                View view = new View(model); 
                // CardColor r = view.chooseColor();
                // Controller controller = new Controller(model,view);
                 //controller.control();

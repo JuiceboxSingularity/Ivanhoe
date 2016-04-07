@@ -168,6 +168,10 @@ public class Game implements Serializable {
 	}
 
 	public boolean withdrawPlayer() {
+		if (customToken != CardColor.None) {
+			currentPlayer.getTokens().put(customToken, 0);
+			tokens.put(tournamentColor, tokens.get(tournamentColor) + 1);
+		}
 		for (Player p : playerList) {
 			if (currentPlayer.equals(p)) {
 				p.setPlaying(false);

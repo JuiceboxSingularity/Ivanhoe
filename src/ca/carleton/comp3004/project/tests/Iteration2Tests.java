@@ -1260,4 +1260,116 @@ public class Iteration2Tests {
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
 	}
+
+	@Test
+	public void testBulletJ() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertEquals(game.getTournamentColor(), CardColor.Purple);
+
+		assertTrue(game.endTurn());
+		//Withdraw other two players
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		assertFalse(game.withdrawPlayer());
+		game.startTurn();
+		//This returns true if the tournament has ended
+		assertTrue(game.withdrawPlayer());
+		//Player wants a red token
+		game.setCustomColor(CardColor.Red);
+		//Check that the player indeed wins a token of the tournament color
+		game.endTournament();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 1);
+	}
+	
+	@Test
+	public void testGreenBulletK() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Green, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.awardToken(game.getCurrentPlayer());
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Green).intValue(), 1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Green);
+		game.withdrawPlayer();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Green).intValue(), 0);
+	}
+	
+	@Test
+	public void testYellowBulletK() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Yellow, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.awardToken(game.getCurrentPlayer());
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Yellow).intValue(), 1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Yellow);
+		game.withdrawPlayer();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Yellow).intValue(), 0);
+	}
+	
+	@Test
+	public void testRedBulletK() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.awardToken(game.getCurrentPlayer());
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Red);
+		game.withdrawPlayer();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 0);
+	}
+	
+	@Test
+	public void testBlueBulletK() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Blue, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.awardToken(game.getCurrentPlayer());
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Blue).intValue(), 1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Blue);
+		game.withdrawPlayer();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Blue).intValue(), 0);
+	}
+	
+	@Test
+	public void testPurpleBulletK() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.awardToken(game.getCurrentPlayer());
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		assertTrue(game.validatePlay(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Purple);
+		game.withdrawPlayer();
+		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 0);
+	}
+	
+	@Test
+	public void testAwardTokenTwice() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.setCustomColor(CardColor.Green);
+		// If true, token was awarded
+		assertTrue(game.awardToken(game.getCurrentPlayer()));
+		// If false, ask user to change his selection for token
+		assertFalse(game.awardToken(game.getCurrentPlayer()));
+	}
 }
