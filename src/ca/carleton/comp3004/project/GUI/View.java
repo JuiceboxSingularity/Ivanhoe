@@ -64,8 +64,7 @@ public class View extends JFrame {
 	private GridBagConstraints c;
 
 	private final int WINDOW_WIDTH = 1024;
-	private final int WINDOW_HEIGHT = 768;
-	private JPanel sidebar;
+	private final int WINDOW_HEIGHT = 800;
 	private JPanel sidebarOptions;
 	private JPanel bottombar;
 	private DrawPanel playArea;
@@ -123,7 +122,7 @@ public class View extends JFrame {
 	Base64.Decoder b64Decoder = Base64.getDecoder();
 	
 	public View(Model tempmodel) {
-		tourColor = Color.white;
+		tourColor = Color.black;
 		images = new Image();
 		initUI();
 		model = tempmodel;
@@ -152,8 +151,6 @@ public class View extends JFrame {
 		panel = new JPanel(new GridBagLayout());
 		c = new GridBagConstraints();
 		panel.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		sidebar = new JPanel(new GridLayout(6,0));
-		//sidebar = new JPanel();
 		sidebarOptions = new JPanel(new GridBagLayout());
 		bottombar = new JPanel();
 		playArea = new DrawPanel();
@@ -163,7 +160,6 @@ public class View extends JFrame {
 			playerArea[x] = new JLayeredPane();
 		}
 		
-		otherArea = new JPanel(new GridLayout(2,5));
 		playerYou = new JPanel(new GridLayout(2,5));
 		playerOne = new JPanel(new GridLayout(2,5));
 		playerTwo = new JPanel(new GridLayout(2,5));
@@ -181,167 +177,113 @@ public class View extends JFrame {
 		connectBox = new JTextField(10);
 		nameBox = new JTextField(10);
 		
-		
-		
-		
-		otherArea.setOpaque(false);
-		
-		sidebar.setBackground(Color.gray);
-
 		sidebarOptions.setBackground(Color.darkGray);
 
 		bottombar.setBackground(new Color(115, 60, 20));
 
 		playerYou.setBackground(new Color(190, 110, 30));
 		playerYou.setBorder(BorderFactory.createTitledBorder("You"));
-		playerOne.setBackground(new Color(190, 110, 30));
-		playerOne.setBorder(BorderFactory.createTitledBorder("Player"));
-		playerTwo.setBackground(new Color(245, 205, 135));
-		playerTwo.setBorder(BorderFactory.createTitledBorder("Player"));
-		playerThree.setBackground(new Color(245, 205, 135));
-		playerThree.setBorder(BorderFactory.createTitledBorder("Player"));
-		playerFour.setBackground(new Color(190, 110, 30));
-		playerFour.setBorder(BorderFactory.createTitledBorder("Player"));
-		
-		playArea.paintComponent(images.getBackgroundPic().getGraphics());
 
 		panel.setBackground(Color.gray);
 
-		c.weightx = 10;
-		c.weighty = 10;
-		c.gridx = 1;
-		c.gridy = 1;
+		
+		c = new GridBagConstraints();
+		c.weightx = 0.0;
+		c.weighty = 0.1;
 		c.gridheight = 1;
 		c.gridwidth = 1;
-		connectBox.setText("127.0.0.1");
-		sidebarOptions.add(connectBox, c);
+		//c.anchor = GridBagConstraints.PAGE_END;
 		
-		c.weightx = 10;
-		c.weighty = 10;
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		sidebarOptions.add(nameBox, c);
-		
-		
-		connectButton.addActionListener(new ConnectButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 3;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		connectButton.addActionListener(new ConnectButtonActionListener());
 		sidebarOptions.add(connectButton, c);
 		
-		button.addActionListener(new ButtonActionListener());
-		c.weightx = 0.5;
-		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 4;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		button.addActionListener(new ButtonActionListener());
 		sidebarOptions.add(button, c);
 		
-		startButton.addActionListener(new StartButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
-		c.gridx = 1;
-		c.gridy = 3;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		sidebarOptions.add(startButton, c);
-		
-		widthdrawButton.addActionListener(new WidthdrawButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 5;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		widthdrawButton.addActionListener(new WidthdrawButtonActionListener());
 		sidebarOptions.add(widthdrawButton, c);
 		
-		endButton.addActionListener(new EndButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
+		c.gridx = 1;
+		c.gridy = 3;
+		startButton.addActionListener(new StartButtonActionListener());
+		sidebarOptions.add(startButton, c);
+		
 		c.gridx = 1;
 		c.gridy = 4;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		endButton.addActionListener(new EndButtonActionListener());
 		sidebarOptions.add(endButton, c);
 		
-		startGameButton.addActionListener(new StartGameButtonActionListener());
-		c.weightx = 0.1;
-		c.weighty = 0.5;
 		c.gridx = 1;
 		c.gridy = 5;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		startGameButton.addActionListener(new StartGameButtonActionListener());
 		sidebarOptions.add(startGameButton, c);
 		
-		
-		tempLabel = new JLabel();
-		tempLabel.setText("Server");
-		tempLabel.setForeground(yellow);
-		c.weightx = 0.1;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		sidebarOptions.add(tempLabel, c);
-		
-		tempLabel = new JLabel();
-		tempLabel.setText("Name");
-		tempLabel.setForeground(yellow);
-		c.weightx = 0.1;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		sidebarOptions.add(tempLabel, c);
-		
-		textArea = new JTextArea(6, 20);
+		textArea = new JTextArea(25, 20);
 		textArea.setEditable(false);
-		c.weightx = 1.0;
-		c.weighty = 2.0;
+		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 1;
 		c.gridwidth = 2;
+		c.ipady = 25;
 		sidebarOptions.add(textArea, c);
 				
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = 0.4;
-		c.weighty = 0.7;
+		c = new GridBagConstraints();
+		c.gridheight = 1;
+		c.gridwidth = 1;
+		
+		tempLabel = new JLabel();
+		tempLabel.setText("Server");
+		tempLabel.setForeground(yellow);
+		c.gridx = 0;
+		c.gridy = 1;
+		sidebarOptions.add(tempLabel, c);
+
+		tempLabel = new JLabel();
+		tempLabel.setText("Name");
+		tempLabel.setForeground(yellow);
+		c.gridx = 0;
+		c.gridy = 2;
+		sidebarOptions.add(tempLabel, c);
+
+		
 		c.gridx = 1;
-		c.gridy = 0;
-		c.gridheight = 2;
-		c.gridwidth = 1;
-		playArea.setBorder(BorderFactory.createTitledBorder(null,"Play Area", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
-		playArea.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.4), (int) (panel.getHeight() * 0.7)));
-		panel.add(playArea, c);
-		c.weightx = 0.2;
+		c.gridy = 1;
+		connectBox.setText("127.0.0.1");
+		sidebarOptions.add(connectBox, c);
+		
+		c.gridx = 1;
+		c.gridy = 2;
+		sidebarOptions.add(nameBox, c);
+		
+		
+		c.fill = GridBagConstraints.BOTH;
+		c.weightx = 1;
 		c.weighty = 0.7;
-		c.gridx = 3;
+		c.gridx = 0;
 		c.gridy = 0;
 		c.gridheight = 2;
-		c.gridwidth = 1;
-		sidebar.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.7)));
-		panel.add(sidebar, c);
-		//
+		c.gridwidth = 4;
+		//playArea.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.4), (int) (panel.getHeight() * 0.7)));
+		panel.add(playArea, c);
+		
 		c.weightx = 0.2;
-		c.weighty = 0.3;
+		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.gridheight = 1;
 		c.gridwidth = 1;
-		playerYou.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.3)));
+		//playerYou.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.3)));
 		panel.add(playerYou, c);
 		//
 		c.weightx = 0.6;
-		c.weighty = 0.3;
+		c.weighty = 0;
 		c.gridx = 1;
 		c.gridy = 2;
 		c.gridheight = 1;
@@ -349,63 +291,32 @@ public class View extends JFrame {
 		bottombar.setBorder(BorderFactory.createTitledBorder("Hand"));
 		bottombar.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.6), (int) (panel.getHeight() * 0.3)));
 		panel.add(bottombar, c);
-		c.weightx = 0.2;
-		c.weighty = 0.3;
-		c.gridx = 3;
-		c.gridy = 2;
-		c.gridheight = 1;
+		
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridx = 4;
+		c.gridy = 0;
+		c.gridheight = 3;
 		c.gridwidth = 1;
-		sidebarOptions.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.3)));
+		c.fill = GridBagConstraints.BOTH;
+		sidebarOptions.setPreferredSize(new Dimension(250,0));
 		panel.add(sidebarOptions, c);
-		c.weightx = 0.2;
-		c.weighty = 0.35;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		playerOne.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
-		panel.add(playerOne, c);
-		c.weightx = 0.2;
-		c.weighty = 0.35;
-		c.gridx = 2;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		playerTwo.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
-		panel.add(playerTwo, c);
-		c.weightx = 0.2;
-		c.weighty = 0.35;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		playerThree.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
-		panel.add(playerThree, c);
-		c.weightx = 0.2;
-		c.weighty = 0.35;
-		c.gridx = 2;
-		c.gridy = 1;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		playerFour.setPreferredSize(new Dimension((int) (panel.getWidth() * 0.2), (int) (panel.getHeight() * 0.35)));
-		panel.add(playerFour, c);
 		
-		
-		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[0].setBorder(BorderFactory.createTitledBorder(null,"Player 1", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[0]);
-		playerArea[1].setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[1].setBorder(BorderFactory.createTitledBorder(null,"Player 2", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[1]);
-		playerArea[2].setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[2].setBorder(BorderFactory.createTitledBorder(null,"Player 3", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[2]);
-		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[3].setBorder(BorderFactory.createTitledBorder(null,"Player 4", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[3]);
 		
 		//otherArea.setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
 		//playArea.add(otherArea);
-		playerArea[5].setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[5].setBorder(BorderFactory.createTitledBorder(null,"You", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[5]);
 		
-		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 5", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.white));
+		playerArea[4].setBorder(BorderFactory.createTitledBorder(null,"Player 5", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
 		playArea.add(playerArea[4]);
 		
 		
@@ -481,8 +392,9 @@ public class View extends JFrame {
 
 	public void loadTokens() {
 		if (true){
-			return;
+			//return;
 		}
+		//System.out.println("TOKENS");
 		JLabel templabel;
 		JPanel tempPanel;
 		//YOU
@@ -493,7 +405,7 @@ public class View extends JFrame {
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens(0).contains("P")) {
+		if (model.getPlayerTokens(0).contains("P")||true) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -570,7 +482,7 @@ public class View extends JFrame {
 		tempPanel = new JPanel(new GridLayout(1,5));
 		tempPanel.setOpaque(false);
 		templabel.setOpaque(true);
-		if (model.getPlayerTokens(1).contains("P")) {
+		if (model.getPlayerTokens(1).contains("P")||true) {
 			templabel.setBackground(purple);
 			tempPanel.add(templabel);
 		} else {
@@ -805,50 +717,6 @@ public class View extends JFrame {
 		loadTokens();
 	}
 	
-	public void chooseTourColor() {
-		//sidebarOptions
-		sidebar.removeAll();
-		
-		JLabel tempLabel;
-		tempLabel = new JLabel("Pick a color:");
-		sidebar.add(tempLabel);
-		
-		JButton tempButton;
-		
-		tempButton = new JButton();
-		tempButton.setBackground(purple);
-		tempButton.addActionListener(new ColorChooserListener(purple));
-		//tempButton.setSize(new Dimension(50,50));
-		sidebar.add(tempButton);
-		
-		tempButton = new JButton();
-		tempButton.setBackground(red);
-		tempButton.addActionListener(new ColorChooserListener(red));
-		//tempButton.setSize(new Dimension(50,50));
-		sidebar.add(tempButton);
-		
-		tempButton = new JButton();
-		tempButton.setBackground(blue);
-		tempButton.addActionListener(new ColorChooserListener(blue));
-		//tempButton.setSize(new Dimension(50,50));
-		sidebar.add(tempButton);
-		
-		tempButton = new JButton();
-		tempButton.setBackground(yellow);
-		tempButton.addActionListener(new ColorChooserListener(yellow));
-		//tempButton.setSize(new Dimension(50,50));
-		sidebar.add(tempButton);
-		
-		tempButton = new JButton();
-		tempButton.setBackground(green);
-		tempButton.addActionListener(new ColorChooserListener(green));
-		//tempButton.setSize(new Dimension(50,50));
-		sidebar.add(tempButton);
-		
-		revalidate();
-		repaint();
-	}
-	
 	//Will need to be changed
 	public void useCard(int x) {
 		String message;
@@ -871,16 +739,6 @@ public class View extends JFrame {
 	public void selectPlayedCard(Card card, int player) {
 		System.out.println("Card: " + card.getCardName());
 		System.out.println("Player: " + player);
-	}
-
-	//Will need to be changed
-	public void selectColor(Color col) {
-		System.out.println("Chosen" + col);
-		tourColor = col;
-		playArea.setBorder(BorderFactory.createTitledBorder(null,"Play Area", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), tourColor));
-		sidebar.removeAll();
-		revalidate();
-		repaint();
 	}
 	
 	//Will need to be changed
@@ -1089,18 +947,7 @@ public class View extends JFrame {
 			useCard(card);
 		}
 	}
-	
-	private class ColorChooserListener implements ActionListener {
-		private Color col;
 
-		public ColorChooserListener(Color col) {
-			this.col = col;
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			selectColor(col);
-		}
-	}
 	
 	private class cardInPlayListener implements MouseListener {
 		private Card card;
@@ -1188,7 +1035,7 @@ public class View extends JFrame {
 
 			super.paintComponent(g);
 			if (this.getWidth() > 0 && this.getHeight() > 0) {
-				g.drawImage(images.getBackgroundPic(this.getWidth(),this.getHeight()), 0, 0, null);
+				//g.drawImage(images.getBackgroundPic(this.getWidth(),this.getHeight()), 0, 0, null);
 			}
 		}
 	}

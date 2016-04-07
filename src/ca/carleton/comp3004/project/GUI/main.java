@@ -15,7 +15,7 @@ public class main {
             @Override
             public void run() {          
             	ArrayList temphand = new ArrayList();
-                Model model = new Model(temphand,temphand,temphand,temphand,temphand,temphand);
+                Model model = new Model();
                 //model.setPlayerTokens();
     			//model.addPlayerSpecials("Shield");
     			//model.addPlayerSpecials("Stunned");

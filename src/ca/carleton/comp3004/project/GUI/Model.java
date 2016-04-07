@@ -32,23 +32,8 @@ public class Model {
 	//private boolean chooseColor;
 	//more?
 
-	public Model(ArrayList hand, ArrayList area, ArrayList area1, ArrayList area2, ArrayList area3, ArrayList area4) {
-		this.hand = hand;
-		this.playerArea = area;
-		this.playerArea1 = area1;
-		this.playerArea2 = area2;
-		this.playerArea3 = area3;
-		this.playerArea4 = area4;
-		this.playertokens = new ArrayList(0);
-		this.player1tokens = new ArrayList(0);
-		this.player2tokens = new ArrayList(0);
-		this.player3tokens = new ArrayList(0);
-		this.player4tokens = new ArrayList(0);
-		this.playerSpecials = new ArrayList(0);
-		this.player1Specials = new ArrayList(0);
-		this.player2Specials = new ArrayList(0);
-		this.player3Specials = new ArrayList(0);
-		this.player4Specials = new ArrayList(0);
+	public Model(){
+		
 	}
 	
 	public Model(Game game){
