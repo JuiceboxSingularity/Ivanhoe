@@ -15,11 +15,6 @@ public class Model {
 	private ArrayList playerArea2;
 	private ArrayList playerArea3;
 	private ArrayList playerArea4;
-	private ArrayList playertokens; //tokens that you have
-	private ArrayList player1tokens; //tokens that player 1 has
-	private ArrayList player2tokens;
-	private ArrayList player3tokens;
-	private ArrayList player4tokens;
 	private ArrayList playerSpecials; //special cards that you have
 	private ArrayList player1Specials; // special cards that player 1 has
 	private ArrayList player2Specials;
@@ -57,10 +52,6 @@ public class Model {
 	public List<Card> getHand() {
 		return game.getPlayers().get(playerNum).getHand();
 	}
-
-	public int getHandSize() {
-		return game.getPlayers().get(playerNum).getHand().size();
-	}
 	
 	public List<Card> getPlayerArea(int x) {
 		return game.getPlayers().get(x).getInPlay();
@@ -87,22 +78,6 @@ public class Model {
 		}
 		return temp;
 	}
-	
-	/*
-	public void setPlayerTokens() {
-		
-		temp.add("P");
-		temp.add("G");
-		temp.add("B");
-		temp.add("R");
-		temp.add("Y");
-		playertokens = temp;
-		player1tokens = temp;
-		player2tokens = temp;
-		player3tokens = temp;
-		player4tokens = temp;
-	}
-	*/
 	
 	public ArrayList getPlayerSpecials() {
 		return playerSpecials;

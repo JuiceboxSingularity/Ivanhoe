@@ -97,8 +97,10 @@ public class GameServer extends Thread {
     		charBuffer.flip();
     		
     		byteBuffer.clear();
+    		
+    		encoder.reset();
 			encoder.encode(charBuffer,byteBuffer,false);
-			encoder.reset();
+			
 			byteBuffer.flip();
 			writeAll(byteBuffer);
 			byteBuffer.clear();	
@@ -177,8 +179,10 @@ public class GameServer extends Thread {
 							charBuffer.clear();
 							charBuffer.put(message);
 							charBuffer.flip();
-							client.write(encoder.encode(charBuffer));
+							
 							encoder.reset();
+							client.write(encoder.encode(charBuffer));
+							
 							charBuffer.clear();
 							
 						}
@@ -256,12 +260,14 @@ public class GameServer extends Thread {
 										
 										encoder.reset();
 										writeAll(encoder.encode(charBuffer));
+										
 										byteBuffer.clear();
 										charBuffer.clear();										
 									}
 								}
 								game.endTournament();
 							};
+							Thread.sleep(100);
 							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
