@@ -558,7 +558,7 @@ public class View extends JFrame {
 	}
 	
 	class NetworkActionListener implements ActionListener {
-		int bytes;
+		int bytes,bytes2;
 		String string;
 		Game game;
 		public void actionPerformed(ActionEvent e) {
@@ -574,11 +574,13 @@ public class View extends JFrame {
 				if (bytes == 0){
 
 				} else if (bytes > 0){
-					;
-					
 					try {
-						Thread.sleep(100);
-						bytes += channel.read(byteBuffer);
+						do {
+							Thread.sleep(900);
+							bytes2 = channel.read(byteBuffer);
+							bytes+=bytes2;
+						} while (bytes2>0);
+						
 					} catch (InterruptedException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
