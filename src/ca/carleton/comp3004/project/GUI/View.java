@@ -54,8 +54,8 @@ import ca.carleton.comp3004.project.gameobjects.Card.CardType;
 import ca.carleton.comp3004.project.gameobjects.Game;
 
 public class View extends JFrame {
-	int WIDTH = 1024;
-	int HEIGHT = 1024;
+	int WIDTH = 1200;
+	int HEIGHT = 1200;
 	int SIDE_WIDTH = 250;
 	
 	private Image images;
@@ -379,7 +379,6 @@ public class View extends JFrame {
 		java.util.List<Card> hand = model.getHand();
 		//java.util.List<Card> hand = new LinkedList<Card>();
 		//hand.add(new Card(Card.CardType.Color,Card.CardColor.Red,4,"red"));
-		
 		bottombar.removeAll();
 		for (int i = 0; i < hand.size(); i++) {
 			//System.out.println("GETTING HAND: "+i);
@@ -403,6 +402,7 @@ public class View extends JFrame {
 		JLabel tempLabel;
 		JPanel tempPanel;
 		
+		playerAreaPane[5].removeAll();
 		for (int x = 0; x < model.game.getPlayers().size();x++){
 		//for (int x = 0; x < 3;x++){
 			playerAreaPane[x].removeAll();
@@ -419,17 +419,16 @@ public class View extends JFrame {
 				tempLabel.setSize(new Dimension(images.getCards(played.get(i)).getWidth(),images.getCards(played.get(i)).getHeight()));
 				tempLabel.addMouseListener(new cardInPlayListener(played.get(i),x));
 				
-				playerAreaPane[x].add(tempLabel, new Integer(i));
-				/*
+				
+				
 				if (x == model.playerNum){ 
 					playerAreaPane[5].add(tempLabel, new Integer(i));
 					//Border border = BorderFactory.createTitledBorder(null,"You (Player "+(model.playerNum+1)+")", TitledBorder.LEFT, TitledBorder.TOP, BorderFactory.createTitledBorder("test").getTitleFont(), Color.black);
 					//playerAreaPane[5].setBorder(border);
 				} else {
-					
-					
+					playerAreaPane[x].add(tempLabel, new Integer(i));
 				}
-				*/
+				
 				tempLabel.setLocation((int)tempLabel.getLocation().getX()+5+10*i,(int)tempLabel.getLocation().getY()+15+15*i);
 				//System.out.println(i);
 				
@@ -451,112 +450,41 @@ public class View extends JFrame {
 		JLabel templabel;
 		JPanel tempPanel;
 		JLabel tempLabel;
-		for (int x = 0; x < model.game.getPlayers().size();x++){
+		int x1;
+		for (int x = 0; x <= 5;x++){
 			tokenArea[x].removeAll();
-			
-			tempLabel = new lab(model.getPlayerTokens(x).contains("B"));
-			tempLabel.setForeground(blue);
-			tempLabel.setOpaque(true);
-			tokenArea[x].add(tempLabel);
-			
-			tempLabel = new lab(model.getPlayerTokens(x).contains("G"));
-			tempLabel.setForeground(green);
-			tempLabel.setOpaque(true);
-			tokenArea[x].add(tempLabel);
-			
-			tempLabel = new lab(model.getPlayerTokens(x).contains("Y"));
-			tempLabel.setForeground(yellow);
-			tempLabel.setOpaque(true);
-			tokenArea[x].add(tempLabel);
-			
-			tempLabel = new lab(model.getPlayerTokens(x).contains("R"));
-			tempLabel.setForeground(red);
-			tempLabel.setOpaque(true);
-			tokenArea[x].add(tempLabel);
-			
-			tempLabel = new lab(model.getPlayerTokens(x).contains("P"));
-			tempLabel.setForeground(purple);
-			tempLabel.setOpaque(true);
-			tokenArea[x].add(tempLabel);	
+			if (x  < model.game.getPlayers().size()){
+				tempLabel = new lab(model.getPlayerTokens(x).contains("B"));
+				tempLabel.setForeground(blue);
+				tempLabel.setOpaque(true);
+				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Blue));
+				tokenArea[x].add(tempLabel);
+				
+				tempLabel = new lab(model.getPlayerTokens(x).contains("G"));
+				tempLabel.setForeground(green);
+				tempLabel.setOpaque(true);
+				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Green));
+				tokenArea[x].add(tempLabel);
+				
+				tempLabel = new lab(model.getPlayerTokens(x).contains("Y"));
+				tempLabel.setForeground(yellow);
+				tempLabel.setOpaque(true);
+				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Yellow));
+				tokenArea[x].add(tempLabel);
+				
+				tempLabel = new lab(model.getPlayerTokens(x).contains("R"));
+				tempLabel.setForeground(red);
+				tempLabel.setOpaque(true);
+				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Red));
+				tokenArea[x].add(tempLabel);
+				
+				tempLabel = new lab(model.getPlayerTokens(x).contains("P"));
+				tempLabel.setForeground(purple);
+				tempLabel.setOpaque(true);
+				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Purple));
+				tokenArea[x].add(tempLabel);
+			}
 		}
-		
-		/*
-		
-		
-		
-		if (model.getPlayerTokens(0).contains("P")||true) {
-			templabel.setBackground(purple);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(0).contains("R")) {
-			templabel.setBackground(red);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(0).contains("B")) {
-			templabel.setBackground(blue);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(0).contains("Y")) {
-			templabel.setBackground(yellow);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		templabel = new JLabel();
-		templabel.setOpaque(true);
-		if (model.getPlayerTokens(0).contains("G")) {
-			templabel.setBackground(green);
-			tempPanel.add(templabel);
-		} else {
-			templabel.setOpaque(false);
-			tempPanel.add(templabel);
-		}
-		for (int x = 0; x < 6; x++){
-			playerArea[x].add(tempPanel);
-		}
-		playerYou.add(tempPanel);
-		/*
-		tempPanel = new JPanel(new FlowLayout());
-		tempPanel.setOpaque(false);
-		
-		if (model.getPlayerSpecials().contains("Shield")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(14), (int)playerYou.getWidth()/5, (int)playerYou.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)14,0));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayerSpecials().contains("Stunned")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(15), (int)playerYou.getWidth()/5, (int)playerYou.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)15,0));
-			tempPanel.add(templabel);
-		}
-		if (model.getPlayerSpecials().contains("Ivanhoe")) {
-			templabel = new JLabel(new ImageIcon(images.resize(images.getCards(16), (int)playerYou.getWidth()/5, (int)playerYou.getHeight()/2)));
-			//NEW
-			templabel.addMouseListener(new cardInPlayListener((int)16,0));
-			tempPanel.add(templabel);
-			
-		}
-		
-		playerYou.add(tempPanel);
-		*/
 		
 	}
 
@@ -594,6 +522,10 @@ public class View extends JFrame {
 		//model.getHand().remove(0);
 		//model.setHand(model.getHand().remove(0));
 		System.out.println(x);
+		if (game.purple == true){
+			System.out.println("CHOOSE A COLOR FIRST");
+			return;
+		}
 		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1)){
 			game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
 			//game.performPlay(x);
@@ -668,6 +600,10 @@ public class View extends JFrame {
 							model.lastPlayerNum = game.getCurrentPlayer().getId();
 							textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
 						}
+						if (game.purple){
+							textAppend("PLEASE CHOOSE A COLOR");
+						}
+						
 						
 						redraw();
 						break;
@@ -820,6 +756,42 @@ public class View extends JFrame {
 		}
 	}
 
+	private class tokenPickListerner implements MouseListener {
+		private Card.CardColor color;
+
+		public tokenPickListerner(Card.CardColor col) {
+			this.color = col;
+			
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("PICKED A COLORRR");
+			String message;
+			message = "purple:";
+			message += this.color.ordinal();
+			sendString(message);
+			System.out.println(message);
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+	}
 	
 	private class cardInPlayListener implements MouseListener {
 		private Card card;

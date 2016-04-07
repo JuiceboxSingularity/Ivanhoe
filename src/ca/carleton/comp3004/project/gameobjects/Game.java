@@ -19,7 +19,7 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = -6443549403268656779L;
 	private final int NOCARD = -1;
 	private List<Player> playerList;
-	private CardColor tournamentColor;
+	public CardColor tournamentColor;
 	private CardColor prevColor;
 	private Deck deck;
 	private int maxPlayers;
@@ -27,9 +27,12 @@ public class Game implements Serializable {
 	private Player targetPlayer = null;
 	private int targetCard = NOCARD;
 	private Map<CardColor, Integer> tokens;
-	private CardColor customToken = CardColor.None;
+	
 	private boolean ended;
-
+	
+	public boolean purple = false;
+	private CardColor customToken = CardColor.None;
+	
 	public Game(int maxPlayers) {
 		this.playerList = new LinkedList<Player>();
 		this.tournamentColor = CardColor.None;
@@ -145,7 +148,11 @@ public class Game implements Serializable {
 	}
 
 	public void endTournament() {
-		awardToken(currentPlayer);
+		if (tournamentColor == CardColor.Purple){
+			purple = true;
+		} else {
+			awardToken(currentPlayer);
+		}
 		for (Player p : playerList) {
 			p.setPlaying(true);
 			p.clearDisplay();
