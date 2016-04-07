@@ -704,6 +704,60 @@ public class TournamentTest {
 	}
 	
 	@Test
+	public void testShieldAgainstDisgrace() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
+		game.setTournamentColor(CardColor.Red);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertTrue(c.getCardType().equals(CardType.Supporter));
+		}
+		game.endTurn();
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Disgrace"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		//Make sure the card is still there
+		for (Card c : shieldedPlayer.getInPlay()) {
+			assertTrue(c.getCardType().equals(CardType.Supporter));
+		}
+	}
+	
+	@Test
+	public void testShieldAgainstRetreat() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Shield"));
+		Player shieldedPlayer = game.getCurrentPlayer();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Retreat"));
+		// We want to take back the supporter
+		game.setTargetCard(1);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Retreat")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		// Nothing should change
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertFalse(c.equals(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		}
+		Card cardInHand = shieldedPlayer.getHand().get(shieldedPlayer.getHand().size() - 1);
+		assertTrue(cardInHand.getCardType() == CardType.Supporter && (cardInHand.getCardName() == "Maiden"));
+	}
+	
+	@Test
 	public void testStunned() {
 		
 	}
