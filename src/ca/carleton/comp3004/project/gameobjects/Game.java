@@ -462,7 +462,7 @@ public class Game implements Serializable {
 
 	public boolean validateAdapt(Player p) {
 		Set<Integer> cardValues = new HashSet<Integer>();
-
+		if (p.isShielded()) return true;
 		for (Card c : p.getHand()) {
 			if (c.getCardType() == CardType.Action) continue;
 			if (!cardValues.add(c.getCardValue())) {
