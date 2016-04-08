@@ -635,7 +635,6 @@ public class View extends JFrame {
 					System.out.println("STUFF RECEIVED: "+bytes);
 					msgBuffer.put(socketBuffer);
 					
-<<<<<<< HEAD
 					if (read < (size+8)){
 						waiting = true;
 						return;
@@ -644,17 +643,6 @@ public class View extends JFrame {
 					} else {
 						waiting = false;
 						msgBuffer.flip();
-=======
-					while ((bytes-Long.BYTES) < size){
-						try {
-							bytes += channel.read(byteBuffer);
-							System.out.println("WAITING:"+bytes);
-							Thread.sleep(100);
-						} catch (IOException | InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
->>>>>>> origin/master
 					}
 					
 				} else if (bytes == 0){
