@@ -20,13 +20,14 @@ public class Game implements Serializable {
 	private final int NOCARD = -1;
 	private List<Player> playerList;
 	public CardColor tournamentColor;
-	private CardColor prevColor;
+	public CardColor prevColor;
 	private Deck deck;
 	private int maxPlayers;
 	private Player currentPlayer;
 	private Player targetPlayer = null;
 	private int targetCard = NOCARD;
 	private Map<CardColor, Integer> tokens;
+	private Game backup = null;
 	
 	private boolean ended;
 	
@@ -46,6 +47,16 @@ public class Game implements Serializable {
 			tokens.put(c, 5);
 		}
 	}
+	
+	public Game (Game aGame) {
+		this(aGame.maxPlayers);
+		for (Player p : aGame.playerList) {
+			this.playerList.add(p.clone());
+		}
+		
+		
+		this.tournamentColor = aGame.tournamentColor;
+	}
 
 	public boolean addPlayer(Player aPlayer) {
 		if (playerList.size() < maxPlayers) {
@@ -61,13 +72,17 @@ public class Game implements Serializable {
 			tournamentColor = customToken;
 			customToken = CardColor.None;
 		}
-		if (this.tournamentColor == CardColor.None) return false;
+		if (this.tournamentColor == CardColor.None) {
+			return false;
+		}
 		else if (p.getTokens().get(tournamentColor).intValue() == 1) {
+			tournamentColor = CardColor.None;
 			return false;
 		}
 		if (tokens.get(tournamentColor) > 0) {
 			p.getTokens().put(tournamentColor, p.getTokens().get(tournamentColor)+1);
 			tokens.put(tournamentColor, tokens.get(tournamentColor) - 1);
+			tournamentColor = CardColor.None;
 			return true;
 		} else {
 			return false;
@@ -148,6 +163,7 @@ public class Game implements Serializable {
 	}
 
 	public void endTournament() {
+		this.prevColor = tournamentColor;
 		if (tournamentColor == CardColor.Purple){
 			purple = true;
 		} else {
@@ -157,7 +173,6 @@ public class Game implements Serializable {
 			p.setPlaying(true);
 			p.clearDisplay();
 		}
-		this.prevColor = tournamentColor;
 		this.tournamentColor = CardColor.None;
 		this.customToken = CardColor.None;
 	}
@@ -215,8 +230,10 @@ public class Game implements Serializable {
 	}
 
 	public boolean validatePlay(Card c) {
-		if (this.tournamentColor == CardColor.None && c.getCardType() == CardType.Color) {
-			if (this.prevColor == CardColor.Purple && c.getCardColor() == CardColor.Purple) return false;
+		if (tournamentColor == CardColor.None && c.getCardType() == CardType.Color) {
+			if (this.prevColor == CardColor.Purple && c.getCardColor() == CardColor.Purple) {
+				return false;
+			}
 			return true;
 		} else if (c.getCardType() == CardType.Supporter){
 			if (c.getCardName() == "Squire") return true;
@@ -275,6 +292,7 @@ public class Game implements Serializable {
 
 			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performDisgrace();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
 				currentPlayer.removeCard(index);
@@ -301,15 +319,18 @@ public class Game implements Serializable {
 				performBreaklance();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Riposte") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performRiposte();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dodge") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performDodge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Retreat") {
 				currentPlayer.removeCard(index);
 				performRetreat();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Knockdown") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performKnockdown();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Shield") {
 				currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
@@ -461,6 +482,7 @@ public class Game implements Serializable {
 		if (!targetPlayer.isShielded()) {
 			Card randomCard = targetPlayer.getHand().remove(new Random().nextInt(targetPlayer.getHand().size()));
 			this.currentPlayer.getHand().add(randomCard);
+			
 		}
 		this.targetPlayer = null;
 	}
@@ -492,5 +514,24 @@ public class Game implements Serializable {
 		}
 
 		return true;
+	}
+
+	public void performIvanhoe(int playerId) {
+		if (backup != null) {
+			this.playerList = new LinkedList<Player>(backup.playerList);
+			this.tournamentColor = backup.tournamentColor;
+			backup = null;
+		}
+		
+		for (Player p : playerList) {
+			if (p.getId() == playerId) {
+				for (Iterator<Card> it = p.getHand().iterator(); it.hasNext(); ) {
+					Card aCard = it.next();
+					if (aCard.getCardName() == "Ivanhoe") {
+						it.remove();
+					}
+				}
+			}
+		}
 	}
 }

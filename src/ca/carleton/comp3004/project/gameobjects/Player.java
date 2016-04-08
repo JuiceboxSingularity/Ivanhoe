@@ -3,6 +3,7 @@ package ca.carleton.comp3004.project.gameobjects;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,15 +26,24 @@ public class Player implements Serializable {
 	public Player(String name, int id) {
 		this.playerName = name;
 		this.id = id;
-		this.inDisplay = new ArrayList<Card>();
-		this.inPlay = new ArrayList<Card>();
-		this.hand = new ArrayList<Card>();
+		this.inDisplay = new LinkedList<Card>();
+		this.inPlay = new LinkedList<Card>();
+		this.hand = new LinkedList<Card>();
 		this.tokens = new HashMap<CardColor, Integer>();
 		
 		for (CardColor c : CardColor.values()) {
 			if (c == CardColor.None || c == CardColor.White) continue;
 			tokens.put(c, 0);
 		}
+	}
+	
+	@Override
+	public Player clone() {
+		Player p = new Player(this.playerName, this.id);
+		p.inDisplay.addAll(this.inDisplay);
+		p.inPlay.addAll(this.inPlay);
+		p.hand.addAll(this.hand);
+		return p;
 	}
 	
 	public void addCard(Card c) {
@@ -127,6 +137,15 @@ public class Player implements Serializable {
 	public boolean isShielded() {
 		for (Card c : inDisplay) {
 			if (c.getCardName() == "Shield") {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isStunned() {
+		for (Card c : inDisplay) {
+			if (c.getCardName() == "Stunned") {
 				return true;
 			}
 		}

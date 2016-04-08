@@ -93,7 +93,7 @@ public class Card implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Type: " + this.getCardType() + " Color: " + this.getCardColor().toString() + " Value: " + this.value;
+		return "Type: " + this.getCardType() + " Color: " + this.getCardColor().toString() + " Value: " + this.value + " Name: " + this.cardName;
 	}
 	
 	public boolean equals(Card aCard) {

@@ -153,6 +153,8 @@ public class TournamentTest {
 
 		//Check that the player indeed wins a token of the tournament color
 		game.endTournament();
+		game.setCustomColor(CardColor.Purple);
+		game.awardToken(game.getCurrentPlayer());
 		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
 	}
 
@@ -177,17 +179,19 @@ public class TournamentTest {
 
 		assertTrue(game.endTurn());
 		//Withdraw other two players
-		game.startTurn();		assertFalse(game.withdrawPlayer());
+		game.startTurn();		
+		assertFalse(game.withdrawPlayer());
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
 
 		//Check that the player indeed wins a token of the tournament color
 		game.endTournament();
+		game.setCustomColor(CardColor.Purple);
+		assertTrue(game.awardToken(game.getCurrentPlayer()));
 		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
 
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 3));
-
 		assertFalse(game.validatePlay(game.getCurrentPlayer().viewCard(game.getCurrentPlayer().getHand().size()-1)));
 
 		assertEquals(game.getTournamentColor(), CardColor.None);
@@ -930,7 +934,7 @@ public class TournamentTest {
 		Player shieldedPlayer = game.getCurrentPlayer();
 		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Shield")));
 		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
-		
+
 		assertTrue(game.endTurn());
 		assertEquals(CardColor.Purple, game.getTournamentColor());
 		game.startTurn();
@@ -955,7 +959,7 @@ public class TournamentTest {
 
 		assertTrue(game.validateAdapt(shieldedPlayer));
 	}
-	
+
 	@Test
 	public void testShieldAgainstDropweapon() {
 		game.startTurn();
@@ -974,7 +978,7 @@ public class TournamentTest {
 		assertEquals(CardColor.Green, game.getTournamentColor());
 		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Green, 5)));
 	}
-	
+
 	@Test
 	public void testShieldAgainstChangeweapon() {
 		game.startTurn();
@@ -998,7 +1002,7 @@ public class TournamentTest {
 		game.startTurn();
 		assertEquals(CardColor.Blue, game.getTournamentColor());
 	}
-	
+
 	@Test
 	public void testShieldAgainstUnhorse() {
 		game.startTurn();
@@ -1023,14 +1027,191 @@ public class TournamentTest {
 		assertEquals(CardColor.Red, game.getTournamentColor());
 		assertFalse(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Unhorse")));
 	}
-	
+
 	@Test
 	public void testStunned() {
 
 	}
 
 	@Test
-	public void testIvanhoe() {
+	public void testIvanhoeAgainstKnockdown() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Ivanhoe"));
+		int targetPlayer = game.getCurrentPlayer().getId();
+		int targetPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Knockdown"));
+		game.setTargetPlayer(targetPlayer);
+		int currentPlayerHandSize = game.getCurrentPlayer().getHand().size();
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Knockdown")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
 
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				assertEquals(p.getHand().size(), targetPlayerHandSize - 1);
+			}
+		}
+		assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
+
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				for (Card c : p.getHand()) {
+					if (c.getCardName() == "Ivanhoe") {
+						game.performIvanhoe(targetPlayer);
+
+						assertEquals(p.getHand().size(), targetPlayerHandSize - 1);
+						assertEquals(game.getCurrentPlayer().getHand().size(), currentPlayerHandSize);
+					}
+				}
+			}
+		}
+	}
+
+	@Test
+	public void testIvanhoeAgainstDodge() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		int targetPlayer = game.getCurrentPlayer().getId();
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Ivanhoe"));
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Dodge"));
+		game.setTargetPlayer(targetPlayer);
+		game.setTargetCard(0);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Dodge")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+
+				assertFalse((p.getInPlay().get(0).getCardColor() == CardColor.Purple) && 
+						((p.getInPlay().get(0).getCardValue() == 4)));
+			}
+		}
+
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				for (Card c : p.getHand()) {
+					if (c.getCardName() == "Ivanhoe") {
+						game.performIvanhoe(targetPlayer);
+					}
+				}
+			}
+		}
+
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer) {
+				assertTrue(p.getInPlay().size() == 2);
+			}
+		}
+	}
+
+	@Test
+	public void testIvanhoeAgainstDisgrace() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6));
+		game.setTournamentColor(CardColor.Red);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Ivanhoe"));
+		Player targetPlayer = game.getCurrentPlayer();
+
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertTrue(c.getCardType().equals(CardType.Supporter));
+		}
+		game.endTurn();
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Disgrace"));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		//Make sure the card is not there
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer.getId()) {
+				for (Card c : p.getInPlay()) {
+					assertFalse(c.getCardType().equals(CardType.Supporter));
+				}
+			}
+		}
+		
+
+		game.performIvanhoe(targetPlayer.getId());
+
+		//Make sure the card is back
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetPlayer.getId()) {
+				assertTrue(p.getInPlay().size() > 0);
+			}
+		}
+		for (Card c : targetPlayer.getInPlay()) {
+			assertTrue(c.getCardType().equals(CardType.Supporter));
+		}
+	}
+	
+	@Test
+	public void testIvanhoeAgainstRetreat() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Supporter, CardColor.White, 6, "Maiden"));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Ivanhoe"));
+		Player targetPlayer = game.getCurrentPlayer();
+
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Retreat"));
+		// We want to take back the supporter
+		game.setTargetCard(1);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Retreat")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		// Nothing should change
+		game.performIvanhoe(targetPlayer.getId());
+		for (Card c : game.getCurrentPlayer().getInPlay()) {
+			assertFalse(c.equals(new Card(CardType.Supporter, CardColor.White, 6, "Maiden")));
+		}
+	}
+	
+	@Test
+	public void testIvanhoeAgainstRiposte() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 5));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Purple, 4));
+		int targetId = game.getCurrentPlayer().getId();
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Ivanhoe"));
+		assertTrue(game.endTurn());
+		assertEquals(CardColor.Purple, game.getTournamentColor());
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Riposte"));
+		game.setTargetPlayer(targetId);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Riposte")));
+		Card takenCard = game.getTargetPlayer().getInPlay().get(0);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+
+		assertTrue((takenCard.getCardColor() == CardColor.Purple) && ( takenCard.getCardType() == CardType.Color) && (takenCard.getCardValue() == 4));
+		for (Player p : game.getPlayers()) {
+			if (p.getId() == targetId) {
+				assertTrue(p.getInPlay().size() == 0);
+			}
+		}
+		assertEquals(game.getCurrentPlayer().getInPlay().size(), 1);
+		
+		game.performIvanhoe(targetId);
+		
+		assertEquals(game.getCurrentPlayer().getInPlay().size(), 0);
 	}
 }
