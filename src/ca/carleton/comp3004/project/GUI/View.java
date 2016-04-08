@@ -485,6 +485,8 @@ public class View extends JFrame {
 				tokenArea[x].add(tempLabel);
 			}
 		}
+		revalidate();
+		repaint();
 		
 	}
 
@@ -526,13 +528,13 @@ public class View extends JFrame {
 			System.out.println("CHOOSE A COLOR FIRST");
 			return;
 		}
-		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1)){
+		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) || true){
 			game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
 			//game.performPlay(x);
 			message = "play:"+x;
 			sendString(message);
 		} else {
-			System.out.println("NOT YOUR TURN");
+			//System.out.println("NOT YOUR TURN");
 		}
 	}
 	
@@ -557,28 +559,92 @@ public class View extends JFrame {
 		return button;
 	}
 	
-	class NetworkActionListener implements ActionListener {
-		int bytes;
-		String string;
+	public void process(String string){
 		Game game;
+		
+		String[] parts = string.split(":");
+		switch(parts[0]){
+		case "state":
+			//int size = Integer.parseInt( parts[1];
+			
+			game = decodeGameState(parts[1]);
+			System.out.println("RECEIVED GAME STATE");
+			
+			
+			model.setGame(game);
+			
+			if (game.getCurrentPlayer().getId() != model.lastPlayerNum){
+				model.lastPlayerNum = game.getCurrentPlayer().getId();
+				textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
+			}
+			if (game.purple){
+				textAppend("PLEASE CHOOSE A COLOR");
+			}
+			
+			
+			redraw();
+			break;
+		case "player":
+			model.setPlayer(Integer.parseInt(parts[1]));
+			System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
+			textAppend("YOU ARE PLAYER: " + (model.playerNum+1)+"\n");
+			break;
+		case "msg":
+			
+			textAppend(parts[1]+"\n");
+			break;
+		}
+		
+	}
+	
+	class NetworkActionListener implements ActionListener {
+		long size;
+		int bytes,read;
+		String string;
+		
+		ByteBuffer socketBuffer = ByteBuffer.allocate(8192);
+		ByteBuffer msgBuffer = ByteBuffer.allocate(8192);
+		
+		boolean waiting = false;
+		
 		public void actionPerformed(ActionEvent e) {
 			if (connected){
+				
+				socketBuffer.clear();
+					
 				try {
-					byteBuffer.clear();
-					bytes = channel.read(byteBuffer);
-					byteBuffer.flip();
+					bytes = channel.read(socketBuffer);
 				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					System.out.println("DISCONNECTED");
 					connected = false;
-					
+					e1.printStackTrace();
 				}
-				if (bytes == 0){
-
-				} else if (bytes > 0){
-					long size = byteBuffer.getLong();
+				
+				if (bytes > 0){
+					socketBuffer.flip();
+					if (!waiting){
+						read = bytes;
+						size = socketBuffer.getLong();
+						System.out.println("SIZE HEADER: "+size);
+						msgBuffer.clear();
+					} else {
+						read += bytes;	
+					}
 					
-					System.out.println("\n\nSIZE HEADER: "+size);
-					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
+					System.out.println("STUFF RECEIVED: "+bytes);
+					msgBuffer.put(socketBuffer);
 					
+<<<<<<< HEAD
+					if (read < (size+8)){
+						waiting = true;
+						return;
+					} else if (read > (size+8)){
+						System.out.println("RECEIVED TOO MUCH");
+					} else {
+						waiting = false;
+						msgBuffer.flip();
+=======
 					while ((bytes-Long.BYTES) < size){
 						try {
 							bytes += channel.read(byteBuffer);
@@ -588,56 +654,32 @@ public class View extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+>>>>>>> origin/master
 					}
-					System.out.println("\n\nSTUFF RECEIVED: "+bytes);
 					
-					
-					charBuffer.clear();
-					decoder.decode(byteBuffer,charBuffer,false);
-					charBuffer.flip();
-					string = charBuffer.toString();
-					//SERVER READ KEEP SELECTING IF THESE BUFFERS NOT CLEARED; SOME SORT OF LAZY READ?
-					byteBuffer.clear();
-					charBuffer.clear();
-					
-					System.out.println(string);
-					System.out.println(string.length());
-					
-					String[] parts = string.split(":");
-					switch(parts[0]){
-					case "state":
-						//int size = Integer.parseInt( parts[1];
-						
-						game = decodeGameState(parts[1]);
-						System.out.println("RECEIVED GAME STATE");
-						
-						
-						model.setGame(game);
-						
-						if (game.getCurrentPlayer().getId() != model.lastPlayerNum){
-							model.lastPlayerNum = game.getCurrentPlayer().getId();
-							textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
-						}
-						if (game.purple){
-							textAppend("PLEASE CHOOSE A COLOR");
-						}
-						
-						
-						redraw();
-						break;
-					case "player":
-						model.setPlayer(Integer.parseInt(parts[1]));
-						System.out.println("RECEIVED PLAYER NUMBER: " + model.playerNum);
-						textAppend("YOU ARE PLAYER: " + (model.playerNum+1)+"\n");
-						break;
-					case "msg":
-						
-						textAppend(parts[1]+"\n");
-						break;
-					}
+				} else if (bytes == 0){
+					return;	
 				} else {
-					//EOF -1
+					System.out.println("DISCONNECTED?");
+					return;
 				}
+				
+				charBuffer.clear();
+				decoder.reset();
+				decoder.decode(msgBuffer,charBuffer,true);
+				charBuffer.flip();
+				
+				string = charBuffer.toString();
+				//SERVER READ KEEP SELECTING IF THESE BUFFERS NOT CLEARED; SOME SORT OF LAZY READ?
+				byteBuffer.clear();
+				charBuffer.clear();
+					
+				System.out.println(string);
+				System.out.println(string.length());
+					
+				process(string);
+					
+			
 			}
 		}
 	}

@@ -68,69 +68,66 @@ public class GameServer extends Thread {
 			}
 			string = b64Encoder.encodeToString(baos.toByteArray());
 			System.out.println(string);
-			
-			
-			/*
-			byte[] object;
-			object = b64Decoder.decode(string);
-			
-			ByteArrayInputStream bais = new ByteArrayInputStream(object);
-			ObjectInputStream ois;
-			try {
-				ois = new ObjectInputStream(bais);
-				game = (Game) ois.readObject();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
-			
 			System.out.println("PLAYER TURN " + game.getCurrentPlayer().getId());
 			
-			System.out.println(string.length());
+			System.out.println(string.length()+"state:".length());
+			
 			charBuffer.clear();
+			
 			charBuffer.append("state:");
 			charBuffer.append(string);
     		charBuffer.flip();
     		
-    		byteBuffer.clear();
     		
+    		byteBuffer.clear();
     		encoder.reset();
-			encoder.encode(charBuffer,byteBuffer,false);
+			encoder.encode(charBuffer,byteBuffer,true);
 			
 			byteBuffer.flip();
 			writeAll(byteBuffer);
-			byteBuffer.clear();	
-			charBuffer.clear();
 		}
 				
 		public void writeAll(ByteBuffer byteBuffer){
-			System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
+			//System.out.println("SENDING TO ALL: " + byteBuffer.remaining());
 			for (int x = 0; x<numPlayers; x++){
-				try {
-					byteBuffer.flip();
-					//System.out.println(byteBuffer.remaining());
-					
-					
-					//ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
-					ByteBuffer size = ByteBuffer.allocate(8192);
-					size.putLong(byteBuffer.limit());
-					size.put(byteBuffer);
-					size.flip();
-				
-					
-					playerSockets[x].write(size);
-					//playerSockets[x].write(byteBuffer);
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				writeData(playerSockets[x],byteBuffer);
 			}
 		}
+		
+		public void writeString(SocketChannel socket,String string){
+			charBuffer.clear();
+			charBuffer.put(string);
+			charBuffer.flip();
+			
+			byteBuffer.clear();
+			encoder.reset();
+			encoder.encode(charBuffer,byteBuffer,true);
+			byteBuffer.flip();
+			charBuffer.clear();
+			
+			writeData(socket,byteBuffer);
+		}
+		
+		public void writeData(SocketChannel socket,ByteBuffer byteBuffer){
+			ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
+			size.putLong(byteBuffer.limit());
+			size.flip();
+			
+			byteBuffer.rewind();
+			
+			System.out.println("SIZE: " + byteBuffer.limit());
+			System.out.println("SIZE 1:" + byteBuffer.position());
+			try {
+				socket.write(size);
+				//Thread.sleep(200);
+				socket.write(byteBuffer);
+				System.out.println("SIZE 2:" + byteBuffer.limit());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 		
 		public void read(SelectionKey key){
 			client = (SocketChannel)key.channel();
@@ -187,29 +184,7 @@ public class GameServer extends Thread {
 							System.out.println("JOINED: PLAYER " + parts[1] + " " + numPlayers);
 							
 							message = "player:"+(numPlayers);
-							charBuffer.clear();
-							charBuffer.put(message);
-							charBuffer.flip();
-							
-							encoder.reset();
-							
-							byteBuffer.clear();
-							encoder.encode(charBuffer,byteBuffer,true);
-							
-							//ByteBuffer size = ByteBuffer.allocate(Long.BYTES);
-							
-							byteBuffer.flip();
-							
-							ByteBuffer size = ByteBuffer.allocate(8192);
-							size.putLong(byteBuffer.limit());
-							size.put(byteBuffer);
-							size.flip();
-							client.write(size);
-							//client.write(byteBuffer);
-							//charBuffer.rewind();
-							//client.write(encoder.encode(charBuffer));
-							
-							//charBuffer.clear();
+							writeString(client,message);
 							
 						}
 						break;
