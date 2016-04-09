@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetSocketAddress;
@@ -27,6 +28,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.print.attribute.standard.Media;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -107,11 +112,17 @@ public class View extends JFrame {
 	Base64.Encoder b64Encoder = Base64.getEncoder();
 	Base64.Decoder b64Decoder = Base64.getDecoder();
 	
+	static String path = System.getProperty("user.dir");
+	String soundShuffle = "/sounds/cockatrice/shuffle.wav";
+	String soundDraw = "/sounds/cockatrice/draw.wav";
+	String soundPlay = "/sounds/cockatrice/playCard.wav";
+	String soundPass = "/sounds/cockatrice/Passturn.wav";
 	public View(Model tempmodel) {
 		tourColor = Color.black;
 		images = new Image();
 		initUI();
 		model = tempmodel;
+		playSound(soundShuffle);
 	}
 	
 	private void textAppend(String string){
@@ -765,7 +776,9 @@ public class View extends JFrame {
 	
 	class StartButtonActionListener implements ActionListener {
 		String message;
+		
 		public void actionPerformed(ActionEvent e) {
+			playSound(soundDraw);
 			message = "start:";
 			sendString(message);
 		}
@@ -818,6 +831,7 @@ public class View extends JFrame {
 	class WidthdrawButtonActionListener implements ActionListener {
 		String message;
 		public void actionPerformed(ActionEvent e) {
+			playSound(soundPass);
 			message = "widthdraw:";
 			sendString(message);
 		}
@@ -834,6 +848,7 @@ public class View extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			playSound(soundPlay);
 			useCard(card);
 		}
 	}
@@ -965,4 +980,21 @@ public class View extends JFrame {
 			}
 		}
 	}
+	
+	public static synchronized void playSound(final String fileName)
+    {
+        // Note: use .wav files            
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path + fileName));
+                    clip.open(inputStream);
+                    clip.start();
+                } catch (Exception e) {
+                    System.out.println("play sound error: " + e.getMessage() + " for " + fileName);
+                }
+            }
+        }).start();
+    }
 }
