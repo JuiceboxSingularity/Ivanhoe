@@ -1255,7 +1255,8 @@ public class Iteration2Tests {
 		game.startTurn();
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
-
+		game.setTournamentColor(CardColor.Purple);
+		game.awardToken(game.getCurrentPlayer());
 		//Check that the player indeed wins a token of the tournament color
 		game.endTournament();
 		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Purple).intValue(), 1);
@@ -1280,9 +1281,10 @@ public class Iteration2Tests {
 		//This returns true if the tournament has ended
 		assertTrue(game.withdrawPlayer());
 		//Player wants a red token
-		game.setCustomColor(CardColor.Red);
 		//Check that the player indeed wins a token of the tournament color
 		game.endTournament();
+		game.setTournamentColor(CardColor.Red);
+		game.awardToken(game.getCurrentPlayer());
 		assertEquals(game.getCurrentPlayer().getTokens().get(CardColor.Red).intValue(), 1);
 	}
 	

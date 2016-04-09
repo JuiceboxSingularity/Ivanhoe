@@ -358,8 +358,6 @@ public class Game implements Serializable {
 					}
 				}
 			}
-
-
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 			currentPlayer.setTurnPlayed(true);

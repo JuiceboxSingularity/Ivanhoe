@@ -10,7 +10,8 @@ import org.junit.runners.Suite.SuiteClasses;
 				GameTest.class,
 				PlayerTest.class,
 				GameLogicTest.class,
-				TournamentTest.class})
+				TournamentTest.class,
+				Iteration2Tests.class})
 public class AllGameTests {
 	
 }
