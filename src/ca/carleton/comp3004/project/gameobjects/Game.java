@@ -289,6 +289,8 @@ public class Game implements Serializable {
 				return true;
 			} else if (c.getCardName().equals("Disgrace")) {
 				return true;
+			} else if (c.getCardName().equals("Ivanhoe")) {
+				return true;
 			}
 			else {
 				System.out.println("CANT PLAY " + c);
