@@ -243,17 +243,17 @@ public class Game implements Serializable {
 			if (currentPlayer.isStunned() && (currentPlayer.isTurnPlayed())) {
 				return false;
 			} 
-			if (c.getCardName() == "Squire") return true;
+			if (c.getCardName().equals("Squire")) return true;
 			for (Card card : currentPlayer.getInPlay()) {
-				if (card.getCardName() == "Maiden") return false;
+				if (card.getCardName().equals("Maiden")) return false;
 			}
 			return true;
 		} else if (tournamentColor == CardColor.None && c.getCardType() == CardType.Action) {
 			return false;
 		} else if (c.getCardType() == CardType.Action){
-			if ((c.getCardName() == "Unhorse") && (tournamentColor == CardColor.Purple) && (customToken != CardColor.None)) {
+			if ((c.getCardName().equals("Unhorse")) && (tournamentColor == CardColor.Purple) && (customToken != CardColor.None)) {
 				return true;
-			} else if ((c.getCardName() == "Changeweapon") && ((tournamentColor == CardColor.Red) || 
+			} else if ((c.getCardName().equals("Changeweapon")) && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
 				if (((customToken == CardColor.Red) || 
@@ -261,36 +261,37 @@ public class Game implements Serializable {
 						(customToken == CardColor.Yellow)))
 					return true;
 				else return false;
-			} else if ((c.getCardName() == "Dropweapon") && ((tournamentColor == CardColor.Red) || 
+			} else if ((c.getCardName().equals("Dropweapon")) && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
 				return true;
-			} else if ((c.getCardName() == "Breaklance")) {
+			} else if ((c.getCardName().equals("Breaklance"))) {
 				return true;
-			} else if ((c.getCardName() == "Riposte")) {
+			} else if ((c.getCardName().equals("Riposte"))) {
 				return true;
-			} else if ((c.getCardName() == "Dodge")) {
+			} else if ((c.getCardName().equals("Dodge"))) {
 				return true;
-			} else if ((c.getCardName() == "Retreat")) {
+			} else if ((c.getCardName().equals("Retreat"))) {
 				return true;
-			} else if ((c.getCardName() == "Knockdown")) {
+			} else if ((c.getCardName().equals("Knockdown"))) {
 				return true;
-			} else if (c.getCardName() == "Shield") {
+			} else if (c.getCardName().equals("Shield")) {
 				return true;
-			} else if (c.getCardName() == "Adapt") {
+			} else if (c.getCardName().equals("Adapt")) {
 				return true;
-			} else if ((c.getCardName() == "Stunned")) {
+			} else if ((c.getCardName().equals("Stunned"))) {
 				return true;
-			} else if (c.getCardName() == "Outmaneuver") {
+			} else if (c.getCardName().equals("Outmaneuver")) {
 				return true;
-			} else if (c.getCardName() == "Charge") {
+			} else if (c.getCardName().equals("Charge")) {
 				return true;
-			} else if (c.getCardName() == "Countercharge") {
+			} else if (c.getCardName().equals("Countercharge")) {
 				return true;
-			} else if (c.getCardName() == "Disgrace") {
+			} else if (c.getCardName().equals("Disgrace")) {
 				return true;
 			}
 			else {
+				System.out.println("CANT PLAY " + c);
 				return false;
 			}
 		}
@@ -310,59 +311,58 @@ public class Game implements Serializable {
 			tournamentColor = currentPlayer.viewCard(index).getCardColor();
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
-
-			if (currentPlayer.viewCard(index).getCardName() == "Disgrace") {
+			if (currentPlayer.viewCard(index).getCardName().equals("Disgrace")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performDisgrace();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Charge")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performCharge();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Outmaneuver") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Outmaneuver")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performOutmaneuver();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Countercharge")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performCountercharge();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Unhorse")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				tournamentColor = customToken;
 				customToken = CardColor.None;
-			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Changeweapon")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				tournamentColor = customToken;
 				customToken = CardColor.None;
-			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Dropweapon")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				tournamentColor = CardColor.Green;
-			} else if (currentPlayer.viewCard(index).getCardName() == "Breaklance") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Breaklance")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performBreaklance();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Riposte") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Riposte")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performRiposte();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Dodge") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Dodge")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performDodge();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Retreat") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Retreat")) {
 				currentPlayer.removeCard(index);
 				performRetreat();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Knockdown") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Knockdown")) {
 				currentPlayer.removeCard(index);
 				backup = new Game(this);
 				performKnockdown();
-			} else if (currentPlayer.viewCard(index).getCardName() == "Shield") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Shield")) {
 				currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
-			} else if (currentPlayer.viewCard(index).getCardName() == "Stunned") {
+			} else if (currentPlayer.viewCard(index).getCardName().equals("Stunned")) {
 				for (Player p : playerList) {
 					if (p.getId() == targetPlayer.getId()) {
 						p.addCardToDisplay(currentPlayer.removeCard(index));
