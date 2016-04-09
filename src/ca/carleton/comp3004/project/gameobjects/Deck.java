@@ -104,7 +104,7 @@ public class Deck implements Serializable {
 		}
 		
 		//NEED PLAYER CARD
-		String[] needPlayerCard = {"DODGE"};
+		String[] needPlayerCard = {"Dodge", "Adapt", "Outwit"};
 		for (int i = 0; i < needPlayerCard.length; i++) {
 			card = new Card(CardType.Action, CardColor.None, 0, needPlayerCard[i]);
 			card.targetPlayer = true;
