@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Game;
 import ca.carleton.comp3004.project.gameobjects.Player;
 

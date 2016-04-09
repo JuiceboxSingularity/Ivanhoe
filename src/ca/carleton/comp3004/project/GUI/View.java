@@ -117,6 +117,7 @@ public class View extends JFrame {
 	String soundDraw = "/sounds/cockatrice/draw.wav";
 	String soundPlay = "/sounds/cockatrice/playCard.wav";
 	String soundPass = "/sounds/cockatrice/Passturn.wav";
+	String soundVictory = "/sounds/cockatrice/victory.wav";
 	public View(Model tempmodel) {
 		tourColor = Color.black;
 		images = new Image();
@@ -605,6 +606,7 @@ public class View extends JFrame {
 				textAppend("PLEASE CHOOSE A COLOR\n");
 			}
 			if (game.won){
+				playSound(soundVictory);
 				textAppend("TOURNAMENT OVER\n");
 				textAppend("PLAYER " + game.getCurrentPlayer().getId() + " HAS WON\n");
 			}

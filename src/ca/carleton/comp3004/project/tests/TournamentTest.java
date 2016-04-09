@@ -2,8 +2,6 @@ package ca.carleton.comp3004.project.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.Map.Entry;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
