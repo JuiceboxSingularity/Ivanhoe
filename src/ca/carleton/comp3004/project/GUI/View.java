@@ -55,15 +55,13 @@ import ca.carleton.comp3004.project.gameobjects.Game;
 
 public class View extends JFrame {
 	int WIDTH = 1200;
-	int HEIGHT = 1200;
+	int HEIGHT = 1000;
 	int SIDE_WIDTH = 250;
 	
 	private Image images;
 	private JPanel panel;
 	private GridBagConstraints c;
 
-	private final int WINDOW_WIDTH = 1024;
-	private final int WINDOW_HEIGHT = 800;
 	private JPanel sidebarOptions;
 	private JPanel bottombar;
 	private DrawPanel playArea;
@@ -147,6 +145,11 @@ public class View extends JFrame {
 		}
 		
 		public void paintComponent(Graphics g) {
+			
+			int size = this.getWidth();
+			if (size > this.getHeight()) size = this.getHeight();
+			int s = 4;
+			
 	        super.paintComponent(g);       
 	        Graphics2D g2d = (Graphics2D) g;
 	        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -155,9 +158,9 @@ public class View extends JFrame {
 	        g.setColor(this.getForeground());
 	        g2d.setStroke(new BasicStroke(3));
 	        if (on){
-	        	g2d.fillOval(0,0,this.getWidth()-5,this.getWidth()-5);
+	        	g2d.fillOval(s/2,s/2,size-s,size-s);
 	        } else {
-	        	g2d.drawOval(0,0,this.getWidth()-5,this.getWidth()-5);
+	        	g2d.drawOval(s/2,s/2,size-s,size-s);
 			}
 	    }  
 		
@@ -210,11 +213,10 @@ public class View extends JFrame {
 			tokenArea[x] =  new JPanel(new GridLayout(1,5));
 			initToken(tokenArea[x]);
 			
-			tokenArea[x].setPreferredSize(new Dimension(150, 50));
-			playerAreaPane[x].setPreferredSize(new Dimension(140, 200));
-					
 			
+			playerAreaPane[x].setPreferredSize(new Dimension(140,100));
 			playerArea[x].add(playerAreaPane[x],BorderLayout.CENTER);
+			tokenArea[x].setPreferredSize(new Dimension((WIDTH-SIDE_WIDTH)/3-100, (WIDTH-SIDE_WIDTH)/15));
 			playerArea[x].add(tokenArea[x],BorderLayout.PAGE_END);
 		}
 		
@@ -455,38 +457,45 @@ public class View extends JFrame {
 		JPanel tempPanel;
 		JLabel tempLabel;
 		int x1;
-		for (int x = 0; x <= 5;x++){
+		
+		tokenArea[5].removeAll();
+		for (int x = 0; x <= 4;x++){
 			tokenArea[x].removeAll();
 			if (x  < model.game.getPlayers().size()){
+				x1 = x;
+				if (x == model.playerNum){
+					x1 = 5;
+				}
+				
 				tempLabel = new lab(model.getPlayerTokens(x).contains("B"));
 				tempLabel.setForeground(blue);
 				tempLabel.setOpaque(true);
 				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Blue));
-				tokenArea[x].add(tempLabel);
+				tokenArea[x1].add(tempLabel);
 				
 				tempLabel = new lab(model.getPlayerTokens(x).contains("G"));
 				tempLabel.setForeground(green);
 				tempLabel.setOpaque(true);
 				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Green));
-				tokenArea[x].add(tempLabel);
+				tokenArea[x1].add(tempLabel);
 				
 				tempLabel = new lab(model.getPlayerTokens(x).contains("Y"));
 				tempLabel.setForeground(yellow);
 				tempLabel.setOpaque(true);
 				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Yellow));
-				tokenArea[x].add(tempLabel);
+				tokenArea[x1].add(tempLabel);
 				
 				tempLabel = new lab(model.getPlayerTokens(x).contains("R"));
 				tempLabel.setForeground(red);
 				tempLabel.setOpaque(true);
 				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Red));
-				tokenArea[x].add(tempLabel);
+				tokenArea[x1].add(tempLabel);
 				
 				tempLabel = new lab(model.getPlayerTokens(x).contains("P"));
 				tempLabel.setForeground(purple);
 				tempLabel.setOpaque(true);
 				tempLabel.addMouseListener(new tokenPickListerner(Card.CardColor.Purple));
-				tokenArea[x].add(tempLabel);
+				tokenArea[x1].add(tempLabel);
 			}
 		}
 		revalidate();
@@ -582,7 +591,11 @@ public class View extends JFrame {
 				textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
 			}
 			if (game.purple){
-				textAppend("PLEASE CHOOSE A COLOR");
+				textAppend("PLEASE CHOOSE A COLOR\n");
+			}
+			if (game.won){
+				textAppend("TORUNAMENT OVER\n");
+				textAppend("PLAYER " + game.getCurrentPlayer().getId() + " HAS WON\n");
 			}
 			
 			

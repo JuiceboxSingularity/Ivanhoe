@@ -263,7 +263,7 @@ public class GameServer extends Thread {
 							if(game.withdrawPlayer()){
 								for (Player p : game.getPlayers()) {
 									if (p.isPlaying()){
-										message = "msg:player "+ p.getId()+ " has won";
+										message = "msg:player "+ p.getId()+ " has won\n";
 										System.out.println(message);
 										
 										charBuffer.clear();										

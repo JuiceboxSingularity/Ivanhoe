@@ -31,7 +31,7 @@ public class Game implements Serializable {
 	
 	private boolean ended;
 	
-	public boolean purple = false;
+	public boolean purple = false, won = false;
 	private CardColor customToken = CardColor.None;
 	
 	public Game(int maxPlayers) {
@@ -83,6 +83,9 @@ public class Game implements Serializable {
 			p.getTokens().put(tournamentColor, p.getTokens().get(tournamentColor)+1);
 			tokens.put(tournamentColor, tokens.get(tournamentColor) - 1);
 			tournamentColor = CardColor.None;
+			if (this.gameWon()){
+				won = true;
+			}
 			return true;
 		} else {
 			return false;
@@ -372,7 +375,7 @@ public class Game implements Serializable {
 	}
 
 	public boolean gameWon() {
-		if (playerList.size() < 3) {
+		if (playerList.size() <= 3) {
 			int numTokens = 0;
 			for (Entry<CardColor, Integer> entry : currentPlayer.getTokens().entrySet()) { 
 				if (entry.getValue().intValue() == 1) {
