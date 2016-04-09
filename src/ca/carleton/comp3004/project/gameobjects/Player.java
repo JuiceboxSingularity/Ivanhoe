@@ -40,9 +40,17 @@ public class Player implements Serializable {
 	@Override
 	public Player clone() {
 		Player p = new Player(this.playerName, this.id);
-		p.inDisplay.addAll(this.inDisplay);
-		p.inPlay.addAll(this.inPlay);
-		p.hand.addAll(this.hand);
+		for (Card c : this.inDisplay) {
+			p.inDisplay.add(c.clone());
+		}
+		
+		for (Card c : this.inPlay) {
+			p.inPlay.add(c.clone());
+		}
+		
+		for (Card c : this.hand) {
+			p.hand.add(c.clone());
+		}
 		return p;
 	}
 	

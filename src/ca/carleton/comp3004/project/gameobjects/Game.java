@@ -296,26 +296,33 @@ public class Game implements Serializable {
 				performDisgrace();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Charge") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performCharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Outmaneuver") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performOutmaneuver();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Countercharge") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performCountercharge();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Unhorse") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				tournamentColor = customToken;
 				customToken = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Changeweapon") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				tournamentColor = customToken;
 				customToken = CardColor.None;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Dropweapon") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				tournamentColor = CardColor.Green;
 			} else if (currentPlayer.viewCard(index).getCardName() == "Breaklance") {
 				currentPlayer.removeCard(index);
+				backup = new Game(this);
 				performBreaklance();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Riposte") {
 				currentPlayer.removeCard(index);
@@ -531,6 +538,10 @@ public class Game implements Serializable {
 						it.remove();
 					}
 				}
+			}
+			
+			if (p.getId() == currentPlayer.getId()) {
+				this.currentPlayer = p;
 			}
 		}
 	}

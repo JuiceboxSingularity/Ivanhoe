@@ -75,6 +75,11 @@ public class Card implements Serializable {
 		this.cardName = name;
 	}
 	
+	public Card clone() {
+		Card c = new Card(this.cardType, this.cardColor, this.value, this.cardName);
+		return c;
+	}
+	
 	public CardType getCardType() {
 		return cardType;
 	}

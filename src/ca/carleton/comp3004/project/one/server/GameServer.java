@@ -279,12 +279,20 @@ public class GameServer extends Thread {
 								}
 								game.endTournament();
 							};
-							Thread.sleep(100);
+							Thread.sleep(1500);
 							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");
 						}
-						break;					
+						break;	
+					case "target":
+						System.out.println("APPLYING TARGET PLAYER");
+						for (String s : parts) {
+							System.out.println("HI " + s);
+						}
+						if (started == true) {
+							game.setTargetPlayer(Integer.parseInt(parts[1]));
+						}
 				}
 
 			} catch (Exception e){
