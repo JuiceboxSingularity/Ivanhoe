@@ -33,8 +33,8 @@ public class GameServer extends Thread {
 		String string;
 		SocketChannel client;
 		
-		CharBuffer charBuffer = CharBuffer.allocate(8192);
-		ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
+		CharBuffer charBuffer = CharBuffer.allocate(16384);
+		ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
 
 		Charset charset = Charset.forName("US-ASCII");
 		CharsetEncoder encoder = charset.newEncoder();
@@ -116,12 +116,12 @@ public class GameServer extends Thread {
 			byteBuffer.rewind();
 			
 			System.out.println("SIZE: " + byteBuffer.limit());
-			System.out.println("SIZE 1:" + byteBuffer.position());
+			//System.out.println("SIZE 1:" + byteBuffer.position());
 			try {
 				socket.write(size);
 				//Thread.sleep(200);
 				socket.write(byteBuffer);
-				System.out.println("SIZE 2:" + byteBuffer.limit());
+				//System.out.println("SIZE 2:" + byteBuffer.limit());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -263,7 +263,7 @@ public class GameServer extends Thread {
 							if(game.withdrawPlayer()){
 								for (Player p : game.getPlayers()) {
 									if (p.isPlaying()){
-										message = "msg:player "+ p.getId()+ " has won\n";
+										message = "msg:player "+ p.getId()+ " has won";
 										System.out.println(message);
 										
 										charBuffer.clear();										
@@ -279,7 +279,7 @@ public class GameServer extends Thread {
 								}
 								game.endTournament();
 							};
-							Thread.sleep(1500);
+							//Thread.sleep(1500);
 							sendGame(game);
 						} else {
 							System.out.println("GAME NOT STARTED");

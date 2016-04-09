@@ -99,8 +99,8 @@ public class View extends JFrame {
 	boolean connected;
 	int port = 1001;
 	
-	CharBuffer charBuffer = CharBuffer.allocate(8192);
-	ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
+	CharBuffer charBuffer = CharBuffer.allocate(16384);
+	ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
 
 	Charset charset = Charset.forName("US-ASCII");
 	CharsetEncoder encoder = charset.newEncoder();
@@ -599,13 +599,15 @@ public class View extends JFrame {
 	
 	class NetworkActionListener implements ActionListener {
 		long size;
-		int bytes,read;
+		int bytes,read,back;
 		String string;
 		
-		ByteBuffer socketBuffer = ByteBuffer.allocate(8192);
-		ByteBuffer msgBuffer = ByteBuffer.allocate(8192);
+		ByteBuffer socketBuffer = ByteBuffer.allocate(16384);
+		ByteBuffer msgBuffer = ByteBuffer.allocate(16384);
 		
-		boolean waiting = false;
+		boolean waiting = false, oversized = false;
+		
+		boolean d = false;
 		
 		public void actionPerformed(ActionEvent e) {
 			if (connected){
@@ -621,13 +623,15 @@ public class View extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				if (bytes > 0){
+				if (bytes > 0 || oversized){
+					oversized = false;
 					socketBuffer.flip();
-					if (!waiting){
+					if (!waiting && !oversized){
 						read = bytes;
 						size = socketBuffer.getLong();
-						System.out.println("SIZE HEADER: "+size);
+						if (d) System.out.println("SIZE HEADER: "+size);
 						msgBuffer.clear();
+						//msgBuffer.limit(new Long(size).intValue());
 					} else {
 						read += bytes;	
 					}
@@ -637,14 +641,20 @@ public class View extends JFrame {
 					
 					if (read < (size+8)){
 						waiting = true;
+						
 						return;
 					} else if (read > (size+8)){
-						System.out.println("RECEIVED TOO MUCH");
+						msgBuffer.limit(new Long(size).intValue());
+						back = (int) (read - (size+8));
+						if (d) System.out.println("RECEIVED TOO MUCH: " + back);
+						socketBuffer.position(socketBuffer.limit()-back);
+						size = socketBuffer.getLong();
+						if (d) System.out.println("PLUS SIZE HEADER: "+size);
+						oversized = true;
 					} else {
 						waiting = false;
-						msgBuffer.flip();
 					}
-					
+				
 				} else if (bytes == 0){
 					return;	
 				} else {
@@ -652,6 +662,7 @@ public class View extends JFrame {
 					return;
 				}
 				
+				msgBuffer.flip();
 				charBuffer.clear();
 				decoder.reset();
 				decoder.decode(msgBuffer,charBuffer,true);
@@ -666,7 +677,15 @@ public class View extends JFrame {
 				System.out.println(string.length());
 					
 				process(string);
-					
+				
+				if (oversized == true){
+					if (d) System.out.println("OVERSIZED");
+					waiting = true;
+					read = back;
+					msgBuffer.clear();
+					msgBuffer.put(socketBuffer);
+				}
+			
 			
 			}
 		}
