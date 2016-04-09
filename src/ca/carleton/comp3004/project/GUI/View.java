@@ -60,8 +60,8 @@ import ca.carleton.comp3004.project.gameobjects.Game;
 import ca.carleton.comp3004.project.gameobjects.Player;
 
 public class View extends JFrame {
-	int WIDTH = 1200;
-	int HEIGHT = 1000;
+	int WIDTH = 1024;
+	int HEIGHT = 768;
 	int SIDE_WIDTH = 250;
 	
 	private Image images;
@@ -586,6 +586,8 @@ public class View extends JFrame {
 					message += choosePlayer();
 					sendString(message);
 				}
+				message = "play:"+x;
+				sendString(message);
 			} else if (card.getCardType() == CardType.Color){
 				message = "play:"+x;
 				sendString(message);
@@ -807,7 +809,7 @@ public class View extends JFrame {
 		
 		try {
 			encoder.reset();
-			channel.write(encoder.encode(charBuffer));
+			writeData(channel,encoder.encode(charBuffer));
 			encoder.reset();
 		} catch (CharacterCodingException e) {
 			// TODO Auto-generated catch block
@@ -816,6 +818,24 @@ public class View extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void writeData(SocketChannel socket,ByteBuffer byteBuffer){
+		ByteBuffer size = ByteBuffer.allocate(16384);
+		size.putLong(byteBuffer.limit());
+		size.put(byteBuffer);
+		size.flip();
+		
+		byteBuffer.rewind();
+		
+		System.out.println("SIZE: " + size.limit());
+		//System.out.println("SIZE 1:" + byteBuffer.position());
+		try {
+			socket.write(size);
+			//System.out.println("SIZE 2:" + byteBuffer.limit());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	class StartGameButtonActionListener implements ActionListener {
