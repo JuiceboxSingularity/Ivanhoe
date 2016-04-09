@@ -391,6 +391,10 @@ public class View extends JFrame {
 			
 			tempButton.setPreferredSize(new Dimension((int) (temp), 160));
 			tempButton.addActionListener(new HandActionListener(i));
+			if (model.game != null) {
+				if (model.game.validatePlay(hand.get(i))) tempButton.setEnabled(true);
+				else tempButton.setEnabled(false);
+			}
 			bottombar.add(tempButton, c);
 		}
 		//System.out.println("DONE GETTING HAND");
