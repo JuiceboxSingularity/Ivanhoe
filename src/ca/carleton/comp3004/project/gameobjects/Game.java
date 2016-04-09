@@ -281,6 +281,14 @@ public class Game implements Serializable {
 				return true;
 			} else if ((c.getCardName() == "Stunned")) {
 				return true;
+			} else if (c.getCardName() == "Outmaneuver") {
+				return true;
+			} else if (c.getCardName() == "Charge") {
+				return true;
+			} else if (c.getCardName() == "Countercharge") {
+				return true;
+			} else if (c.getCardName() == "Disgrace") {
+				return true;
 			}
 			else {
 				return false;
