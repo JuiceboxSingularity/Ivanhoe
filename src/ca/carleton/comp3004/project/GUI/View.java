@@ -659,6 +659,7 @@ public class View extends JFrame {
 			}
 			if (game.won){
 				playSound(soundVictory);
+				JOptionPane.showMessageDialog(null, "PLAYER " + game.getCurrentPlayer().getId() + " HAS WON");
 				textAppend("TOURNAMENT OVER\n");
 				textAppend("PLAYER " + game.getCurrentPlayer().getId() + " HAS WON\n");
 			}
