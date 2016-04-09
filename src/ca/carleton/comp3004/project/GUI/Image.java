@@ -14,6 +14,7 @@ public class Image extends Component {
     //BufferedImage actionCards[] = new BufferedImage[17];
     //BufferedImage simpleCards[] = new BufferedImage[19];
 	BufferedImage[] cards = new BufferedImage[36]; //17+19
+	BufferedImage[] status = new BufferedImage[2]; //17+19
 	String[] cardNames = new String[36];
 	String[] part;
 	int cardCount;
@@ -46,6 +47,18 @@ public class Image extends Component {
     	
 		try {
 	    	backgroundBorder = ImageIO.read(new File("images/Background/background.jpeg"));
+		} catch (IOException e) {
+			System.out.println("Background missing");
+		}
+		
+		try {
+			folder = new File("images/status");
+			listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					status[i] = ImageIO.read(listOfFiles[i]);
+				}
+			}
 		} catch (IOException e) {
 			System.out.println("Background missing");
 		}
@@ -102,6 +115,10 @@ public class Image extends Component {
         g2d.dispose();
 
         return dimg;
+    }
+    
+    public BufferedImage getStatusPic(int x) {
+    	return status[x];
     }
     
 

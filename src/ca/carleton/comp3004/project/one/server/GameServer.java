@@ -344,8 +344,6 @@ public class GameServer extends Thread {
 				}
 				
 				
-				
-				
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -416,7 +414,6 @@ public class GameServer extends Thread {
 	
 	public static void main(String[] args) {
 		GameServer game = new GameServer();		
-
 	}
 	
 }

@@ -75,6 +75,7 @@ public class View extends JFrame {
 	private JLayeredPane[] playerAreaPane = new JLayeredPane[6];
 	private JPanel[] playerArea = new JPanel[6];
 	private JPanel[] tokenArea = new JPanel[6];
+	private JPanel[] statusArea = new JPanel[6];
 	
 	private JTextField connectBox;
 	private JTextField nameBox;
@@ -219,21 +220,43 @@ public class View extends JFrame {
 		playArea = new DrawPanel();
 		playArea.setLayout(new GridLayout(2,3));
 		
+		JLabel tempLabel;
+		
 		for (int x = 0; x < 6; x++){
 			playerArea[x] = new JPanel();
 			playerArea[x].setLayout(new BorderLayout(0,0));
 			playerAreaPane[x] = new JLayeredPane();
 			tokenArea[x] =  new JPanel(new GridLayout(1,5));
+			
 			initToken(tokenArea[x]);
+			
+			
+			/*
+			tempLabel = new lab();
+			tempLabel.setForeground(red);
+			tempLabel.setOpaque(true);
+			
+			statusArea[x].add(tempLabel);
+			*/
+			statusArea[x] = new JPanel(new GridLayout(2,1));
+			
+			tempLabel = new JLabel(new ImageIcon(images.getStatusPic(1)));
+			statusArea[x].add(tempLabel);
+			tempLabel = new JLabel(new ImageIcon(images.getStatusPic(0)));
+			statusArea[x].add(tempLabel);
 			
 			
 			playerAreaPane[x].setPreferredSize(new Dimension(140,100));
 			playerArea[x].add(playerAreaPane[x],BorderLayout.CENTER);
+			
 			tokenArea[x].setPreferredSize(new Dimension((WIDTH-SIDE_WIDTH)/3-100, (WIDTH-SIDE_WIDTH)/15));
+			statusArea[x].setPreferredSize(new Dimension(32,32));
+			
+			playerArea[x].add(statusArea[x],BorderLayout.LINE_START);
 			playerArea[x].add(tokenArea[x],BorderLayout.PAGE_END);
 		}
 		
-		JLabel tempLabel;
+		
 		connectButton = new JButton("Connect");
 		button = new JButton("Refresh");
 		startButton = new JButton("Start Turn");
@@ -417,6 +440,35 @@ public class View extends JFrame {
 		repaint();
 	}
 
+	public void loadStatus() {
+		int x1;
+		JLabel tempLabel;
+		statusArea[5].removeAll();
+		System.out.println("HERE???");
+		for (int x = 0; x <= 4;x++){
+			statusArea[x].removeAll();			
+			if (x  < model.game.getPlayers().size()){
+				x1 = x;
+				if (x == model.playerNum){
+					x1 = 5;
+				}
+				if (model.game.getPlayers().get(x).isShielded()){
+					tempLabel = new JLabel(new ImageIcon(images.getStatusPic(1)));
+					statusArea[x1].add(tempLabel);
+				}
+				if (model.game.getPlayers().get(x).isStunned()){
+					tempLabel = new JLabel(new ImageIcon(images.getStatusPic(1)));
+					statusArea[x1].add(tempLabel);
+				}
+				
+			}
+			
+		}
+		
+		revalidate();
+		repaint();
+	}
+	
 	public void loadPlayArea() {
 		JLabel tempLabel;
 		JPanel tempPanel;
@@ -424,6 +476,7 @@ public class View extends JFrame {
 		playerAreaPane[5].removeAll();
 		for (int x = 0; x < model.game.getPlayers().size();x++){
 		//for (int x = 0; x < 3;x++){
+			System.out.println("REMOVE ALLLLLLLL P: " + x);
 			playerAreaPane[x].removeAll();
 			playerAreaPane[x].addMouseListener(new targetPlayerListener(x));
 			
@@ -558,6 +611,8 @@ public class View extends JFrame {
 		loadHand();
 		loadPlayArea();
 		loadTokens();
+		loadStatus();
+		//THE BUTTON, NOT USED
 	}
 	
 	//Will need to be changed
@@ -784,6 +839,7 @@ public class View extends JFrame {
 		loadHand();
 		loadPlayArea();
 		loadTokens();
+		loadStatus();
 	}
 	
 	public Game decodeGameState(String message){
