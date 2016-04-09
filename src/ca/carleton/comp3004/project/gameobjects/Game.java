@@ -53,7 +53,7 @@ public class Game implements Serializable {
 		for (Player p : aGame.playerList) {
 			this.playerList.add(p.clone());
 		}
-		
+		this.backup = null;
 		
 		this.tournamentColor = aGame.tournamentColor;
 	}
