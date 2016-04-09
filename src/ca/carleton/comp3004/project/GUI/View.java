@@ -538,7 +538,7 @@ public class View extends JFrame {
 		//model.setHand(model.getHand().remove(0));
 		System.out.println(x);
 		if (game.purple == true){
-			System.out.println("CHOOSE A COLOR FIRST");
+			System.out.println("CHOOSE A COLOR FIRST\n");
 			return;
 		}
 		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) || true){
@@ -594,7 +594,7 @@ public class View extends JFrame {
 				textAppend("PLEASE CHOOSE A COLOR\n");
 			}
 			if (game.won){
-				textAppend("TORUNAMENT OVER\n");
+				textAppend("TOURNAMENT OVER\n");
 				textAppend("PLAYER " + game.getCurrentPlayer().getId() + " HAS WON\n");
 			}
 			
