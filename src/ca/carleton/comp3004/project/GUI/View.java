@@ -57,6 +57,7 @@ import ca.carleton.comp3004.project.gameobjects.Card;
 import ca.carleton.comp3004.project.gameobjects.Card.CardColor;
 import ca.carleton.comp3004.project.gameobjects.Card.CardType;
 import ca.carleton.comp3004.project.gameobjects.Game;
+import ca.carleton.comp3004.project.gameobjects.Player;
 
 public class View extends JFrame {
 	int WIDTH = 1200;
@@ -535,6 +536,24 @@ public class View extends JFrame {
 		return options.get(n);
 	}
 	
+	public int choosePlayer() {
+		java.util.List<Integer> options = new ArrayList<Integer>();
+		for (Player p : model.game.getPlayers()) {
+				options.add(p.getId());
+		}
+		Object[] oparr = options.toArray();
+		int n = JOptionPane.showOptionDialog(this,
+				"Please choose a player ",
+						"Player selector",
+						JOptionPane.CLOSED_OPTION,
+						JOptionPane.QUESTION_MESSAGE,
+						null,
+						oparr,
+						oparr[0]);
+		
+		return options.get(n);
+	}
+	
 	public void update() {
 		loadHand();
 		loadPlayArea();
@@ -553,11 +572,31 @@ public class View extends JFrame {
 			System.out.println("CHOOSE A COLOR FIRST\n");
 			return;
 		}
-		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) || true){
-			game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
+		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) /*||true*/){
+			Card card = game.getPlayers().get(model.playerNum).getHand().get(x);
+			
+			if (card.getCardType() == CardType.Action){
+				if (card.targetColor){
+					message = "targetColor:";
+					message += chooseColor().ordinal();
+					sendString(message);
+				}
+				if (card.targetPlayer){
+					message = "targetPlayer:";
+					message += choosePlayer();
+					sendString(message);
+				}
+			} else if (card.getCardType() == CardType.Color){
+				message = "play:"+x;
+				sendString(message);
+			} else if (card.getCardType() == CardType.Supporter) {
+				message = "play:"+x;
+				sendString(message);
+			}
+			
+			//game.validatePlay(game.getPlayers().get(model.playerNum).getHand().get(x));
 			//game.performPlay(x);
-			message = "play:"+x;
-			sendString(message);
+			
 		} else {
 			//System.out.println("NOT YOUR TURN");
 		}
@@ -603,7 +642,18 @@ public class View extends JFrame {
 				textAppend("PLAYER " + model.lastPlayerNum + " TURN\n");
 			}
 			if (game.purple){
-				textAppend("PLEASE CHOOSE A COLOR\n");
+				if (model.game.getCurrentPlayer().getId() == (model.playerNum+1)){
+					textAppend("PLEASE CHOOSE A COLOR\n");
+					//choosePlayer();
+					System.out.println("PICKED A COLORRR");
+					String message;
+					message = "purple:";
+					message += chooseColor().ordinal();
+					sendString(message);
+					System.out.println(message);
+				}
+				
+				
 			}
 			if (game.won){
 				playSound(soundVictory);

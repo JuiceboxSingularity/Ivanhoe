@@ -68,13 +68,52 @@ public class Deck implements Serializable {
 		}
 
 		// Add special cards
+<<<<<<< Updated upstream
 		String[] actionCardName = {"Retreat", "Knockdown", "Knockdown", "Outmaneuver", "Charge", "Countercharge", "Disgrace", "Adapt",
+=======
+		
+		/*
+		String[] actionCardName = {"Retreat", "KnockDown", "KnockDown", "Outmaneuver", "Charge", "Countercharge", "Disgrace", "Adapt",
+>>>>>>> Stashed changes
 				"Outwit", "Shield", "Stunned", "Ivanhoe", "Unhorse", "Changeweapon", "Dropweapon", "Breaklance", "Riposte", "Riposte", 
 				"Riposte", "Dodge"};
+		*/
 	
-		for (int i = 0; i < actionCardName.length; i++) {
-			cards.add(new Card(CardType.Action, CardColor.None, 0, actionCardName[i]));
+		Card card;
+		
+		//NOTHING
+		String[] needNothing = {"Outmaneuver","Charge","Countercharge","Disgrace","Shield","Ivanhoe","Dropweapon"};
+		for (int i = 0; i < needNothing.length; i++) {
+			card = new Card(CardType.Action, CardColor.None, 0, needNothing[i]);
+			cards.add(card);
 		}
+		
+		//NEED CARD
+		//actionCardName = {};
+		
+		//NEED COLOR
+		String[] needColor = {"Retreat","Unhorse","Changeweapon",};
+		for (int i = 0; i < needColor.length; i++) {
+			card = new Card(CardType.Action, CardColor.None, 0, needColor[i]);
+			cards.add(card);
+		}
+		
+		//NEED PLAYER
+		String[] needPlayer = {"Knockdown","Knockdown","Stunned","Breaklance","Riposte","Riposte","Riposte"};
+		for (int i = 0; i < needPlayer.length; i++) {
+			card = new Card(CardType.Action, CardColor.None, 0, needPlayer[i]);
+			card.targetPlayer = true;
+			cards.add(card);
+		}
+		
+		//NEED PLAYER CARD
+		String[] needPlayerCard = {"DODGE"};
+		for (int i = 0; i < needPlayerCard.length; i++) {
+			card = new Card(CardType.Action, CardColor.None, 0, needPlayerCard[i]);
+			card.targetPlayer = true;
+			card.targetCard = true;
+			cards.add(card);
+		}	
 	}
 
 	public List<Card> getCards() {

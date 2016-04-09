@@ -37,6 +37,8 @@ public class Card implements Serializable {
 	int value;
 	private String cardName;
 	
+	public boolean targetPlayer = false, targetCard = false, targetColor = false;
+	
 	public Card(CardType type, CardColor color, int value) {
 		this.cardType = type;
 		this.cardColor = color;
