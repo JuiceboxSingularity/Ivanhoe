@@ -262,21 +262,21 @@ public class Game implements Serializable {
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
 				return true;
-			} else if ((c.getCardName() == "Breaklance") && (targetPlayer != null)) {
+			} else if ((c.getCardName() == "Breaklance")) {
 				return true;
-			} else if ((c.getCardName() == "Riposte") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0) && (!targetPlayer.isShielded())) {
+			} else if ((c.getCardName() == "Riposte")) {
 				return true;
-			} else if ((c.getCardName() == "Dodge") && (targetPlayer != null) && (targetCard != NOCARD) && (targetPlayer.getInPlay().size() != 0)) {
+			} else if ((c.getCardName() == "Dodge")) {
 				return true;
-			} else if ((c.getCardName() == "Retreat") && (targetCard != NOCARD) && (currentPlayer.getInPlay().size() != 0)) {
+			} else if ((c.getCardName() == "Retreat")) {
 				return true;
-			} else if ((c.getCardName() == "Knockdown") && (targetPlayer != null) && (targetPlayer.getHand().size() != 0)) {
+			} else if ((c.getCardName() == "Knockdown")) {
 				return true;
 			} else if (c.getCardName() == "Shield") {
 				return true;
 			} else if (c.getCardName() == "Adapt") {
 				return true;
-			} else if ((c.getCardName() == "Stunned") && (targetPlayer != null)) {
+			} else if ((c.getCardName() == "Stunned")) {
 				return true;
 			}
 			else {

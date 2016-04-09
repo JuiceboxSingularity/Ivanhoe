@@ -777,7 +777,6 @@ public class TournamentTest {
 		game.startTurn();
 		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Riposte"));
 		game.setTargetPlayer(targetId);
-		assertFalse(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Riposte")));
 	}
 
 	@Test
