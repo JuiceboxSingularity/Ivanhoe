@@ -1028,7 +1028,34 @@ public class TournamentTest {
 
 	@Test
 	public void testStunned() {
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 1));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 4));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		int targetPlayer = game.getCurrentPlayer().getId();
+		assertTrue(game.endTurn());
 
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 6));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 6)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Action, CardColor.None, 0, "Stunned"));
+		game.setTargetPlayer(targetPlayer);
+		assertTrue(game.validatePlay(new Card(CardType.Action, CardColor.None, 0, "Stunned")));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertTrue(game.endTurn());
+		
+		game.startTurn();
+		game.withdrawPlayer();
+				
+		game.startTurn();
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 2));
+		game.getCurrentPlayer().getHand().add(new Card(CardType.Color, CardColor.Red, 6));
+		assertTrue(game.validatePlay(new Card(CardType.Color, CardColor.Red, 6)));
+		game.performPlay(game.getCurrentPlayer().getHand().size()-1);
+		assertFalse(game.validatePlay(new Card(CardType.Color, CardColor.Red, 2)));
 	}
 
 	@Test

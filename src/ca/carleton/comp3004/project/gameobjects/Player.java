@@ -22,6 +22,7 @@ public class Player implements Serializable {
 	private int id;
 	private Map<CardColor, Integer> tokens;
 	private boolean playing;
+	private boolean turnPlayed;
 	
 	public Player(String name, int id) {
 		this.playerName = name;
@@ -30,7 +31,7 @@ public class Player implements Serializable {
 		this.inPlay = new LinkedList<Card>();
 		this.hand = new LinkedList<Card>();
 		this.tokens = new HashMap<CardColor, Integer>();
-		
+		this.setTurnPlayed(false);
 		for (CardColor c : CardColor.values()) {
 			if (c == CardColor.None || c == CardColor.White) continue;
 			tokens.put(c, 0);
@@ -158,5 +159,13 @@ public class Player implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	public boolean isTurnPlayed() {
+		return turnPlayed;
+	}
+
+	public void setTurnPlayed(boolean turnPlayed) {
+		this.turnPlayed = turnPlayed;
 	}
 }

@@ -126,6 +126,7 @@ public class Game implements Serializable {
 	}
 
 	public void startTurn() {
+		currentPlayer.setTurnPlayed(false);
 		Card drawn = deck.draw();
 		if (drawn == null) return;
 		currentPlayer.addCard(deck.draw());
@@ -236,6 +237,9 @@ public class Game implements Serializable {
 			}
 			return true;
 		} else if (c.getCardType() == CardType.Supporter){
+			if (currentPlayer.isStunned() && (currentPlayer.isTurnPlayed())) {
+				return false;
+			} 
 			if (c.getCardName() == "Squire") return true;
 			for (Card card : currentPlayer.getInPlay()) {
 				if (card.getCardName() == "Maiden") return false;
@@ -272,12 +276,17 @@ public class Game implements Serializable {
 				return true;
 			} else if (c.getCardName() == "Adapt") {
 				return true;
+			} else if ((c.getCardName() == "Stunned") && (targetPlayer != null)) {
+				return true;
 			}
 			else {
 				return false;
 			}
 		}
 		else if (this.tournamentColor == c.getCardColor()) {
+			if (currentPlayer.isStunned() && (currentPlayer.isTurnPlayed())) {
+				return false;
+			}
 			return true;
 		} else {
 			return false;
@@ -286,6 +295,7 @@ public class Game implements Serializable {
 
 	public void performPlay(int index) {
 		if (currentPlayer.viewCard(index).getCardType() == CardType.Color && tournamentColor == CardColor.None) {
+			currentPlayer.setTurnPlayed(true);
 			tournamentColor = currentPlayer.viewCard(index).getCardColor();
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Action) {
@@ -341,13 +351,21 @@ public class Game implements Serializable {
 				performKnockdown();
 			} else if (currentPlayer.viewCard(index).getCardName() == "Shield") {
 				currentPlayer.addCardToDisplay(currentPlayer.removeCard(index));
+			} else if (currentPlayer.viewCard(index).getCardName() == "Stunned") {
+				for (Player p : playerList) {
+					if (p.getId() == targetPlayer.getId()) {
+						p.addCardToDisplay(currentPlayer.removeCard(index));
+					}
+				}
 			}
 
 
 		} else if (currentPlayer.viewCard(index).getCardColor() == tournamentColor) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
+			currentPlayer.setTurnPlayed(true);
 		} else if (currentPlayer.viewCard(index).getCardType() == CardType.Supporter) {
 			currentPlayer.addCardToPlay(currentPlayer.removeCard(index));
+			currentPlayer.setTurnPlayed(true);
 		}
 	}
 
