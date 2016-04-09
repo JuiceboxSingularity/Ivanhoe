@@ -572,7 +572,11 @@ public class View extends JFrame {
 			System.out.println("CHOOSE A COLOR FIRST\n");
 			return;
 		}
-		if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) /*||true*/){
+		if (game.getPlayers().get(model.playerNum).getHand().get(x).getCardName().equals("Ivanhoe")) {
+			message = "playIvanhoe:"+model.playerNum;
+			sendString(message);
+		}
+		else if (model.game.getCurrentPlayer().getId() == (model.playerNum+1) /*||true*/){
 			Card card = game.getPlayers().get(model.playerNum).getHand().get(x);
 			
 			if (card.getCardType() == CardType.Action){

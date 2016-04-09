@@ -251,16 +251,12 @@ public class Game implements Serializable {
 		} else if (tournamentColor == CardColor.None && c.getCardType() == CardType.Action) {
 			return false;
 		} else if (c.getCardType() == CardType.Action){
-			if ((c.getCardName().equals("Unhorse")) && (tournamentColor == CardColor.Purple) && (customToken != CardColor.None)) {
+			if ((c.getCardName().equals("Unhorse")) && (tournamentColor == CardColor.Purple)) {
 				return true;
 			} else if ((c.getCardName().equals("Changeweapon")) && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {
-				if (((customToken == CardColor.Red) || 
-						(customToken == CardColor.Blue) || 
-						(customToken == CardColor.Yellow)))
 					return true;
-				else return false;
 			} else if ((c.getCardName().equals("Dropweapon")) && ((tournamentColor == CardColor.Red) || 
 					(tournamentColor == CardColor.Blue) || 
 					(tournamentColor == CardColor.Yellow))) {

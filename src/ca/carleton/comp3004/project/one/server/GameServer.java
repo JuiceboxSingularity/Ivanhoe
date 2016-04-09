@@ -273,6 +273,10 @@ public class GameServer extends Thread {
 					game.setCustomColor(Card.CardColor.values()[Integer.parseInt(parts[1])]);
 					
 					break;
+				case "playIvanhoe":
+					System.out.println("DOING THE IVANHOE THING");
+					game.performIvanhoe(Integer.parseInt(parts[1]));
+					break;
 			}
 			
 		}
